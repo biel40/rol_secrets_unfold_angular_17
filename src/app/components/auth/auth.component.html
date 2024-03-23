@@ -1,0 +1,58 @@
+<div>
+  <section class="flex flex-row items-center justify-center">
+    <h1 class="!mt-10"> Rol Game Manager </h1>
+  </section>
+
+  <form [formGroup]="signInForm" class="login material">
+
+    <div style="width: 75%;">
+      <mat-form-field style="width: 100%;">
+        <mat-label for="username"> Email: </mat-label>
+        <input matInput type="text" formControlName="email" class="inputField" placeholder="Email" type="text"
+          required />
+
+        @if (emailFormControl.hasError('email') && !emailFormControl.hasError('required')) {
+          <mat-error>
+            Introduce un email válido
+          </mat-error>
+        }
+
+        @if (emailFormControl.hasError('required')) {
+          <mat-error>
+            Email es <strong>necesario</strong>
+          </mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <div style="width: 75%;">
+      <mat-form-field style="width: 100%;">
+        <mat-label for="username"> Contraseña: </mat-label>
+        <input matInput type="password" formControlName="password" class="inputField" placeholder="Password" required />
+
+        @if (passwordFormControl.hasError('required')) {
+        <mat-error>
+          La contraseña es <strong> necesaria </strong>
+        </mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <div>
+      <button type="submit" aria-live="polite" class="button block" (click)="handleLogin()">
+        Login
+      </button>
+      <p> O </p>
+      <button (click)="handleSignup()" aria-live="polite" class="button block">
+        Sign Up
+      </button>
+    </div>
+  </form>
+
+</div>
+
+@if (displayErrorMessage) {
+<div class="error-message">
+  Oops, ha ocurrido un error. Por favor, inténtalo de nuevo más tarde.
+</div>
+}
