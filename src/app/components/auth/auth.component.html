@@ -1,14 +1,14 @@
-<div>
-  <section class="flex flex-row items-center justify-center">
-    <h1 class="!mt-10"> Rol Game Manager </h1>
-  </section>
+<div class="h-full flex flex-col items-center justify-center">
+  <div class="flex items-center justify-center">
+    <h1 class="!mt-10 !mb-14 !text-3xl"> Rol Game Manager </h1>
+  </div>
 
   <form [formGroup]="signInForm" class="login material">
 
-    <div style="width: 75%;">
-      <mat-form-field style="width: 100%;">
+    <div class="w-3/4">
+      <mat-form-field class="w-full !m-4">
         <mat-label for="username"> Email: </mat-label>
-        <input matInput type="text" formControlName="email" class="inputField" placeholder="Email" type="text"
+        <input matInput type="text" autocomplete="email" formControlName="email" placeholder="Email" type="text"
           required />
 
         @if (emailFormControl.hasError('email') && !emailFormControl.hasError('required')) {
@@ -25,26 +25,26 @@
       </mat-form-field>
     </div>
 
-    <div style="width: 75%;">
-      <mat-form-field style="width: 100%;">
+    <div class="w-3/4">
+      <mat-form-field class="w-full !m-4">
         <mat-label for="username"> Contraseña: </mat-label>
-        <input matInput type="password" formControlName="password" class="inputField" placeholder="Password" required />
+        <input matInput type="password" autocomplete="current-password" formControlName="password" class="inputField" placeholder="Password" required />
 
         @if (passwordFormControl.hasError('required')) {
-        <mat-error>
-          La contraseña es <strong> necesaria </strong>
-        </mat-error>
+          <mat-error>
+            La contraseña es <strong> necesaria </strong>
+          </mat-error>
         }
       </mat-form-field>
     </div>
 
-    <div>
+    <div class="flex flex-col">
       <button type="submit" aria-live="polite" class="button block" (click)="handleLogin()">
         Login
       </button>
-      <p> O </p>
+      <p class="!mt-2"> O </p>
       <button (click)="handleSignup()" aria-live="polite" class="button block">
-        Sign Up
+        Regístrate
       </button>
     </div>
   </form>
@@ -52,7 +52,7 @@
 </div>
 
 @if (displayErrorMessage) {
-<div class="error-message">
-  Oops, ha ocurrido un error. Por favor, inténtalo de nuevo más tarde.
-</div>
+  <div class="error-message">
+    Oops, ha ocurrido un error inesperado. Por favor, inténtalo de nuevo más tarde.
+  </div>
 }

@@ -60,9 +60,7 @@ button:hover {
     border-radius: 4px;
     font-size: 14px;
     animation: fade-in-up 0.3s ease forwards;
-    /* Aplicar la animación */
     opacity: 0;
-    /* Inicialmente oculto */
 }
 
 @keyframes fade-in-up {

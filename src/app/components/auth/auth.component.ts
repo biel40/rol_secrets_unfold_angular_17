@@ -6,6 +6,8 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { User } from '@supabase/supabase-js';
 import { Profile, SupabaseService } from '../../services/supabase/supabase.service';
 import { MaterialModule } from '../../modules/material.module';
+import { UserService } from '../../services/user/user.service';
+import { LoaderService } from '../../services/loader/loader.service';
 
 @Component({
   selector: 'app-auth',
@@ -19,13 +21,18 @@ import { MaterialModule } from '../../modules/material.module';
 })
 export class AuthComponent implements OnInit {
   
-  protected supabase = inject(SupabaseService);
+  private _supabaseService: SupabaseService = inject(SupabaseService);
   protected readonly formBuilder = inject(FormBuilder);
-  private router = inject(Router);
+  private _router = inject(Router);
+  private _userService = inject(UserService);
+  private _loaderService = inject(LoaderService);
 
-  loading = false;
+  public loading: boolean = false;
   public displayErrorMessage: boolean = false;
   public user: User | null = null;
+
+  public email: string = "";
+  public password: string = "";
 
   emailFormControl = new FormControl('', [
     Validators.required,
@@ -41,12 +48,25 @@ export class AuthComponent implements OnInit {
   signInForm = this.formBuilder.group({
     email: '',
     password: ''
-  })
+  });
 
   constructor(
-  ) { }
+  ) { 
+    this._checkUserSession();
+  }
 
-  ngOnInit(): void { }
+  public ngOnInit(): void { 
+    
+  }
+
+  private async _checkUserSession() {
+    this.user = this._userService.getUser();
+
+    if (this.user) {
+      alert('Ya hay session iniciada. Redirigiendo a la página de perfil.');
+      this._router.navigate(['profile']);
+    }
+  }
 
   async handleLogin(): Promise<void> {
     try {
@@ -54,12 +74,15 @@ export class AuthComponent implements OnInit {
       const password = this.signInForm.value.password as string;
 
       if (email != "" && password != "") {
-        const user = await this.supabase.signIn(email, password);
+        const user = await this._supabaseService.signIn(email, password);
 
         if (user.error && user.error.message == "Invalid login credentials") {
           alert("Email or password incorrect. Please try again.");
         } else {
-          this.router.navigate(['account']);
+          this.user = user.data.user;
+          this._userService.setUser(this.user);
+          this._loaderService.setLoading(true);
+          this._router.navigate(['profile']);
         }
       }
     } catch (error) {
@@ -71,13 +94,15 @@ export class AuthComponent implements OnInit {
     }
   }
 
-
   public async handleSignup(): Promise<void> {
     const email = this.signInForm.value.email as string;
     const password = this.signInForm.value.password as string;
 
+    this.email = email;
+    this.password = password;
+
     if (email != "" && password != "") {
-      this.supabase.signUp(email, password).then((response) => {
+      this._supabaseService.signUp(email, password).then((response: any) => {
         if (response.error) {
           if (response.error.message == "Email rate limit exceeded") {
             alert('Ha superado el límite de intentos. Por favor, inténtelo de nuevo más tarde.');
@@ -88,8 +113,9 @@ export class AuthComponent implements OnInit {
           }
         } else {
           this.user = response.data.user;
+          this._userService.setUser(this.user);
           this.createProfile();
-          this.router.navigate(['account']);
+          this._router.navigate(['profile']);
         }
       });
     } else {
@@ -98,7 +124,7 @@ export class AuthComponent implements OnInit {
   }
 
   private async createProfile() {
-    // We create and insert a new profile for the new user if it doesn't exist
+
     if (this.user) {
       const mockProfile: Profile = {
         id: this.user.id,
@@ -109,9 +135,7 @@ export class AuthComponent implements OnInit {
         weapon: "Espada",
       };
 
-      console.log('Mock Profile creating.....: ', mockProfile);
-
-      await this.supabase.insertProfile(mockProfile).then((response) => {
+      await this._supabaseService.insertProfile(mockProfile).then((response: any) => {
         if (response.error) {
           console.error('Ha ocurrido un error inesperado. Por favor, inténtelo de nuevo.');
         } else {
@@ -120,5 +144,4 @@ export class AuthComponent implements OnInit {
       });
     }
   }
-
 }
