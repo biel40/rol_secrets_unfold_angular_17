@@ -8,7 +8,7 @@
     <div class="w-3/4">
       <mat-form-field class="w-full !m-4">
         <mat-label for="username"> Email: </mat-label>
-        <input matInput type="text" autocomplete="email" formControlName="email" placeholder="Email" type="text"
+        <input matInput class="inputField" type="text" autocomplete="email" formControlName="email" placeholder="Email" type="text"
           required />
 
         @if (emailFormControl.hasError('email') && !emailFormControl.hasError('required')) {

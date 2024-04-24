@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core'
+import { Component, inject, OnDestroy, OnInit } from '@angular/core'
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms'
 import { Router } from '@angular/router'
 import { FormControl, Validators } from '@angular/forms';
@@ -8,6 +8,8 @@ import { Profile, SupabaseService } from '../../services/supabase/supabase.servi
 import { MaterialModule } from '../../modules/material.module';
 import { UserService } from '../../services/user/user.service';
 import { LoaderService } from '../../services/loader/loader.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 
 @Component({
   selector: 'app-auth',
@@ -16,10 +18,10 @@ import { LoaderService } from '../../services/loader/loader.service';
   standalone: true,
   imports: [
     MaterialModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ]
 })
-export class AuthComponent implements OnInit {
+export class AuthComponent implements OnInit, OnDestroy {
   
   private _supabaseService: SupabaseService = inject(SupabaseService);
   protected readonly formBuilder = inject(FormBuilder);
@@ -51,6 +53,7 @@ export class AuthComponent implements OnInit {
   });
 
   constructor(
+    private _snackBar: MatSnackBar
   ) { 
     this._checkUserSession();
   }
@@ -77,7 +80,7 @@ export class AuthComponent implements OnInit {
         const user = await this._supabaseService.signIn(email, password);
 
         if (user.error && user.error.message == "Invalid login credentials") {
-          alert("Email or password incorrect. Please try again.");
+          this._displaySnackbar("Email or password incorrect. Please try again.");
         } else {
           this.user = user.data.user;
           this._userService.setUser(this.user);
@@ -87,7 +90,8 @@ export class AuthComponent implements OnInit {
       }
     } catch (error) {
       if (error instanceof Error) {
-        alert(error.message)
+        console.error('Error: ', error);
+        this._displaySnackbar(error.message);
       }
     } finally {
       this.signInForm.reset()
@@ -105,11 +109,9 @@ export class AuthComponent implements OnInit {
       this._supabaseService.signUp(email, password).then((response: any) => {
         if (response.error) {
           if (response.error.message == "Email rate limit exceeded") {
-            alert('Ha superado el límite de intentos. Por favor, inténtelo de nuevo más tarde.');
-            this.displayErrorMessage = true;
+            this._displaySnackbar("Email rate limit exceeded. Please try again later.");
           } else {
-            alert('Ha ocurrido un error inesperado. Por favor, inténtelo de nuevo.');
-            this.displayErrorMessage = true;
+            this._displaySnackbar("An error has occurred. Please try again.");
           }
         } else {
           this.user = response.data.user;
@@ -119,7 +121,7 @@ export class AuthComponent implements OnInit {
         }
       });
     } else {
-      alert('Por favor, introduce email y contraseña para poder registrarte.');
+      this._displaySnackbar("Email and password are required.");
     }
   }
 
@@ -138,10 +140,22 @@ export class AuthComponent implements OnInit {
       await this._supabaseService.insertProfile(mockProfile).then((response: any) => {
         if (response.error) {
           console.error('Ha ocurrido un error inesperado. Por favor, inténtelo de nuevo.');
+          this._displaySnackbar('Ha ocurrido un error inesperado. Por favor, inténtelo de nuevo.');
         } else {
           console.log('Profile for user created successfully!!');
         }
       });
     }
   }
+
+  private _displaySnackbar(message: string) : void {
+    this._snackBar.open(message, 'Cerrar', {
+      duration: 4000,
+    });
+  }
+
+  public ngOnDestroy(): void {
+    this._loaderService.setLoading(false);
+  }
+
 }

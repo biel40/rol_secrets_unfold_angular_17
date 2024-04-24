@@ -1,14 +1,29 @@
-<div class="flex flex-col items-center justify-center">
-   <h1>Personaje:</h1>
+<div class="flex flex-col items-center justify-center h-full">
 
-   <div class="card border border-red-500">
-        <div class="card-body">
-            <h5 class="card-title"> Nombre: {{ profile?.username}}</h5>
-        </div>
-   </div>
+    <mat-tab-group class="justify-start mb-24">
+        <mat-tab label="Perfil">
+            <!-- <app-profile-info [profile]="profile"></app-profile-info> -->
+        </mat-tab>
+        <mat-tab label="Inventario">
+            <!-- <app-profile-inventory [profile]="profile"></app-profile-inventory> -->
+        </mat-tab>
+        <mat-tab label="Estadísticas">
+            <!-- <app-profile-stats [profile]="profile"></app-profile-stats> -->
+        </mat-tab>
+        <mat-tab label="Habilidades">
+
+        </mat-tab>
+    </mat-tab-group>
+
+   <mat-card class="h-1/3">
+    <mat-card-header>
+        <mat-card-title>Nombre: {{ profile?.username}}</mat-card-title>
+        <mat-card-subtitle>Nivel: {{ profile?.level }}</mat-card-subtitle>
+    </mat-card-header>
+   </mat-card>
 
     <div class="mt-10">
-        <button (click)="signOut()">Cerrar sesión</button>
+        <button class="hover:cursor-pointer" (click)="signOut()">Cerrar sesión</button>
     </div>
 
   
