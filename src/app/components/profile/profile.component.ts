@@ -6,6 +6,8 @@ import { LoaderService } from '../../services/loader/loader.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MaterialModule } from '../../modules/material.module';
+import { ProfileInfoComponent } from '../profile-info/profile-info.component';
+import { ProfileStatsComponent } from '../profile-stats/profile-stats.component';
 
 @Component({
     selector: 'app-profile',
@@ -13,7 +15,9 @@ import { MaterialModule } from '../../modules/material.module';
     styleUrls: ['./profile.component.scss'],
     standalone: true,
     imports: [
-        MaterialModule
+        MaterialModule,
+        ProfileInfoComponent,
+        ProfileStatsComponent
     ]
 })
 export class ProfileComponent implements OnInit {
@@ -41,7 +45,7 @@ export class ProfileComponent implements OnInit {
             if (profile) {
                 this.profile = profile;
             }
-            this._displaySnackbar('Bienvenido a tu perfil! Disfruta de la partida');
+              this._displaySnackbar('Bienvenido a tu perfil! Disfruta de la partida.');
         } else {
             alert('Credenciales inválidas. Por favor, inicie sesión nuevamente.');
             this._router.navigate(['']);
