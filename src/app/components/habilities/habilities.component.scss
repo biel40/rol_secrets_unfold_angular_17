@@ -1,0 +1,60 @@
+.tilesWrap {
+    padding: 0;
+    margin: 50px auto;
+    list-style: none;
+    text-align: center;
+}
+
+.mat-mdc-card-header {
+    display: block !important;
+}
+
+li {
+    margin-bottom: 3em;
+}
+
+.mat-button {
+    margin: 1em;
+}
+
+.attack-container {
+    display: flex;
+    align-items: center;
+}
+
+.mat-card-header {
+    display: block !important;
+}
+
+.example-button-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+mat-icon {
+    margin-bottom: 0.5em;
+}
+
+button {
+    padding: 0.5em;
+}
+
+button:hover {
+    background-color: blanchedalmond;
+    color: black;
+}
+
+/* Animación para el dado */
+.example-button-container button {
+    transition: transform 0.3s;
+}
+
+.example-button-container button:hover {
+    transform: scale(1.1);
+}
+
+.example-button-container button:active {
+    transform: scale(0.9);
+}

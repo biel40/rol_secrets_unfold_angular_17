@@ -8,6 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MaterialModule } from '../../modules/material.module';
 import { ProfileInfoComponent } from '../profile-info/profile-info.component';
 import { ProfileStatsComponent } from '../profile-stats/profile-stats.component';
+import { HabilitiesComponent } from '../habilities/habilities.component';
 
 @Component({
     selector: 'app-profile',
@@ -17,7 +18,8 @@ import { ProfileStatsComponent } from '../profile-stats/profile-stats.component'
     imports: [
         MaterialModule,
         ProfileInfoComponent,
-        ProfileStatsComponent
+        ProfileStatsComponent,
+        HabilitiesComponent
     ]
 })
 export class ProfileComponent implements OnInit {

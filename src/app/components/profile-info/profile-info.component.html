@@ -1,9 +1,15 @@
-<div class="profile-wrapper | flex flex-col items-center gap-2 mt-8">
-    <div class="flex flex-col items-start">
+<div class="profile-wrapper | flex flex-col items-center gap-6 mt-12">
+    <div class="flex flex-col items-start gap-5">
         <h1 class="font-bold text-red-300"> {{profile?.username}}</h1>
-        <p>Nivel: {{profile?.level}}</p>
-        <p>Elemento: {{profile?.power}} {{elementEmoji}}</p>
-        <p>Clase: {{profile?.clase}} {{classEmoji}}</p>
-        <p>Arma equipada: {{profile?.weapon}} </p>
+        <p class="!text-xl">Nivel: {{profile?.level}}</p>
+        <p class="!text-xl">Elemento: {{profile?.power}} {{elementEmoji}}</p>
+        <p class="!text-xl">Clase: {{profile?.clase}} {{classEmoji}}</p>
+        <p class="text-xl">Arma equipada: {{profile?.weapon}} </p>
+    </div>
+
+    <div>
+        <button>
+            <a [routerLink]="['/profile-edit']">Editar perfil</a>
+        </button>
     </div>
 </div>

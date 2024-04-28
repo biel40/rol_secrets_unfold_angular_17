@@ -86,21 +86,17 @@ export class SupabaseService {
     return error ? error : habilities;
   }
 
-  async getHabilitiesFromUser(profile: Profile) {
-    try {
-      let { data: habilities, error } = await this.supabase
-      .from('habilities')
-      .select('*')
-      .lte("level", profile.level)
-      .eq("power", profile.power)
-      .in("clase", ["Base", profile.clase])
-      .order("level");
-      
-      return error ? error : habilities;
-    } catch(error) {
-      return error;
-    }
-  }
+  async getHabilitiesFromUser(profile: Profile) : Promise<Hability[]> {
+    let { data: habilities, error } = await this.supabase
+    .from('habilities')
+    .select('*')
+    .lte("level", profile.level)
+    .eq("power", profile.power)
+    .in("clase", ["Base", profile.clase])
+    .order("level");
+
+    return habilities ? habilities : [];
+  } 
 
   // Function to update user's habilities
   async updateHabilities(habilities: Hability[]) {

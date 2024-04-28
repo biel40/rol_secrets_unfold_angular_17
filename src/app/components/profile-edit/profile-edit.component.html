@@ -1,0 +1,72 @@
+@if (profile) {
+<div id="editProfileForm" class="form">
+   
+    
+    <form id="edit-form" [formGroup]="updateProfileForm" (ngSubmit)="updateProfile()"
+        class="form-widget">
+
+        <div style="margin-bottom: 1em;">
+            <mat-form-field style="width: 75%;">
+                <mat-label for="username"> Nombre: </mat-label>
+                <input id="username" matInput appearance="outline" formControlName="username" type="text" required />
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-form-field appearance="outline" style="width: 75%;">
+                <mat-label> Clase: </mat-label>
+                <mat-select formControlName="clase" required>
+                    @for (class of classList; track $index) {
+                        <mat-option [value]="class">
+                            {{ class }}
+                        </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-form-field appearance="outline" style="width: 75%;">
+                <mat-label> Poder: </mat-label>
+                <mat-select formControlName="power" required>
+                    @for (power of powerList; track $index) {
+                        <mat-option [value]="power">
+                            {{ power }}
+                        </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-form-field appearance="outline" style="width: 75%;">
+                <mat-label> Nivel: </mat-label>
+                <mat-select formControlName="level" required>
+                    @for (level of levels; track $index) {
+                        <mat-option [value]="level">
+                            {{ level }}
+                        </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-form-field appearance="outline" style="width: 75%;">
+                <mat-label> Arma: </mat-label>
+                <mat-select formControlName="weapon" required>
+                    @for (weapon of weaponList; track $index) {
+                        <mat-option [value]="weapon">
+                            {{ weapon }}
+                        </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </form>
+
+    <button id="submit_button" type="submit" form="edit-form" class="button primary block submit">
+        Actualizar
+    </button>
+</div>
+} 

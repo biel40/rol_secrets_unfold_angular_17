@@ -1,0 +1,38 @@
+@if (userHabilities) {
+<div class="gap-4 mt-8">
+    <div class="attack-container">
+        <ul class="tilesWrap | gap-4">
+            @for (hability of userHabilities; track $index) {
+                <li>
+                    <mat-card class="example-card">
+                        <mat-card-header>
+                            <mat-card-title>{{ hability.name }}</mat-card-title>
+                            <mat-card-subtitle>{{ hability.description }}</mat-card-subtitle>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <p>
+                                {{ hability.current_uses }} / {{ hability.total_uses }}
+                            </p>
+                            <div class="example-button-container">
+                                <button (click)="removeUses(hability)">
+                                    <mat-icon> - </mat-icon>
+                                </button>
+                                <button (click)="calculateDamage(hability)">
+                                    DMG
+                                </button>
+                                <button (click)="addUses(hability)">
+                                    <mat-icon> + </mat-icon>
+                                </button>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+} @else {
+<div>
+    <h3> No tienes habilidades asignadas de momento. </h3>
+</div>
+}
