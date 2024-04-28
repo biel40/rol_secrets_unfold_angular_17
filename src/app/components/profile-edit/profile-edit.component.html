@@ -1,19 +1,17 @@
 @if (profile) {
-<div id="editProfileForm" class="form">
-   
+<div id="editProfileForm" class="form | flex flex-col items-center justify-center w-full h-full">
+
+    <h1>Editar el perfil</h1>
     
     <form id="edit-form" [formGroup]="updateProfileForm" (ngSubmit)="updateProfile()"
-        class="form-widget">
+        class="form-widget w-full flex flex-col justify-center items-center">
 
-        <div style="margin-bottom: 1em;">
-            <mat-form-field style="width: 75%;">
-                <mat-label for="username"> Nombre: </mat-label>
+            <mat-form-field class="w-1/3">
+                <mat-label for="username"> {{ 'name' | transloco }}</mat-label>
                 <input id="username" matInput appearance="outline" formControlName="username" type="text" required />
             </mat-form-field>
-        </div>
-
-        <div>
-            <mat-form-field appearance="outline" style="width: 75%;">
+   
+            <mat-form-field class="w-1/3">
                 <mat-label> Clase: </mat-label>
                 <mat-select formControlName="clase" required>
                     @for (class of classList; track $index) {
@@ -23,10 +21,8 @@
                     }
                 </mat-select>
             </mat-form-field>
-        </div>
 
-        <div>
-            <mat-form-field appearance="outline" style="width: 75%;">
+            <mat-form-field class="w-1/3">
                 <mat-label> Poder: </mat-label>
                 <mat-select formControlName="power" required>
                     @for (power of powerList; track $index) {
@@ -36,10 +32,8 @@
                     }
                 </mat-select>
             </mat-form-field>
-        </div>
-
-        <div>
-            <mat-form-field appearance="outline" style="width: 75%;">
+        
+            <mat-form-field class="w-1/3">
                 <mat-label> Nivel: </mat-label>
                 <mat-select formControlName="level" required>
                     @for (level of levels; track $index) {
@@ -49,10 +43,8 @@
                     }
                 </mat-select>
             </mat-form-field>
-        </div>
-
-        <div>
-            <mat-form-field appearance="outline" style="width: 75%;">
+        
+            <mat-form-field class="w-1/3">
                 <mat-label> Arma: </mat-label>
                 <mat-select formControlName="weapon" required>
                     @for (weapon of weaponList; track $index) {
@@ -62,7 +54,6 @@
                     }
                 </mat-select>
             </mat-form-field>
-        </div>
     </form>
 
     <button id="submit_button" type="submit" form="edit-form" class="button primary block submit">

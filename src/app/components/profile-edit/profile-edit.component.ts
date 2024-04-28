@@ -6,6 +6,7 @@ import { Profile, SupabaseService } from '../../services/supabase/supabase.servi
 import { User } from '@supabase/supabase-js';
 import { LoaderService } from '../../services/loader/loader.service';
 import { UserService } from '../../services/user/user.service';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
     selector: 'app-profile-edit',
@@ -15,7 +16,8 @@ import { UserService } from '../../services/user/user.service';
     imports: [
         MaterialModule,
         RouterLink,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        TranslocoModule
     ]
 })
 export class ProfileEditComponent implements OnInit {

@@ -20,6 +20,8 @@
     "@angular/platform-browser": "^17.3.0",
     "@angular/platform-browser-dynamic": "^17.3.0",
     "@angular/router": "^17.3.0",
+    "@jsverse/transloco": "^7.3.0",
+    "@ngneat/transloco": "^6.0.4",
     "@supabase/supabase-js": "^2.39.8",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",

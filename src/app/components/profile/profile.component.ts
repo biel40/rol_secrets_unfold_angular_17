@@ -9,6 +9,8 @@ import { MaterialModule } from '../../modules/material.module';
 import { ProfileInfoComponent } from '../profile-info/profile-info.component';
 import { ProfileStatsComponent } from '../profile-stats/profile-stats.component';
 import { HabilitiesComponent } from '../habilities/habilities.component';
+import { LocaleChangerComponent } from '../locale-changer/locale-changer.component';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
     selector: 'app-profile',
@@ -19,7 +21,9 @@ import { HabilitiesComponent } from '../habilities/habilities.component';
         MaterialModule,
         ProfileInfoComponent,
         ProfileStatsComponent,
-        HabilitiesComponent
+        HabilitiesComponent,
+        TranslocoModule,
+        LocaleChangerComponent
     ]
 })
 export class ProfileComponent implements OnInit {
@@ -65,7 +69,7 @@ export class ProfileComponent implements OnInit {
         setTimeout(() => {
             this._loaderService.setLoading(false);
             this._router.navigate(['']);
-        }, 600);
+        }, 500);
     }
 
     private _displaySnackbar(message: string) : void {

@@ -1,0 +1,16 @@
+{
+    "name": "Name",
+    "power": "Power",
+    "level": "Level",
+    "class": "Class",
+    "profile": "Profile",
+    "stats": "Stats",
+    "habilities": "Habilities",
+    "items": "Items",
+    "inventory": "Inventory",
+    "es": "Spanish",
+    "en": "English",
+    "signOut": "Sign out",
+    "weapon": "Weapon",
+    "edit-profile": "Edit profile"
+}

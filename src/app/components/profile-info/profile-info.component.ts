@@ -6,6 +6,7 @@ import { LoaderService } from '../../services/loader/loader.service';
 import { User } from '@supabase/supabase-js';
 import { Router, RouterLink } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
     selector: 'app-profile-info',
@@ -14,7 +15,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     standalone: true,
     imports: [
         MaterialModule,
-        RouterLink
+        RouterLink,
+        TranslocoModule
     ]
 })
 export class ProfileInfoComponent implements OnInit {

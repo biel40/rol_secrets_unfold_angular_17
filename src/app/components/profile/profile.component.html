@@ -1,22 +1,26 @@
 <div class="flex flex-col items-center justify-start h-full mt-4">
 
     <mat-tab-group class="justify-start w-4/5">
-        <mat-tab label="Perfil">
+        <mat-tab label="{{ 'profile' | transloco}}">
             <app-profile-info [profile]="profile"></app-profile-info> 
         </mat-tab>
-        <mat-tab label="Estadísticas">
+        <mat-tab label="{{ 'stats' | transloco}}">
             <app-profile-stats [profile]="profile"></app-profile-stats>
         </mat-tab>
-        <mat-tab label="Inventario">
+        <mat-tab label="{{ 'inventory' | transloco}}">
             <!-- <app-profile-inventory [profile]="profile"></app-profile-inventory> -->
         </mat-tab>
-        <mat-tab label="Habilidades">
+        <mat-tab label="{{ 'habilities' | transloco}}">
             <app-habilities [profile]="profile"></app-habilities>
         </mat-tab>
     </mat-tab-group>
 
     <div class="mt-4">
-        <button class="hover:cursor-pointer" (click)="signOut()">Cerrar sesión</button>
+        <button class="hover:cursor-pointer" (click)="signOut()">{{'signOut' | transloco}}</button>
+    </div>
+
+    <div class="absolute top-9 right-9">
+        <app-locale-changer></app-locale-changer>
     </div>
 
 </div>

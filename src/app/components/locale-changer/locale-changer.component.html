@@ -1,0 +1,7 @@
+<div>
+    <select [(ngModel)]="selectedLocale" (change)="changeLocale()">
+        @for (locale of locales; track $index) {
+            <option [value]="locale">{{ getLocaleText(locale) }}</option>
+        }
+    </select>
+</div>
