@@ -1,26 +1,37 @@
-<div class="flex flex-col items-center justify-start h-full mt-4">
+@if (profile) {
+    <div class="flex flex-col items-center justify-start w-full h-full mt-4">
 
-    <mat-tab-group class="justify-start w-4/5">
-        <mat-tab label="{{ 'profile' | transloco}}">
-            <app-profile-info [profile]="profile"></app-profile-info> 
-        </mat-tab>
-        <mat-tab label="{{ 'stats' | transloco}}">
-            <app-profile-stats [profile]="profile"></app-profile-stats>
-        </mat-tab>
-        <mat-tab label="{{ 'inventory' | transloco}}">
-            <!-- <app-profile-inventory [profile]="profile"></app-profile-inventory> -->
-        </mat-tab>
-        <mat-tab label="{{ 'habilities' | transloco}}">
-            <app-habilities [profile]="profile"></app-habilities>
-        </mat-tab>
-    </mat-tab-group>
+        <mat-tab-group class="justify-start w-4/5">
+            <mat-tab label="{{ 'profile' | transloco}}">
+                <app-profile-info [profile]="profile"></app-profile-info>
+            </mat-tab>
+            <mat-tab label="{{ 'stats' | transloco}}">
+                <app-profile-stats [profile]="profile"></app-profile-stats>
+            </mat-tab>
+            <mat-tab label="{{ 'inventory' | transloco}}">
+                <!-- <app-profile-inventory [profile]="profile"></app-profile-inventory> -->
+            </mat-tab>
+            <mat-tab label="{{ 'habilities' | transloco}}">
+                <app-habilities [profile]="profile"></app-habilities>
+            </mat-tab>
+        </mat-tab-group>
 
-    <div class="mt-8">
-        <app-locale-changer></app-locale-changer>
+        <div class="mt-12">
+            <app-locale-changer></app-locale-changer>
+        </div>
+
+        <div class="mt-12">
+            <button class="hover:cursor-pointer" (click)="signOut()">{{'signOut' | transloco}}</button>
+        </div>
+
     </div>
+}
 
-    <div class="mt-8">
-        <button class="hover:cursor-pointer" (click)="signOut()">{{'signOut' | transloco}}</button>
-    </div> 
-
-</div>
+@if (errorConfirmEmail) {
+    <div class="flex flex-col items-center justify-center h-full w-full mt-4">
+        <h1 class="">{{ 'error-confirm-email' | transloco }}</h1>
+        <button [routerLink]="['']">
+            <a [routerLink]="['']"> {{ 'go-back' | transloco }} </a>
+        </button>
+    </div>
+}

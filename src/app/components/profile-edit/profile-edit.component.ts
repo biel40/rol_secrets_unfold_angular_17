@@ -59,6 +59,21 @@ export class ProfileEditComponent implements OnInit {
             this._router.navigate(['']);
         } else {
             this.profile = (await this._supabaseService.getProfileInfo(this.user.id)).data;
+
+            if (this.profile) {
+                const { username, clase, power, level, weapon } = this.profile;
+        
+                console.log(this.profile)
+                console.log(this.profile.power)
+
+                this.updateProfileForm.patchValue({
+                    username,
+                    clase,
+                    power,
+                    level,
+                    weapon
+                });
+            }
         }
 
         this._loaderService.setLoading(false);

@@ -93,9 +93,7 @@ export class AuthComponent implements OnInit, OnDestroy {
         console.error('Error: ', error);
         this._displaySnackbar(error.message);
       }
-    } finally {
-      this.signInForm.reset()
-    }
+    } 
   }
 
   public async handleSignup(): Promise<void> {
@@ -116,8 +114,8 @@ export class AuthComponent implements OnInit, OnDestroy {
         } else {
           this.user = response.data.user;
           this._userService.setUser(this.user);
-          this.createProfile();
-          this._router.navigate(['profile']);
+          this._createProfile();
+          this._router.navigate(['new-profile']);
         }
       });
     } else {
@@ -125,14 +123,15 @@ export class AuthComponent implements OnInit, OnDestroy {
     }
   }
 
-  private async createProfile() {
+  private async _createProfile() {
 
     if (this.user) {
+
       const mockProfile: Profile = {
         id: this.user.id,
-        username: "Perfil de Pruebas",
+        username: this.user.email,
         clase: "Mago",
-        power: "Fuego",
+        power: "Pyro",
         level: 0,
         weapon: "Espada",
       };

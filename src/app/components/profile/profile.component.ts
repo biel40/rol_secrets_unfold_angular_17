@@ -3,7 +3,7 @@ import { Profile, SupabaseService } from '../../services/supabase/supabase.servi
 import { User } from '@supabase/supabase-js';
 import { UserService } from '../../services/user/user.service';
 import { LoaderService } from '../../services/loader/loader.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MaterialModule } from '../../modules/material.module';
 import { ProfileInfoComponent } from '../profile-info/profile-info.component';
@@ -23,7 +23,8 @@ import { TranslocoModule } from '@jsverse/transloco';
         ProfileStatsComponent,
         HabilitiesComponent,
         TranslocoModule,
-        LocaleChangerComponent
+        LocaleChangerComponent,
+        RouterLink,
     ]
 })
 export class ProfileComponent implements OnInit {
@@ -35,6 +36,8 @@ export class ProfileComponent implements OnInit {
 
     public profile: Profile | null = null;
     private _user: User | null = null;
+
+    public errorConfirmEmail: boolean = false;
 
     constructor(
         private _snackBar: MatSnackBar
@@ -51,13 +54,9 @@ export class ProfileComponent implements OnInit {
             if (profile) {
                 this.profile = profile;
             }
-
-            // if (isFirstTime) {
-            //     this._displaySnackbar('Bienvenido a tu perfil! Disfruta de la partida.');
-            // }
         } else {
-            alert('Credenciales inválidas. Por favor, inicie sesión nuevamente.');
-            this._router.navigate(['']);
+            this._displaySnackbar('Ha ocurrido un error al intentar obtener la información del perfil. Por favor, vuelva a iniciar sesión.');
+            this.errorConfirmEmail = true;
         }
 
         this._loaderService.setLoading(false);
