@@ -51,7 +51,10 @@ export class ProfileComponent implements OnInit {
             if (profile) {
                 this.profile = profile;
             }
-              this._displaySnackbar('Bienvenido a tu perfil! Disfruta de la partida.');
+
+            // if (isFirstTime) {
+            //     this._displaySnackbar('Bienvenido a tu perfil! Disfruta de la partida.');
+            // }
         } else {
             alert('Credenciales inválidas. Por favor, inicie sesión nuevamente.');
             this._router.navigate(['']);

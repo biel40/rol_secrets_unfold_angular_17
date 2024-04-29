@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { AvailableLangs, LangDefinition, TranslocoService } from '@jsverse/transloco';
 import { TranslocoModule } from '@ngneat/transloco';
 import { Subscription, take } from 'rxjs';
+import { MaterialModule } from '../../modules/material.module';
 
 @Component({
     selector: 'app-locale-changer',
@@ -15,7 +16,8 @@ import { Subscription, take } from 'rxjs';
         CommonModule,
         RouterModule,
         FormsModule,
-        TranslocoModule
+        TranslocoModule,
+        MaterialModule
     ]
 })
 export class LocaleChangerComponent {
@@ -41,6 +43,7 @@ export class LocaleChangerComponent {
             .pipe(take(1))
             .subscribe(() => {
                 this._translocoService.setActiveLang(lang);
+                localStorage.setItem('lang', lang);
             });
     }
 
@@ -58,6 +61,15 @@ export class LocaleChangerComponent {
             case 'zh': return '中文';
             default: return 'Unknown';
         }
+    }
+
+    public getLocaleFlag(locale: string | LangDefinition): string {
+
+        if (!locale || locale === '') {
+            locale = this.selectedLocale;
+        }
+
+        return `./assets/flags/${locale}.png`;
     }
 
     ngOnDestroy() {

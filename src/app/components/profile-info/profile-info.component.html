@@ -1,14 +1,14 @@
 <div class="profile-wrapper | flex flex-col items-center gap-6 mt-12">
     <div class="flex flex-col items-start gap-5">
-        <h1 class="font-bold text-red-300"> {{profile?.username}}</h1>
-        <p class="!text-xl">{{ 'level' | transloco }} : {{profile?.level}}</p>
-        <p class="!text-xl">{{ 'power' | transloco }} : {{profile?.power}} {{elementEmoji}}</p>
-        <p class="!text-xl">{{ 'class' | transloco }} :  {{profile?.clase}} {{classEmoji}}</p>
-        <p class="text-xl">{{ 'weapon' | transloco }} : {{profile?.weapon}} </p>
+        <h1 class="font-bold text-red-300"> {{ profile?.username }}</h1>
+        <p class="!text-xl">{{ 'level' | transloco }} : {{ profile?.level }}</p>
+        <p class="!text-xl">{{ 'power' | transloco }} : {{ profile?.power }} {{ elementEmoji }}</p>
+        <p class="!text-xl">{{ 'class' | transloco }} :  {{ profile?.clase }} {{ classEmoji }}</p>
+        <p class="text-xl">{{ 'weapon' | transloco }} : {{ profile?.weapon }} </p>
     </div>
 
     <div>
-        <button>
+        <button [routerLink]="['/profile-edit']">
             <a [routerLink]="['/profile-edit']"> {{ 'edit-profile' | transloco }} </a>
         </button>
     </div>

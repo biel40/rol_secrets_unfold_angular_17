@@ -64,12 +64,34 @@ export class ProfileEditComponent implements OnInit {
         this._loaderService.setLoading(false);
     }
 
-    public updateProfile() : void {
-        const { username, clase, power, level, weapon } = this.updateProfileForm.value;
+    public async updateProfile() : Promise<void> {
+        this._loaderService.setLoading(true);
 
-        if (this.profile) {
-            
+        const username = this.updateProfileForm.value.username as string;
+        const clase = this.updateProfileForm.value.clase as string;
+        const power = this.updateProfileForm.value.power as string;
+        const level = this.updateProfileForm.value.level as number;
+        const weapon = this.updateProfileForm.value.weapon as string;
+
+        if (this.user) {
+            await this._supabaseService.updateProfile({
+                id: this.user?.id,
+                username,
+                clase, 
+                power,
+                level,
+                weapon
+            });
+
+
+            this._loaderService.setLoading(false);
+
+            this._router.navigate(['profile']);
         }
+    }
+
+    public goBack() : void {
+        this._router.navigate(['profile']);
     }
 
     ngOnChanges() : void {

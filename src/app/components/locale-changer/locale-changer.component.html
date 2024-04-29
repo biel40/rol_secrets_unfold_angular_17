@@ -1,7 +1,12 @@
-<div>
-    <select [(ngModel)]="selectedLocale" (change)="changeLocale()">
+<div class="flex">         
+    <mat-select class="w-28 mr-5" [(ngModel)]="selectedLocale" (ngModelChange)="changeLocale()" >
         @for (locale of locales; track $index) {
-            <option [value]="locale">{{ getLocaleText(locale) }}</option>
+            <mat-option [value]="locale" class="w-full" >
+                <img src="{{ getLocaleFlag(locale) }}" alt="{{ locale }}" class="w-6 h-6 m">
+                {{ getLocaleText(locale) }}
+            </mat-option>
         }
-    </select>
+    </mat-select>
+
+    <img src="{{ getLocaleFlag(this.selectedLocale) }}" alt="{{ selectedLocale}}" class="w-6 h-6">
 </div>

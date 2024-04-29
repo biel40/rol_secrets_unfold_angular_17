@@ -64,6 +64,8 @@ export class ProfileInfoComponent implements OnInit {
             this.classEmoji = '🧙';
         } else if (this.profile?.clase.toUpperCase() == 'SACERDOTE') {
             this.classEmoji = '⛪';
+        } else if (this.profile?.clase.toUpperCase() == 'ARQUERO') {
+            this.classEmoji = '🏹';
         }
     }
 
