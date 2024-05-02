@@ -5,6 +5,8 @@ import { LoaderService } from '../../services/loader/loader.service';
 import { Hability, Profile, SupabaseService } from '../../services/supabase/supabase.service';
 import { Router } from '@angular/router';
 import { User } from '@supabase/supabase-js';
+import { MatDialog } from '@angular/material/dialog';
+import { DiceMatDialogComponent } from '../dialogs/dice-mat-dialog.component';
 
 @Component({
     selector: 'app-habilities',
@@ -22,12 +24,14 @@ export class HabilitiesComponent implements OnInit {
     private _supabaseService: SupabaseService = inject(SupabaseService);
     private _router = inject(Router);
 
+    public animateDice: boolean = false;
+
     public user: User | null = null;
     @Input() public profile: Profile | null = null;
 
     public userHabilities: Hability[] = [];
 
-    constructor() { }
+    constructor(public dialog: MatDialog) { }
 
     async ngOnInit(): Promise<void> {
         this._loaderService.setLoading(true);
@@ -49,15 +53,37 @@ export class HabilitiesComponent implements OnInit {
     }
 
     public addUses(hability: Hability) {
-        
+        if (hability) {
+            hability.current_uses++;
+            this._supabaseService.updateHability(hability);
+        }
     }
 
     public removeUses(hability: Hability) {
-        
+        if (hability) {
+            hability.current_uses--;
+            this._supabaseService.updateHability(hability);
+        }
     }
 
-    public calculateDamage(hability: Hability) {
-        
+    public calculateDamage(hability: Hability): any {
+        if (hability) {
+            this.openDialog(hability);
+        }
+    }
+
+    public openDialog(hability: Hability): void {
+        const dialogRef = this.dialog.open(DiceMatDialogComponent, {
+            data: { 
+                hability: hability
+            },
+            width: '500px',
+            height: '400px'
+        });
+    
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('The dialog was closed');
+        });
     }
 
 }

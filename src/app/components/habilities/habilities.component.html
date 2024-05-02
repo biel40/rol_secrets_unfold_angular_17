@@ -1,5 +1,5 @@
 @if (userHabilities) {
-<div class="gap-4 mt-8">
+<div class="gap-2 mt-8">
     <div class="attack-container">
         <ul class="tilesWrap | gap-4">
             @for (hability of userHabilities; track $index) {
@@ -32,7 +32,7 @@
     </div>
 </div>
 } @else {
-<div>
-    <h3> No tienes habilidades asignadas de momento. </h3>
-</div>
+    <div>
+        <h3> No tienes habilidades asignadas por el momento. </h3>
+    </div>
 }

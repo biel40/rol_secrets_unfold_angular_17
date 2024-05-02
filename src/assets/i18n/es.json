@@ -15,5 +15,6 @@
     "edit-profile": "Editar perfil",
     "update-profile": "Actualizar perfil",
     "error-confirm-email": "Por favor, verifica tu correo electrónico antes de continuar a la partida!",
-    "go-back": "Volver atrás"
+    "go-back": "Volver atrás",
+    "close": "Cerrar"
 }

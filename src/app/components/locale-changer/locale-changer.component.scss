@@ -1,0 +1,11 @@
+/* Ajuste del ícono de flecha */
+::ng-deep.mat-mdc-select-arrow {
+    margin-left: 0.4em;
+    margin-right: 0.7em;
+}
+
+/* Ajuste del tamaño del recuadro del selector */
+::ng-deep .mat-select-value {
+    padding: 4em;
+    margin: 4em;
+}

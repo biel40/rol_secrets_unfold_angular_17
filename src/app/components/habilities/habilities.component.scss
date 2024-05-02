@@ -45,16 +45,3 @@ button:hover {
     background-color: blanchedalmond;
     color: black;
 }
-
-/* Animación para el dado */
-.example-button-container button {
-    transition: transform 0.3s;
-}
-
-.example-button-container button:hover {
-    transform: scale(1.1);
-}
-
-.example-button-container button:active {
-    transform: scale(0.9);
-}

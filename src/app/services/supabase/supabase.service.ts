@@ -113,16 +113,15 @@ export class SupabaseService {
   }
 
   // Function to update only one hability
-  async updateHability(hability: Hability) {
+  public async updateHability(hability: Hability) : Promise<void> {
     try {
-      let { data: habilityUpdated, error } = await this.supabase
+      await this.supabase
       .from('habilities')
       .upsert(hability)
       .select('*');
 
-      return error ? error : habilityUpdated;
     } catch(error) {
-      return error;
+      console.error(error);
     }
   }
 
