@@ -82,9 +82,6 @@ export class DiceMatDialogComponent implements OnInit {
 
             if (this.profile && this.profile.attack != undefined && this.hability.scales_with === 'attack') {
 
-                console.log('this.profile.attack', this.profile.attack);
-                console.log('Dice number', this.diceNumber);
-
                 damage = (this.diceNumber) + (this.profile.attack);
 
                 if (

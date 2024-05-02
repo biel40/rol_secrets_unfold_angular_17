@@ -54,6 +54,11 @@ export class HabilitiesComponent implements OnInit {
 
     public addUses(hability: Hability) {
         if (hability) {
+
+            if (hability.current_uses >= hability.total_uses) {
+                return;
+            }
+
             hability.current_uses++;
             this._supabaseService.updateHability(hability);
         }
@@ -61,13 +66,25 @@ export class HabilitiesComponent implements OnInit {
 
     public removeUses(hability: Hability) {
         if (hability) {
+
+            if (hability.current_uses == 0) {
+                return;
+            }
+
             hability.current_uses--;
+
             this._supabaseService.updateHability(hability);
         }
     }
 
     public calculateDamage(hability: Hability): any {
         if (hability) {
+
+            if (hability.current_uses <= 0) {
+                alert('No tienes más usos disponibles para esta habilidad.');
+                return;
+            }
+
             this.openDialog(hability);
         }
     }
@@ -78,7 +95,7 @@ export class HabilitiesComponent implements OnInit {
                 hability: hability
             },
             width: '500px',
-            height: '400px'
+            height: '500px'
         });
     
         dialogRef.afterClosed().subscribe(result => {

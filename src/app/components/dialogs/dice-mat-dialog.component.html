@@ -1,5 +1,5 @@
 <div class="dice-wrapper | mt-8">
-    <div class="dice">
+    <div class="dice | flex items-center">
         <ol class="die-list even-roll" data-roll="1" id="die-1">
             <li class="die-item" data-side="1">
                 <span class="dot"></span>
@@ -38,10 +38,29 @@
     </div>
 
     <div class="flex flex-col items-center justify-start mt-4">
-        <p> Daño causado </p>
-        <p> {{ damage }} </p>
+        <p> Valor del dado: {{ diceNumber }} </p>
 
-        <button (click)="closeDialog()">
+        <h2> BONIFICADORES </h2>
+
+        @if (hability?.scales_with === 'attack') {
+            <p> Daño del personaje (ataque): +{{profile?.attack }} </p>
+
+            @if (profile?.clase === 'Guerrero') {
+                <p> Bonificador de daño por clase (Guerrero): +2 </p>
+            } @else if (profile?.clase === 'Pícaro') {
+                <p> Bonificador de daño por clase (Pícaro): +1 </p>
+            }
+
+        } @else if (hability?.scales_with === 'special_attack'){
+            <p> Daño del personaje (ataque especial): +{{profile?.special_attack }} </p>
+        }
+       
+        @if (hability?.scales_with === 'attack' && profile?.weapon === 'Espada' ) {
+            <p> Bonificador de daño por arma equipada (Espada) : +2 </p>
+        }
+        <p> TOTAL causado: {{ damage }} </p>
+
+        <button class="mt.2" (click)="closeDialog()">
             {{ 'close' | transloco }}
         </button>
     </div>
