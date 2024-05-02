@@ -47,16 +47,21 @@ export class ProfileComponent implements OnInit {
 
     async ngOnInit(): Promise<void> {
         this._loaderService.setLoading(true);
-        
+
         if (this._user) {
             let profile = (await this._supabaseService.getProfileInfo(this._user.id)).data;
 
             if (profile) {
                 this.profile = profile;
             }
+
+            if (this._user.email && !this._user.email_confirmed_at) {
+                this.errorConfirmEmail = true;
+                this._displaySnackbar('Por favor, confirma tu correo electrónico para poder acceder a todas las funcionalidades de la aplicación.');
+            }
         } else {
-            this._displaySnackbar('Ha ocurrido un error al intentar obtener la información del perfil. Por favor, vuelva a iniciar sesión.');
-            this.errorConfirmEmail = true;
+            this._displaySnackbar('No se ha podido cargar el perfil. Por favor, vuelve a iniciar sesión.');
+            this._router.navigate(['']);
         }
 
         this._loaderService.setLoading(false);
@@ -74,14 +79,19 @@ export class ProfileComponent implements OnInit {
         }, 500);
     }
 
-    private _displaySnackbar(message: string) : void {
+    private _displaySnackbar(message: string): void {
         this._snackBar.open(message, 'Cerrar', {
-          duration: 4000,
+            duration: 4000,
         });
-      }
-    
-      public ngOnDestroy(): void {
+    }
+
+    public ngOnDestroy(): void {
         this._loaderService.setLoading(false);
-      }
+    }
+
+    public goBack(): void {
+        this._supabaseService.signOut();
+        this._router.navigate(['']);
+    }
 
 }

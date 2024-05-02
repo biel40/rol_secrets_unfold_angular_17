@@ -137,7 +137,7 @@ export class SupabaseService {
     });
   }
 
-  signOut() {
+  public signOut() : any {
     return this.supabase.auth.signOut()
   }
 

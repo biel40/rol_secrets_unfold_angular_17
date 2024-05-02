@@ -30,8 +30,8 @@
 @if (errorConfirmEmail) {
     <div class="flex flex-col items-center justify-center h-full w-full mt-4">
         <h1 class="">{{ 'error-confirm-email' | transloco }}</h1>
-        <button [routerLink]="['']">
-            <a [routerLink]="['']"> {{ 'go-back' | transloco }} </a>
+        <button (click)="goBack()" >
+            <p> {{ 'go-back' | transloco }} </p>
         </button>
     </div>
 }

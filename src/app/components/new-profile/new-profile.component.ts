@@ -24,7 +24,6 @@ export class NewProfileComponent implements OnInit {
 
     public async signOut() {
         await this._supabaseService.signOut();
-
         this._router.navigate(['']);
     }
 }
