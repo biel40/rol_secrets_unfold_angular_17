@@ -48,8 +48,6 @@ export class AdminComponent implements OnInit {
 
     private async _loadData(): Promise<void> {
         this.enemiesList = (await this._supabaseService.getEnemies()).data as Enemy[];
-
-        console.log('enemies List from SUpabase DB: ', this.enemiesList);
     }
 
     public async deleteEnemy(enemy: Enemy): Promise<void> {
@@ -84,7 +82,7 @@ export class AdminComponent implements OnInit {
         this.battleChannel.send({
             type: 'broadcast',
             event: 'test',
-            payload: { message: 'start' },
+            payload: { message: 'start', enemies: this.enemiesListToStartBattle},
         });
     }
 

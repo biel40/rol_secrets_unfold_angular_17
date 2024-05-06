@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core'
-import { SupabaseService } from './services/supabase/supabase.service'
+import { Enemy, SupabaseService } from './services/supabase/supabase.service'
 import { RouterOutlet } from '@angular/router';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { TranslocoService } from '@jsverse/transloco';
@@ -24,6 +24,7 @@ export class AppComponent implements OnInit {
   
   public battleStarted: boolean = false;
   public battleChannel: RealtimeChannel | null = null;
+  public enemiesOfBattle: Enemy[] = [];
 
   constructor(
     
@@ -50,9 +51,11 @@ export class AppComponent implements OnInit {
     console.log('Message received: ', payload);
     this.battleStarted = true;
 
-
-    //TODO: Mejorar esto e incorporar un modal
-    alert('Empieza el combate!!!');
+    if (payload.payload.enemies && payload.payload.enemies.length > 0) {
+      this.enemiesOfBattle = payload.payload.enemies;
+      alert('¡Empieza un combate! Los enemigos son: ' + this.enemiesOfBattle.map(enemy => enemy.name).join(', '));
+    }
+    
   }
 
   private async _loadData(): Promise<void> {
