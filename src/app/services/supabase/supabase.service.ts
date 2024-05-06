@@ -3,6 +3,7 @@ import {
   AuthChangeEvent,
   AuthSession,
   createClient,
+  RealtimeChannel,
   Session,
   SupabaseClient,
   User,
@@ -39,6 +40,17 @@ export interface Hability {
   current_uses: number
   dice: string
   scales_with: string
+}
+
+export interface Enemy {
+  id: string,
+  name: string,
+  level: number,
+  description: string,
+  current_hp: number,
+  total_hp: number,
+  is_boss: boolean,
+  image_url: string
 }
 
 @Injectable({
@@ -180,14 +192,27 @@ export class SupabaseService {
     return await this.supabase
     .from('profiles')
     .insert(profile)
-    .select()
+    .select();
   }
 
   async upsertProfile(profile: Profile) {
     return await this.supabase
     .from('profiles')
     .upsert(profile)
-    .select()
+    .select();
   }
+
+  public async getEnemies() {
+    return await this.supabase
+    .from('enemies')
+    .select('*');
+  }
+
+  public async getBroadcastBattleChannel() : Promise<RealtimeChannel> {
+    const channel = this.supabase.channel('battle-channel-room');
+
+    return channel;
+  }
+
 
 }

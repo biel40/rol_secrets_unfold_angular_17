@@ -85,7 +85,13 @@ export class AuthComponent implements OnInit, OnDestroy {
           this.user = user.data.user;
           this._userService.setUser(this.user);
           this._loaderService.setLoading(true);
-          this._router.navigate(['profile']);
+
+          if (this.user && this.user.email && this.user.email_confirmed_at && this.user.email === "dmthesecretsunfold@gmail.com") {
+            this._displaySnackbar('Entrando con perfil de administrador.');
+            this._router.navigate(['admin']);
+          } else {
+            this._router.navigate(['profile']);
+          }
         }
       }
     } catch (error) {

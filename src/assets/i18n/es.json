@@ -16,5 +16,6 @@
     "update-profile": "Actualizar perfil",
     "error-confirm-email": "Por favor, verifica tu correo electrónico antes de continuar a la partida!",
     "go-back": "Volver atrás",
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "edit-stats": "Editar estadísticas"
 }

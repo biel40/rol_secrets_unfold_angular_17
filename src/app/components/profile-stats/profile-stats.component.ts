@@ -6,6 +6,7 @@ import { LoaderService } from '../../services/loader/loader.service';
 import { User } from '@supabase/supabase-js';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
     selector: 'app-profile-stats',
@@ -14,6 +15,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     standalone: true,
     imports: [
         MaterialModule,
+        TranslocoModule
     ]
 })
 export class ProfileStatsComponent implements OnInit {
@@ -58,8 +60,11 @@ export class ProfileStatsComponent implements OnInit {
         ];
     }
 
+    public goToEditStats(): void {
+        this._router.navigate(['profile-stats-edit']);
+    }
+
     private _displaySnackbar(message: string) {
-        // Le damos margen abajo
         this._snackBar.open(message, 'Cerrar', {
             duration: 5000,
             verticalPosition: 'bottom'

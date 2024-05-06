@@ -1,0 +1,53 @@
+<div class="flex flex-col mt-4 h-full w-full items-center justify-center">
+    <h1> Perfil de Admin: DM </h1>
+
+    @if (enemiesList && enemiesList.length > 0) {
+        @for (enemy of enemiesListToStartBattle; track $index) {
+            <div>
+                <h2> Enemigos preparados para el combate: </h2>
+                <ul>
+                    <li>
+                        <p> {{ enemy.name }} </p>
+                    </li>
+                </ul>
+            </div>
+        }
+    }
+
+    <div class="flex flex-row m-5">
+        <button (click)="startBattle()">
+            Empezar el combate!
+        </button>
+    </div>
+
+    <p>Listado de enemigos disponibles: </p>
+
+    @if (enemiesList && enemiesList.length > 0) {
+        @for (enemy of enemiesList; track $index) {
+            <mat-card class="mt-4 md:w-1/3 w-3/4">
+                <mat-card-header>
+                    <div mat-card-avatar class="example-header-image"></div>
+                    <mat-card-title> {{ enemy.name }} </mat-card-title>
+                    <mat-card-subtitle>  </mat-card-subtitle>
+                </mat-card-header>
+                <img mat-card-image class="m-4" [src]="enemy.image_url" alt="Photo of a Shiba Inu">
+                <mat-card-content>
+                    <p>
+                        {{ enemy.description }}
+                    </p>
+                </mat-card-content>
+                <mat-card-actions class="flex flex-row m-4">
+                    <button class="ml-4" mat-button (click)="addEnemyToBattle(enemy)"> Añadir </button>
+                    <button class="ml-4" mat-button> Eliminar </button>
+                </mat-card-actions>
+            </mat-card>
+        }
+    }
+
+    <div class="mt-8">
+        <button (click)="signOut()">
+            Cerrar sesión
+        </button>
+    </div>
+
+</div>

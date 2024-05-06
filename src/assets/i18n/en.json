@@ -16,5 +16,6 @@
     "update-profile": "Update profile",
     "error-confirm-email": "You must confirm your email before you can log in to your profile!.",
     "go-back": "Go back",
-    "close": "Close"
+    "close": "Close",
+    "edit-stats": "Edit stats"
 }

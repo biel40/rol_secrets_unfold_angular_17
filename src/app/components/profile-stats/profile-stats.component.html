@@ -29,4 +29,8 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </mat-table>
+
+    <div class="mt-8 flex flex-col items-center">
+        <button class="hover:cursor-pointer" (click)="goToEditStats()" >{{ 'edit-stats' | transloco }}</button>
+    </div>
 </div>

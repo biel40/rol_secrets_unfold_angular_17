@@ -3,6 +3,7 @@ import { SupabaseService } from './services/supabase/supabase.service'
 import { RouterOutlet } from '@angular/router';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { TranslocoService } from '@jsverse/transloco';
+import { RealtimeChannel } from '@supabase/supabase-js';
 
 @Component({
   selector: 'app-root',
@@ -19,9 +20,11 @@ export class AppComponent implements OnInit {
   private _translocoService: TranslocoService = inject(TranslocoService);
 
   public session: any;
-
-  private supabase = inject(SupabaseService);
+  private _supabaseService = inject(SupabaseService);
   
+  public battleStarted: boolean = false;
+  public battleChannel: RealtimeChannel | null = null;
+
   constructor(
     
   ) {
@@ -34,11 +37,30 @@ export class AppComponent implements OnInit {
     }
   }
 
-  async ngOnInit() {
-    await this.supabase.getSession().then((session) => {
+  public async ngOnInit() {
+    await this._supabaseService.getSession().then((session) => {
       this.session = session;
     });
     
-    this.supabase.authChanges((_, session) => (this.session = session));
+    this._supabaseService.authChanges((_, session) => (this.session = session));
+    this._loadData();
   }
+
+  public messageReceived(payload: any) {
+    console.log('Message received: ', payload);
+    this.battleStarted = true;
+
+
+    //TODO: Mejorar esto e incorporar un modal
+    alert('Empieza el combate!!!');
+  }
+
+  private async _loadData(): Promise<void> {
+    this.battleChannel = await this._supabaseService.getBroadcastBattleChannel();
+
+    this.battleChannel.on( 'broadcast', { event: 'test' }, (payload) => this.messageReceived(payload))
+      .subscribe()
+  }
+
+
 }
