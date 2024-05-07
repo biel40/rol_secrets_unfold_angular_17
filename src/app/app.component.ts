@@ -53,6 +53,7 @@ export class AppComponent implements OnInit {
 
     if (payload.payload.enemies && payload.payload.enemies.length > 0) {
       this.enemiesOfBattle = payload.payload.enemies;
+      
       alert('¡Empieza un combate! Los enemigos son: ' + this.enemiesOfBattle.map(enemy => enemy.name).join(', '));
     }
     
