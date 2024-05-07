@@ -94,7 +94,6 @@ export class AuthComponent implements OnInit, OnDestroy {
           }
 
           // Exception for Bea User
-
           if (this.user && this.user.email == 'bmhvoramar@gmail.com') {
             this._router.navigate(['profile']);
           }
