@@ -1,5 +1,5 @@
 <div class="flex flex-col mt-4 h-full w-full items-center justify-center">
-    <h1> Perfil de Admin: DM </h1>
+    <h1 class="mt-4"> Perfil de Admin: DM </h1>
 
     @if (enemiesList && enemiesList.length > 0) {
         @for (enemy of enemiesListToStartBattle; track $index) {
@@ -16,11 +16,11 @@
 
     <div class="flex flex-row m-5">
         <button (click)="startBattle()">
-            Empezar el combate!
+            {{ 'begin-battle' | transloco }}
         </button>
     </div>
 
-    <p>Listado de enemigos disponibles: </p>
+    <p> Listado de enemigos disponibles : </p>
 
     @if (enemiesList && enemiesList.length > 0) {
         @for (enemy of enemiesList; track $index) {
@@ -30,23 +30,30 @@
                     <mat-card-title> {{ enemy.name }} </mat-card-title>
                     <mat-card-subtitle>  </mat-card-subtitle>
                 </mat-card-header>
-                <img mat-card-image class="m-4" [src]="enemy.image_url" alt="Photo of a Shiba Inu">
+                <img mat-card-image class="m-4" [src]="enemy.image_url" alt="photo of enemy">
                 <mat-card-content>
                     <p>
                         {{ enemy.description }}
                     </p>
                 </mat-card-content>
+                <mat-card-content>
+                    <p>
+                        {{ 'level' | transloco }} : {{ enemy.level }}
+                    </p>
+                </mat-card-content>
                 <mat-card-actions class="flex flex-row m-4">
-                    <button class="ml-4" mat-button (click)="addEnemyToBattle(enemy)"> Añadir </button>
-                    <button class="ml-4" mat-button> Eliminar </button>
+                    <button class="ml-4" mat-button (click)="addEnemyToBattle(enemy)"> {{ 'add' | transloco }} </button>
+                    <button class="ml-4" mat-button> {{ 'delete' | transloco }} </button>
                 </mat-card-actions>
             </mat-card>
         }
     }
 
-    <div class="mt-8">
+    <app-locale-changer class="mt-6"></app-locale-changer>
+
+    <div class="mt-8 mb-8">
         <button (click)="signOut()">
-            Cerrar sesión
+            {{ 'sign-out' | transloco }}
         </button>
     </div>
 

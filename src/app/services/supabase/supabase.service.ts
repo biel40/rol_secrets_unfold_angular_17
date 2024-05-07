@@ -58,24 +58,24 @@ export interface Enemy {
 })
 export class SupabaseService {
 
-  private supabase: SupabaseClient;
+  private _supabaseClient: SupabaseClient;
   public _session: AuthSession | null = null;
 
   constructor() {
-    this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey)
+    this._supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey)
   }
 
-  async getSession() {
+  public async getSession() {
     if (!this._session) {
-      const { data } = await this.supabase.auth.getSession();
+      const { data } = await this._supabaseClient.auth.getSession();
       this._session = data.session;
     }
     return this._session;
   }
-  
 
-  profile(user: User) {
-    return this.supabase
+
+  public profile(user: User) {
+    return this._supabaseClient
       .from('profiles')
       .select(`username, clase, power, level, weapon, current_hp, total_hp, attack, defense, special_attack, special_defense, speed, current_experience`)
       .eq('id', user.id)
@@ -83,23 +83,23 @@ export class SupabaseService {
   }
 
   public async getProfileInfo(userId: string) {
-    return this.supabase
+    return this._supabaseClient
       .from('profiles')
       .select(`username, clase, power, level, weapon, current_hp, total_hp, attack, defense, special_attack, special_defense, speed, current_experience`)
       .eq('id', userId)
       .single()
   }
 
-  async getAllHabilities() {
-    let { data: habilities, error } = await this.supabase
+  public async getAllHabilities() {
+    let { data: habilities, error } = await this._supabaseClient
       .from('habilities')
       .select('*');
       
     return error ? error : habilities;
   }
 
-  async getHabilitiesFromUser(profile: Profile) : Promise<Hability[]> {
-    let { data: habilities, error } = await this.supabase
+  public async getHabilitiesFromUser(profile: Profile) : Promise<Hability[]> {
+    let { data: habilities, error } = await this._supabaseClient
     .from('habilities')
     .select('*')
     .lte("level", profile.level)
@@ -110,10 +110,10 @@ export class SupabaseService {
     return habilities ? habilities : [];
   } 
 
-  // Function to update user's habilities
-  async updateHabilities(habilities: Hability[]) {
+  // Function to update User's habilities
+  public async updateHabilities(habilities: Hability[]) {
     try {
-      let { data: habilitiesUpdated, error } = await this.supabase
+      let { data: habilitiesUpdated, error } = await this._supabaseClient
       .from('habilities')
       .upsert(habilities)
       .select('*');
@@ -127,7 +127,7 @@ export class SupabaseService {
   // Function to update only one hability
   public async updateHability(hability: Hability) : Promise<void> {
     try {
-      await this.supabase
+      await this._supabaseClient
       .from('habilities')
       .upsert(hability)
       .select('*');
@@ -138,78 +138,78 @@ export class SupabaseService {
   }
 
   authChanges(callback: (event: AuthChangeEvent, session: Session | null) => void) {
-    return this.supabase.auth.onAuthStateChange(callback)
+    return this._supabaseClient.auth.onAuthStateChange(callback)
   }
 
-  signIn(email: string, password: string) {
-    return this.supabase.auth.signInWithPassword({
+  public signIn(email: string, password: string) {
+    return this._supabaseClient.auth.signInWithPassword({
       email: email,
       password: password,
     });
   }
 
   public signOut() : any {
-    return this.supabase.auth.signOut()
+    return this._supabaseClient.auth.signOut()
   }
 
   // Had to fix this manually to work
-  async updateProfile(profile: Profile) {
+  public async updateProfile(profile: Profile) {
 
     const update = {
       ...profile,
       updated_at: new Date(),
     }
 
-    return await this.supabase
+    return await this._supabaseClient
     .from('profiles')
     .upsert(update)
     .select()
   }
 
 
-  async updateProfileStats(profile: Profile) {
+  public async updateProfileStats(profile: Profile) {
       
       const update = {
         ...profile,
         updated_at: new Date(),
       }
   
-      return await this.supabase
+      return await this._supabaseClient
       .from('profiles')
       .upsert(update)
       .select(`current_hp, total_hp, attack, defense, special_attack, special_defense, speed, current_experience`)
   }
   
 
-  async signUp(email: string, password: string) {
-    return await this.supabase.auth.signUp({
+  public async signUp(email: string, password: string) {
+    return await this._supabaseClient.auth.signUp({
       email: email,
       password: password,
     });
   }
 
-  async insertProfile(profile: Profile) {
-    return await this.supabase
+  public async insertProfile(profile: Profile) {
+    return await this._supabaseClient
     .from('profiles')
     .insert(profile)
     .select();
   }
 
-  async upsertProfile(profile: Profile) {
-    return await this.supabase
+  public async upsertProfile(profile: Profile) {
+    return await this._supabaseClient
     .from('profiles')
     .upsert(profile)
     .select();
   }
 
   public async getEnemies() {
-    return await this.supabase
+    return await this._supabaseClient
     .from('enemies')
     .select('*');
   }
 
   public async getBroadcastBattleChannel() : Promise<RealtimeChannel> {
-    const channel = this.supabase.channel('battle-channel-room');
+    const channel = this._supabaseClient.channel('battle-channel-room');
 
     return channel;
   }

@@ -17,5 +17,8 @@
     "error-confirm-email": "You must confirm your email before you can log in to your profile!.",
     "go-back": "Go back",
     "close": "Close",
-    "edit-stats": "Edit stats"
+    "edit-stats": "Edit stats",
+    "begin-battle": "Begin battle!",
+    "add": "Add",
+    "delete": "Delete"
 }

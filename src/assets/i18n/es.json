@@ -17,5 +17,8 @@
     "error-confirm-email": "Por favor, verifica tu correo electrónico antes de continuar a la partida!",
     "go-back": "Volver atrás",
     "close": "Cerrar",
-    "edit-stats": "Editar estadísticas"
+    "edit-stats": "Editar estadísticas",
+    "begin-battle": "¡Empezar el combate!",
+    "add": "Añadir",
+    "delete": "Eliminar"
 }

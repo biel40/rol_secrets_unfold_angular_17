@@ -7,10 +7,10 @@ import { ProfileStatsEditComponent } from './components/profile-stats-edit/profi
 import { AdminComponent } from './components/admin/admin-component/admin.component';
 
 export const routes: Routes = [
-    { path: '', component: AuthComponent },
-    { path: 'admin', component: AdminComponent },
-    { path: 'profile', component: ProfileComponent },
-    { path: 'profile-edit', component: ProfileEditComponent },
-    { path: 'new-profile', component: NewProfileComponent },
-    { path: 'profile-stats-edit', component: ProfileStatsEditComponent }
-  ];
+  { path: '', component: AuthComponent },
+  { path: 'admin', component: AdminComponent },
+  { path: 'profile', component: ProfileComponent },
+  { path: 'profile-edit', component: ProfileEditComponent },
+  { path: 'new-profile', component: NewProfileComponent },
+  { path: 'profile-stats-edit', component: ProfileStatsEditComponent }
+];

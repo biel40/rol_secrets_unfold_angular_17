@@ -5,6 +5,8 @@ import { RealtimeChannel, User } from '@supabase/supabase-js';
 import { MaterialModule } from '../../../modules/material.module';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { TranslocoModule } from '@jsverse/transloco';
+import { LocaleChangerComponent } from '../../locale-changer/locale-changer.component';
 
 @Component({
     selector: 'app-admin',
@@ -12,7 +14,9 @@ import { Router } from '@angular/router';
     styleUrls: ['./admin.component.scss'],
     standalone: true,
     imports: [
-        MaterialModule
+        MaterialModule,
+        TranslocoModule,
+        LocaleChangerComponent
     ]
 })
 export class AdminComponent implements OnInit {
