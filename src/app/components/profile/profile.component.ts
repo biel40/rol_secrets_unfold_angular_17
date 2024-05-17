@@ -11,6 +11,7 @@ import { ProfileStatsComponent } from '../profile-stats/profile-stats.component'
 import { HabilitiesComponent } from '../habilities/habilities.component';
 import { LocaleChangerComponent } from '../locale-changer/locale-changer.component';
 import { TranslocoModule } from '@jsverse/transloco';
+import { CardComponent } from '../card/card.component';
 
 @Component({
     selector: 'app-profile',
@@ -25,6 +26,7 @@ import { TranslocoModule } from '@jsverse/transloco';
         TranslocoModule,
         LocaleChangerComponent,
         RouterLink,
+        CardComponent
     ]
 })
 export class ProfileComponent implements OnInit {

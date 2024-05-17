@@ -1,15 +1,21 @@
-<div class="profile-wrapper | flex flex-col items-center justify-center w-full gap-6 mt-12">
-    <div class="flex flex-col items-start gap-5">
-        <h1 class="font-bold text-red-300"> {{ profile?.username }}</h1>
-        <p class="!text-xl">{{ 'level' | transloco }} : {{ profile?.level }}</p>
-        <p class="!text-xl">{{ 'power' | transloco }} : {{ profile?.power }} {{ elementEmoji }}</p>
-        <p class="!text-xl">{{ 'class' | transloco }} :  {{ profile?.clase }} {{ classEmoji }}</p>
-        <p class="text-xl">{{ 'weapon' | transloco }} : {{ profile?.weapon }} </p>
+<div class="card-front">
+    <div class="card-front__level"><span class="text-black">{{ profile?.level }}</span></div>
+    <h2 class="card-front__title">{{ profile?.username }}</h2>
+    <div class="card-front__image">
+        <img class="image" [src]="imageSrc" alt="Character">
     </div>
-
-    <div>
-        <button [routerLink]="['/profile-edit']">
-            <a [routerLink]="['/profile-edit']"> {{ 'edit-profile' | transloco }} </a>
-        </button>
-    </div>
+    <ul class="card-front__info">
+        <li>
+            <div>Poder</div>
+            <div>{{ profile?.power }}</div>
+        </li>
+        <li>
+            <div>Clase</div>
+            <div>{{ profile?.clase }}</div>
+        </li>
+        <li>
+            <div>Arma</div>
+            <div>{{ profile?.weapon }}</div>
+        </li>
+    </ul>
 </div>

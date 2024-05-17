@@ -1,0 +1,50 @@
+:host {
+    height: 90%;
+    width: 95%;
+    max-width: 400px;
+    perspective: 600px;
+}
+
+.card-wrapper {
+    height: 100%;
+    width: 100%;
+}
+
+.card {
+    margin-top: 4em;
+    height: 100%;
+    width: 100%;
+    border: 2px solid #ffffff80;
+    padding: 20px 20px;
+    border-radius: 4px;
+    background: var(--black);
+    box-shadow: 0 0 10px #ffffff40;
+    transition: transform 1s ease-in-out;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+}
+
+.card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    height: 100%;
+    width: 100%;
+    box-shadow: 0 0 2px 8px rgb(199, 199, 199);
+    border-radius: 4px;
+}
+
+.card--back {
+    transform: rotateY(360deg);
+}
+
+.card.is-flipped {
+    transform: rotateY(180deg);
+}
+
+.card__content {
+    height: 100%;
+    width: 100%;
+}

@@ -1,0 +1,136 @@
+.card-front {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: 100%;
+}
+
+.card-front__level {
+    position: absolute;
+    top: -55px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 0px;
+    background-color: white;
+    color: black;
+    height: 50px;
+    aspect-ratio: 1;
+    color: var(--black);
+    border-radius: 50%;
+    box-shadow:
+        0 0 4px 0 white,
+        0 0 2px var(--black);
+}
+
+.card-front__title {
+    font-size: 28px;
+    text-align: center;
+}
+
+.card-front__title::first-letter {
+    color: var(--accent);
+    text-shadow: 0 0 6px var(--accent);
+    margin-right: 1px;
+}
+
+.card-front__image {
+    height: 50%;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+@media (width > 500px) {
+
+    .card-front__image {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .card-front__image img {
+        height: 100%;
+        width: 30%;
+        object-fit: cover;
+        object-position: top;
+    }
+}
+
+@media (width < 500px) {
+    .card-front__image img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        object-position: top;
+    }
+}
+
+
+.card-front__image svg {
+    border: 1px solid var(--gray);
+    height: 100%;
+    width: 100%;
+    opacity: 0.2;
+}
+
+.card-front__info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    list-style: none;
+    flex: 1;
+    overflow: auto;
+}
+
+.card-front__info li {
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid white;
+    border-radius: 4px;
+}
+
+.card-front__info li div:nth-of-type(1) {
+    position: relative;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    color: var(--gray);
+    background-color: white;
+    color: black;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    width: 40%;
+    font-weight: bold;
+}
+
+.card-front__info li div:nth-of-type(1)::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: white;
+    color: black;
+    height: 100%;
+    width: 20px;
+    transform-origin: bottom left;
+    transform: skew(-18deg, 0deg);
+}
+
+.card-front__info li div:nth-of-type(2) {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    text-align: right;
+    padding: 10px 20px;
+    font-weight: bold;
+}
+
+img {
+    width: 20%;
+    height: 20%;
+}

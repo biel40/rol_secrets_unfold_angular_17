@@ -3,7 +3,7 @@
 
         <mat-tab-group class="justify-start w-4/5">
             <mat-tab label="{{ 'profile' | transloco}}">
-                <app-profile-info [profile]="profile"></app-profile-info>
+                <app-card></app-card>
             </mat-tab>
             <mat-tab class="w-full" label="{{ 'stats' | transloco}}">
                 <app-profile-stats [profile]="profile"></app-profile-stats>
@@ -15,6 +15,12 @@
                 <app-habilities [profile]="profile"></app-habilities>
             </mat-tab>
         </mat-tab-group>
+
+        <div class="flex flex-row items-center justify-center mt-4">
+            <button [routerLink]="['/profile-edit']">
+                <a [routerLink]="['/profile-edit']"> {{ 'edit-profile' | transloco }} </a>
+            </button>
+        </div>
 
         <div class="mt-12">
             <app-locale-changer></app-locale-changer>

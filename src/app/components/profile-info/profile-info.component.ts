@@ -7,6 +7,7 @@ import { User } from '@supabase/supabase-js';
 import { Router, RouterLink } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslocoModule } from '@jsverse/transloco';
+import { NgTiltModule } from '@geometricpanda/angular-tilt';
 
 @Component({
     selector: 'app-profile-info',
@@ -16,7 +17,8 @@ import { TranslocoModule } from '@jsverse/transloco';
     imports: [
         MaterialModule,
         RouterLink,
-        TranslocoModule
+        TranslocoModule,
+        NgTiltModule
     ]
 })
 export class ProfileInfoComponent implements OnInit {
@@ -28,6 +30,7 @@ export class ProfileInfoComponent implements OnInit {
 
     private _user: User | null = null;
 
+    public imageSrc: string = "https://i.pinimg.com/236x/41/04/2a/41042a4b200c7bcefad30cfcd6a98c81.jpg";
     public classEmoji = '👋';
     public elementEmoji = '🔥';
 
@@ -45,7 +48,9 @@ export class ProfileInfoComponent implements OnInit {
         if (!this._user) {
             alert('Credenciales inválidas. Por favor, inicie sesión nuevamente.');
             this._router.navigate(['']);
-        } 
+        } else {
+            this.profile = (await this._supabaseService.getProfileInfo(this._user.id)).data;
+        }
     }
 
     public ngOnChanges() : void {
