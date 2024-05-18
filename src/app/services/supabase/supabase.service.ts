@@ -26,7 +26,8 @@ export interface Profile {
   special_attack?: number,
   special_defense?: number,
   speed?: number,
-  current_experience?: number
+  current_experience?: number,
+  image_url?: string
 }
 
 export interface Hability {
@@ -85,7 +86,7 @@ export class SupabaseService {
   public async getProfileInfo(userId: string) {
     return this._supabaseClient
       .from('profiles')
-      .select(`username, clase, power, level, weapon, current_hp, total_hp, attack, defense, special_attack, special_defense, speed, current_experience`)
+      .select(`username, clase, power, level, weapon, current_hp, total_hp, attack, defense, special_attack, special_defense, speed, current_experience, image_url`)
       .eq('id', userId)
       .single()
   }

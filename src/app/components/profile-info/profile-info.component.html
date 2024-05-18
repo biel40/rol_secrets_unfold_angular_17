@@ -2,7 +2,7 @@
     <div class="card-front__level"><span class="text-black">{{ profile?.level }}</span></div>
     <h2 class="card-front__title">{{ profile?.username }}</h2>
     <div class="card-front__image">
-        <img class="image" [src]="imageSrc" alt="Character">
+        <img class="image" [src]="profile?.image_url" alt="Character">
     </div>
     <ul class="card-front__info">
         <li>
