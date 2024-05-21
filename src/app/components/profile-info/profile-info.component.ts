@@ -30,7 +30,7 @@ export class ProfileInfoComponent implements OnInit {
 
     private _user: User | null = null;
 
-    public imageSrc: string = "https://i.pinimg.com/236x/41/04/2a/41042a4b200c7bcefad30cfcd6a98c81.jpg";
+    public imageSrc: string = "";
     public classEmoji = '👋';
     public elementEmoji = '🔥';
 
@@ -50,29 +50,19 @@ export class ProfileInfoComponent implements OnInit {
             this._router.navigate(['']);
         } else {
             this.profile = (await this._supabaseService.getProfileInfo(this._user.id)).data;
+
+            // Default profile image
+            if (this.profile && this.profile.image_url == '' || this.profile && this.profile.image_url == null) {
+                this.profile.image_url = 'https://iili.io/Ji7Prrl.jpg';
+            }
         }
     }
 
     public ngOnChanges() : void {
-        this.setClassEmoji();
         this.setElementEmoji();
         this._loaderService.setLoading(false);
     }
 
-    public setClassEmoji() : void {
-        // TODO: Completar
-        console.log('Clase: ', this.profile?.clase);
-
-        if (this.profile?.clase.toUpperCase() == 'GUERRERO') {
-            this.classEmoji = '⚔️';
-        } else if (this.profile?.clase.toUpperCase() == 'MAGO') {
-            this.classEmoji = '🧙';
-        } else if (this.profile?.clase.toUpperCase() == 'SACERDOTE') {
-            this.classEmoji = '⛪';
-        } else if (this.profile?.clase.toUpperCase() == 'ARQUERO') {
-            this.classEmoji = '🏹';
-        }
-    }
 
     public setElementEmoji() : void {
         if (this.profile?.power.toUpperCase() == 'PYRO') {
@@ -87,12 +77,4 @@ export class ProfileInfoComponent implements OnInit {
             this.elementEmoji = '🌍';
         }
     }
-  
-
-    private _displaySnackbar(message: string) {
-        this._snackBar.open(message, 'Cerrar', {
-            duration: 5000
-        });
-    }
-
 }
