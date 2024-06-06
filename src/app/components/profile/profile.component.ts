@@ -12,6 +12,7 @@ import { HabilitiesComponent } from '../habilities/habilities.component';
 import { LocaleChangerComponent } from '../locale-changer/locale-changer.component';
 import { TranslocoModule } from '@jsverse/transloco';
 import { CardComponent } from '../card/card.component';
+import { ProfileInventoryComponent } from '../profile-inventory/profile-inventory.component';
 
 @Component({
     selector: 'app-profile',
@@ -22,6 +23,7 @@ import { CardComponent } from '../card/card.component';
         MaterialModule,
         ProfileInfoComponent,
         ProfileStatsComponent,
+        ProfileInventoryComponent,
         HabilitiesComponent,
         TranslocoModule,
         LocaleChangerComponent,
