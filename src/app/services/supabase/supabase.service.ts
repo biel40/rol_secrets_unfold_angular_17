@@ -54,6 +54,16 @@ export interface Enemy {
   image_url: string
 }
 
+export interface Item {
+  id: string,
+  profile_id: string,
+  name: string,
+  description: string,
+  quantity: number,
+  value: number,
+  img_src: string
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -213,6 +223,13 @@ export class SupabaseService {
     const channel = this._supabaseClient.channel('battle-channel-room');
 
     return channel;
+  }
+
+  public async getItems(userId: string) {
+    return await this._supabaseClient
+    .from('items')
+    .select('*')
+    .eq('profile_id', userId);
   }
 
 }

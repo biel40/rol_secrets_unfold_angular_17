@@ -1,0 +1,27 @@
+
+.inventory {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border: 1px solid white;
+}
+
+.inventory__item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid white;
+    padding: 10px;
+    background-color: var(--black-light);
+}
+
+.inventory__number {
+    top: 0;
+    left: 0px;
+    font-weight: bold;
+    background-color: white;
+    color: var(--black);
+    height: 24px;
+    width: 24px;
+    text-align: center;
+    opacity: 0.8;
+}

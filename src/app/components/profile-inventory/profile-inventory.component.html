@@ -1,3 +1,22 @@
-<div>
-    <h1>INVENTARIOOOOO</h1>
+<div class="mt-8 flex items-center justify-center">
+    <h1>Inventario del jugador</h1>
+</div>
+
+<div class="m-8 flex items-center justify-center">
+    <button>Añadir nuevo objeto al inventario</button>
+</div>
+
+<div class="inventory">
+    @for (item of items; track $index) {
+        <div class="inventory__item">
+            <div class="inventory__item__image">
+                <img src="{{ item.img_src }}" alt="{{ item.name }}">
+            </div>
+            <div class="inventory__item__info">
+                <h2>{{ item.name }}</h2>
+                <p>{{ item.description }}</p>
+                <p>{{ item.price }}</p>
+            </div>
+        </div>
+    }
 </div>

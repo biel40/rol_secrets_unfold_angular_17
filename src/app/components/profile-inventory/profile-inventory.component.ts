@@ -1,6 +1,6 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { MaterialModule } from '../../modules/material.module';
-import { Profile, SupabaseService } from '../../services/supabase/supabase.service';
+import { Item, Profile, SupabaseService } from '../../services/supabase/supabase.service';
 import { UserService } from '../../services/user/user.service';
 import { LoaderService } from '../../services/loader/loader.service';
 import { User } from '@supabase/supabase-js';
@@ -28,8 +28,9 @@ export class ProfileInventoryComponent implements OnInit {
 
     @Input() profile: Profile | null = null;
 
-    public items: any[] = [];
 
+    public items: any[] | null = null;
+        
     constructor(
         private _snackBar: MatSnackBar
     ) {
@@ -43,6 +44,22 @@ export class ProfileInventoryComponent implements OnInit {
             alert('Credenciales inválidas. Por favor, inicie sesión nuevamente.');
             this._router.navigate(['']);
         } 
+
+        this._loadData();
+    }
+
+    private async _loadData(): Promise<void> {
+        this._loaderService.setLoading(true);
+
+        if (this._user) {
+            let response = await this._supabaseService.getItems(this._user.id);
+
+            this.items = response.data;
+
+            console.log('Items fetched:', this.items);
+        }
+
+        this._loaderService.setLoading(false);
     }
 
     ngOnChanges() : void {
