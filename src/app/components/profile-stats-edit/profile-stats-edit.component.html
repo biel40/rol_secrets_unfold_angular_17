@@ -1,19 +1,14 @@
 @if (profile) {
 <div class="arrow-left | absolute top-12 left-7 bg-slate-200 rounded-xl hover:cursor-pointer" (click)="goBack()">
-
+    
 </div>
 
 <div id="editProfileStatsForm" class="form | flex flex-col gap-4 items-center justify-center mt-10 w-full h-full">
 
     <h1> {{ 'edit-stats' | transloco }} </h1>
 
-    <form id="edit-stats-form" [formGroup]="updateProfileStatsForm" (ngSubmit)="updateProfileStats()"
+    <form id="edit-stats-form" [formGroup]="updateProfileStatsForm"
         class="form-widget w-full gap-7 flex flex-col justify-center items-center">
-
-        <mat-form-field>
-            <mat-label> Vida Actual: </mat-label>
-            <input matInput type="number" formControlName="current_hp" required>
-        </mat-form-field>
 
         <mat-form-field>
             <mat-label> Ataque: </mat-label>
@@ -41,7 +36,7 @@
         </mat-form-field>
     </form>
 
-    <button id="submit_button" type="submit" form="edit-form" class="button primary block submit">
+    <button id="submit_button" form="edit-form" class="button primary block submit" (click)="updateProfileStats()">
         {{ 'update-profile' | transloco }}
     </button>
 </div>

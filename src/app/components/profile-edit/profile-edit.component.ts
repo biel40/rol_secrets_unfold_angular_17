@@ -62,9 +62,6 @@ export class ProfileEditComponent implements OnInit {
 
             if (this.profile) {
                 const { username, clase, power, level, weapon } = this.profile;
-        
-                console.log(this.profile)
-                console.log(this.profile.power)
 
                 this.updateProfileForm.patchValue({
                     username,

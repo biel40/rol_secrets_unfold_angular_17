@@ -1,36 +1,24 @@
-<div class="mt-10 w-full mb-12">
-    <mat-table [dataSource]="dataSource" class="mt-2">
-        <ng-container class="mt-2 pt-4" matColumnDef="Ataque">
-            <th mat-header-cell *matHeaderCellDef> Ataque </th>
-            <td mat-cell *matCellDef="let element"> 1 </td>
-        </ng-container>
+<div class="mt-12 w-full mb-12">
+    <div class="flex flex-col items-center">
+        <h1 class="text-2xl font-bold">{{ 'stats of the character' | transloco }} </h1>
+        <div>
+            <table>
+                <thead>
+                    <tr>
 
-        <ng-container matColumnDef="Defensa">
-            <th mat-header-cell *matHeaderCellDef> Defensa </th>
-            <td mat-cell *matCellDef="let element">2</td>
-        </ng-container>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (key of keys; track $index) {
+                    <tr>
+                        <td>{{ key }} : {{ dataSource[0][key] }}</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
 
-        <ng-container matColumnDef="Ataque especial">
-            <th mat-header-cell *matHeaderCellDef> Ataque especial </th>
-            <td mat-cell *matCellDef="let element"> 3 </td>
-        </ng-container>
-
-    
-        <ng-container matColumnDef="Defensa especial">
-            <th mat-header-cell *matHeaderCellDef> Defensa especial </th>
-            <td mat-cell *matCellDef="let element"> 4 </td>
-        </ng-container>
-
-        <ng-container matColumnDef="Velocidad">
-            <th mat-header-cell *matHeaderCellDef> Velocidad </th>
-            <td mat-cell *matCellDef="let element"> 4 </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </mat-table>
-
-    <div class="mt-8 flex flex-col items-center">
-        <button class="hover:cursor-pointer" (click)="goToEditStats()" >{{ 'edit-stats' | transloco }}</button>
+        <div class="mt-8 flex flex-col items-center">
+            <button class="hover:cursor-pointer" (click)="goToEditStats()">{{ 'edit-stats' | transloco }}</button>
+        </div>
     </div>
-</div>

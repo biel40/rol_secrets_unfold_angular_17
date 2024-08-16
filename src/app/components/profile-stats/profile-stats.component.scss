@@ -1,3 +1,4 @@
+/* Pantalla pequeña */
 @media (width < 700px) {
     .mat-mdc-table {
         width: 100% !important;
@@ -12,7 +13,7 @@
         padding: 30px;
         justify-content: center;
         align-items: center;
-        font-family: 'Courier New', Courier, monospace;
+        font-family: "Courier New", Courier, monospace;
         font-size: 1.5em;
     }
 }
@@ -37,5 +38,55 @@
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+}
+
+/* Estilos generales para la tabla */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 1em;
+}
+
+th,
+td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+thead {
+    background-color: #f4f4f4;
+}
+
+tbody tr {
+    transition: background-color 0.3s ease;
+}
+
+
+/* Estilos específicos para móviles */
+@media (max-width: 700px) {
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+
+    thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    tr {
+        margin-bottom: 15px;
+    }
+
+    td {
+        text-align: center;
     }
 }

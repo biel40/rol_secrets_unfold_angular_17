@@ -1,6 +1,5 @@
 @if (profile) {
-    <div class="flex flex-col items-center justify-start w-full h-full mt-4">
-
+    <div class="flex flex-col items-center justify-start w-full h-full mt-10">
         <mat-tab-group class="justify-start w-4/5">
             <mat-tab label="{{ 'profile' | transloco}}">
                 <app-card></app-card>
@@ -25,7 +24,6 @@
         <div class="mt-8">
             <button class="hover:cursor-pointer" (click)="signOut()">{{'signOut' | transloco}}</button>
         </div>
-
     </div>
 }
 

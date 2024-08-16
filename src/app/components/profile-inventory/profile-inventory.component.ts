@@ -55,8 +55,6 @@ export class ProfileInventoryComponent implements OnInit {
             let response = await this._supabaseService.getItems(this._user.id);
 
             this.items = response.data;
-
-            console.log('Items fetched:', this.items);
         }
 
         this._loaderService.setLoading(false);

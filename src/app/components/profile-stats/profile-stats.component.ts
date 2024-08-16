@@ -25,9 +25,11 @@ export class ProfileStatsComponent implements OnInit {
     private _supabaseService: SupabaseService = inject(SupabaseService);
     private _router = inject(Router);
 
+    public keys: string[] = [];
     public dataSource: any[] = [];
     public displayedColumns: string[] = ['Ataque', 'Defensa', 'Ataque especial', 'Defensa especial', 'Velocidad'];
 
+    public isMobile: boolean = false;
     private _user: User | null = null;
 
     @Input() profile: Profile | null = null;
@@ -36,6 +38,7 @@ export class ProfileStatsComponent implements OnInit {
         private _snackBar: MatSnackBar
     ) {
         this._user = this._userService.getUser();
+        this._detectIfMobile();
     }
 
     async ngOnInit(): Promise<void> {
@@ -58,10 +61,18 @@ export class ProfileStatsComponent implements OnInit {
                 'Velocidad': this.profile?.speed
             }
         ];
+
+        this.keys = Object.keys(this.dataSource[0]);
     }
 
     public goToEditStats(): void {
         this._router.navigate(['profile-stats-edit']);
+    }
+
+    private _detectIfMobile() : void {
+        if (window.innerWidth <= 768) {
+            this.isMobile = true;
+        }
     }
 
     private _displaySnackbar(message: string) {

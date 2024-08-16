@@ -54,9 +54,6 @@ export class ProfileStatsEditComponent implements OnInit {
         if (this.profile) {
             const { attack, special_attack, defense, special_defense, speed } = this.profile;
 
-            console.log(this.profile)
-            console.log(this.profile.power)
-
             this.updateProfileStatsForm.patchValue({
                 attack,
                 defense,
@@ -68,7 +65,43 @@ export class ProfileStatsEditComponent implements OnInit {
     }
 
     public async updateProfileStats(): Promise<void> {
+        try {
+            if (!this.user) {
+                alert('Credenciales inválidas. Por favor, inicie sesión nuevamente.');
+                this._router.navigate(['']);
+            }
 
+            if (this.profile) {
+                let id: string = this.profile?.id ? this.profile.id : '';
+
+                let attack: number = this.updateProfileStatsForm.get('attack')?.getRawValue();
+                let defense: number = this.updateProfileStatsForm.get('defense')?.getRawValue();
+                let special_attack: number = this.updateProfileStatsForm.get('special_attack')?.getRawValue();
+                let special_defense: number = this.updateProfileStatsForm.get('special_defense')?.getRawValue();
+                let speed: number = this.updateProfileStatsForm.get('speed')?.getRawValue();
+
+                let profile: Profile = {
+                    id,
+                    clase: this.profile.clase,
+                    level: this.profile.level,
+                    power: this.profile.power,
+                    weapon: this.profile.weapon,
+                    attack,
+                    defense,
+                    special_attack,
+                    special_defense,
+                    speed
+                };
+
+                await this._supabaseService.updateProfileStats(profile);
+                
+                alert('Estadísticas del perfil actualizadas correctamente!');
+
+                this._router.navigate(['profile']);
+            }
+        } catch (error) {
+            console.error('Error updating profile stats:', error);
+        }
     }
 
     public goBack() : void {

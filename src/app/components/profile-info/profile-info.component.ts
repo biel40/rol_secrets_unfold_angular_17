@@ -33,6 +33,7 @@ export class ProfileInfoComponent implements OnInit {
     public imageSrc: string = "";
     public classEmoji = '👋';
     public elementEmoji = '🔥';
+    public weaponEmoji = '🗡️';
 
     @Input() profile: Profile | null = null;
 
@@ -56,15 +57,16 @@ export class ProfileInfoComponent implements OnInit {
                 this.profile.image_url = 'https://iili.io/Ji7Prrl.jpg';
             }
         }
+        this.setElementEmojis();
     }
 
     public ngOnChanges() : void {
-        this.setElementEmoji();
+        this.setElementEmojis();
         this._loaderService.setLoading(false);
     }
 
 
-    public setElementEmoji() : void {
+    public setElementEmojis() : void {
         if (this.profile?.power.toUpperCase() == 'PYRO') {
             this.elementEmoji = '🔥';
         } else if (this.profile?.power.toUpperCase() == 'HYDRO') {
@@ -75,6 +77,33 @@ export class ProfileInfoComponent implements OnInit {
             this.elementEmoji = '❄️';
         } else if (this.profile?.power.toUpperCase() == 'GEO') {
             this.elementEmoji = '🌍';
+        } else if (this.profile?.power.toUpperCase() == 'NATURA') {
+            this.elementEmoji = '🌿';
+        } else if (this.profile?.power.toUpperCase() == 'AERO') {
+            this.elementEmoji = '🌪️';
         }
+
+        if (this.profile?.clase.toUpperCase() == 'RANGER') {
+            this.classEmoji = '🏹';
+        } else if (this.profile?.clase.toUpperCase() == 'WARRIOR' || this.profile?.clase.toUpperCase() == 'GUERRERO') {
+            this.classEmoji = '⚔️';
+        } else if (this.profile?.clase.toUpperCase() == 'MAGE' || this.profile?.clase.toUpperCase() == 'MAGO') {
+            this.classEmoji = '🧙';
+        } else if (this.profile?.clase.toUpperCase() == 'HEALER' || this.profile?.clase.toUpperCase() == 'SACERDOTE') {
+            this.classEmoji = '🩺';
+        } else if (this.profile?.clase.toUpperCase() == 'BÁRBARO') {
+            this.classEmoji = '🪓';
+        } else if (this.profile?.clase.toUpperCase() == 'ROGUE' || this.profile?.clase.toUpperCase() == 'LADRÓN' || this.profile?.clase.toUpperCase() == 'PÍCARO') {
+            this.classEmoji = '🗡️';
+        }
+
+        if (this.profile?.weapon.toUpperCase() == 'SWORD' || this.profile?.weapon.toUpperCase() == 'ESPADA') {
+            this.weaponEmoji = '⚔️';
+        } else if (this.profile?.weapon.toUpperCase() == 'BOW' || this.profile?.weapon.toUpperCase() == 'ARCO') {
+            this.weaponEmoji = '🏹';
+        } else if (this.profile?.weapon.toUpperCase() == 'STAFF' || this.profile?.weapon.toUpperCase() == 'BASTÓN') {
+            this.weaponEmoji = '🧙';
+        }
+        
     }
 }
