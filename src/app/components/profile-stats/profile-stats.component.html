@@ -10,9 +10,11 @@
                 </thead>
                 <tbody>
                     @for (key of keys; track $index) {
-                    <tr>
-                        <td>{{ key }} : {{ dataSource[0][key] }}</td>
-                    </tr>
+                        <tr>
+                            <td>
+                                {{ key }} : {{ dataSource[0][key] }}
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>

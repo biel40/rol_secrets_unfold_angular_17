@@ -54,6 +54,7 @@ export class ProfileStatsComponent implements OnInit {
         // Cuando se reciba la información del perfil, el dataSource se rellena con la info de las stats
         this.dataSource = [
             {
+                '❤️ Vida': this.profile?.current_hp + '/' + this.profile?.total_hp,
                 'Ataque': this.profile?.attack,
                 'Defensa': this.profile?.defense,
                 'Ataque especial': this.profile?.special_attack,

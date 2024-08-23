@@ -29,6 +29,8 @@ export class ProfileStatsEditComponent implements OnInit {
     public profile: Profile | null = null;
 
     public updateProfileStatsForm = this._formBuilder.group({
+        current_hp: 0,
+        total_hp: 0,
         attack: 0,
         defense: 0,
         special_attack: 0,
@@ -52,9 +54,11 @@ export class ProfileStatsEditComponent implements OnInit {
         }
 
         if (this.profile) {
-            const { attack, special_attack, defense, special_defense, speed } = this.profile;
+            const { current_hp, total_hp, attack, special_attack, defense, special_defense, speed } = this.profile;
 
             this.updateProfileStatsForm.patchValue({
+                current_hp,
+                total_hp,
                 attack,
                 defense,
                 special_attack,

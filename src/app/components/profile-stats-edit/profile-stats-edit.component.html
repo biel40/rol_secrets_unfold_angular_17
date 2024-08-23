@@ -11,6 +11,16 @@
         class="form-widget w-full gap-7 flex flex-col justify-center items-center">
 
         <mat-form-field>
+            <mat-label> Vida actual: </mat-label>
+            <input matInput type="number" formControlName="current_hp" required>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label> Vida máxima: </mat-label>
+            <input matInput type="number" formControlName="total_hp" required>
+        </mat-form-field>
+   
+        <mat-form-field>
             <mat-label> Ataque: </mat-label>
             <input matInput type="number" formControlName="attack" required>
         </mat-form-field>
