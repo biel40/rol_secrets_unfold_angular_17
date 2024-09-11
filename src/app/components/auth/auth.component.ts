@@ -63,12 +63,29 @@ export class AuthComponent implements OnInit, OnDestroy {
   }
 
   private async _checkUserSession() {
-    this.user = this._userService.getUser();
+    try {
+      this.user = this._userService.getUser();
+      
+      if (this.user && this.user.email_confirmed_at) {
+        let userIsInDb = await this._supabaseService.profile(this.user).then((response: any) => {
+          if (response.error) {
+            return false;
+          } else {
+            return true;
+          }
+        });
 
-    if (this.user && this.user.email_confirmed_at) {
-      alert('Ya hay sesión iniciada. Redirigiendo a la página de perfil.');
-      this._router.navigate(['profile']);
-    }
+        if (userIsInDb) {
+          alert('Ya hay sesión iniciada. Redirigiendo a la página de perfil.');
+          this._router.navigate(['profile']);
+        } else {
+          this._displaySnackbar('No se ha podido cargar el perfil. Por favor, vuelve a iniciar sesión.');
+          this._router.navigate(['']);
+        }
+      }
+    } catch(error) {
+      console.error(error);
+    }  
   }
 
   async handleLogin(): Promise<void> {

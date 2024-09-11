@@ -55,8 +55,13 @@ export class ProfileComponent implements OnInit {
         if (this._user) {
             let profile = (await this._supabaseService.getProfileInfo(this._user.id)).data;
 
+            console.log('Profile: ', profile);
+            
             if (profile) {
                 this.profile = profile;
+            } else {
+                this._displaySnackbar('No se ha podido cargar el perfil. Por favor, vuelve a iniciar sesión.');
+                this._router.navigate(['']);
             }
 
             if (this._user.email && !this._user.email_confirmed_at) {

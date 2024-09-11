@@ -94,11 +94,18 @@ export class SupabaseService {
   }
 
   public async getProfileInfo(userId: string) {
-    return this._supabaseClient
+    try {
+      let profileInfo: any = this._supabaseClient
       .from('profiles')
       .select(`id, username, clase, power, level, weapon, current_hp, total_hp, attack, defense, special_attack, special_defense, speed, current_experience, image_url`)
       .eq('id', userId)
-      .single()
+      .single();
+
+      return profileInfo;
+    } catch(error) {
+      console.error(error);
+      return error;
+    }
   }
 
   public async getAllHabilities() {

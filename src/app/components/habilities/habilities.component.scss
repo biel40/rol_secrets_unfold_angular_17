@@ -5,6 +5,11 @@
     text-align: center;
 }
 
+button {
+    min-width: 40px;
+    min-height: 40px;
+}
+
 .mat-mdc-card-header {
     display: block !important;
 }
