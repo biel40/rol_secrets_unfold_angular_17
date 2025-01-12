@@ -7,6 +7,8 @@ import { User } from '@supabase/supabase-js';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslocoModule } from '@jsverse/transloco';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-profile-inventory',
@@ -15,7 +17,9 @@ import { TranslocoModule } from '@jsverse/transloco';
     standalone: true,
     imports: [
         MaterialModule,
-        TranslocoModule
+        TranslocoModule,
+        FormsModule,
+        CommonModule
     ]
 })
 export class ProfileInventoryComponent implements OnInit {
@@ -30,6 +34,17 @@ export class ProfileInventoryComponent implements OnInit {
 
 
     public items: any[] | null = null;
+    public createNewItem: boolean = false;
+
+    public newItem = {
+        id: '',
+        name: '',
+        description: '',
+        quantity: 0,
+        profile_id: '',
+        price: 0,
+        img_src: ''
+    };
         
     constructor(
         private _snackBar: MatSnackBar
