@@ -56,6 +56,29 @@ button:hover {
 .inventory_item {
     border: 1px solid whitesmoke;
     margin-bottom: 3em;
+    width: 100%;
+    max-width: 50em;
+    height: 30em;
+}
+
+/* Estilos para pantallas pequeñas */
+@media (max-width: 768px) {
+    .inventory_item {
+        width: 95%;
+        height: 22em; 
+    }
+    
+    .item-description {
+        padding-left: 1.5em;
+    }
+}
+
+/* Estilos para pantallas grandes */
+@media (min-width: 1200px) {
+    .inventory_item {
+        width: 90%;
+        height: 29em; 
+    }
 }
 
 .inventory_item_info {
@@ -79,3 +102,30 @@ img {
     border-radius: 10px;
     margin-bottom: 10px;
 }
+
+.new-item-form {
+    background: #1a1a1a;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    margin: 2rem auto;
+    max-width: 800px;
+  }
+  
+  .new-item-form form {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .new-item-form input {
+    background: #2d2d2d;
+    border: 2px solid #444;
+    color: #fff;
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+    flex: 1 1 200px;
+    min-width: 200px;
+    transition: all 0.3s ease;
+  }

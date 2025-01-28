@@ -94,8 +94,8 @@ export class HabilitiesComponent implements OnInit {
             data: { 
                 hability: hability
             },
-            width: '500px',
-            height: '500px'
+            width: '80vw',
+            height: '90vh'
         });
     
         dialogRef.afterClosed().subscribe(result => {

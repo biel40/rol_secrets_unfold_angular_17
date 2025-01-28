@@ -13,10 +13,6 @@ import { User } from '@supabase/supabase-js';
     standalone: true,
     imports: [
         MaterialModule,
-        MatDialogTitle,
-        MatDialogContent,
-        MatDialogActions,
-        MatDialogClose,
         TranslocoModule
     ]
 })
@@ -71,7 +67,11 @@ export class DiceMatDialogComponent implements OnInit {
         });
     }
 
+    /*
+    * This private method calculates the damage of the attack
+    */
     private async _calculateDamage() {
+        console.log('Calculating damage...');
 
         if (this.hability) {
             this.hability.current_uses--;
@@ -80,7 +80,10 @@ export class DiceMatDialogComponent implements OnInit {
 
             let damage: number = 0;
 
-            if (this.profile && this.profile.attack != undefined && this.hability.scales_with === 'attack') {
+            if (
+                this.profile && 
+                this.profile.attack != undefined
+            ) {
 
                 damage = (this.diceNumber) + (this.profile.attack);
 
@@ -100,6 +103,7 @@ export class DiceMatDialogComponent implements OnInit {
                 this.damage = damage;
 
                 console.log('Total damage: ', this.damage);
+                alert('Daño total: ' + this.damage);
             }
         }
     }
@@ -112,11 +116,11 @@ export class DiceMatDialogComponent implements OnInit {
     public getRandomNumber(min: number, max: number) {
         min = Math.ceil(min);
         max = Math.floor(max);
+
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
     public closeDialog() {
-        console.log('closeDialog');
         this.dialogRef.close();
     }
 

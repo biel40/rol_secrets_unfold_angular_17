@@ -83,10 +83,4 @@ export class ProfileInventoryComponent implements OnInit {
         this._router.navigate(['profile-stats-edit']);
     }
 
-    private _displaySnackbar(message: string) {
-        this._snackBar.open(message, 'Cerrar', {
-            duration: 5000,
-            verticalPosition: 'bottom'
-        });
-    }
 }

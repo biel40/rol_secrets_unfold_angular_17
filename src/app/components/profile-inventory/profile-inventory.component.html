@@ -9,24 +9,28 @@
             <input type="text" placeholder="Descripción del objeto" [(ngModel)]="newItem.description">
             <input type="text" placeholder="Precio del objeto" [(ngModel)]="newItem.price">
             <input type="text" placeholder="URL de la imagen" [(ngModel)]="newItem.img_src">
-            <button>Añadir objeto</button>
         </form>
-        <button (click)="createNewItem = false">Cancelar</button>
+
+        <button class="!mt-7 !mr-7" (click)="createNewItem = false">Cancelar</button>
+        <button>Añadir objeto</button>
     </div>
 }
-
 
 <div class="inventory">
     @for (item of items; track $index) {
         <div class="inventory_item">
             <div class="inventory_item_info">
                 <h2 class="!pt-4">{{ item.name }}</h2>
-                <p>{{ item.description }}</p>
+                <p class="item-description">{{ item.description }}</p>
                 <p>{{ item.price }}</p>
             </div>
 
             <div class="inventory_item_wrapper">
                 <img src="{{ item.img_src }}" alt="{{ item.name }}">
+            </div>
+
+            <div class="inventory_item_actions | flex justify-center !mt-3">
+                <button class="use-item-button">Usar</button>
             </div>
         </div>
     }
