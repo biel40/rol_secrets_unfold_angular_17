@@ -152,7 +152,7 @@ export class SupabaseService {
       }
 
       // We will set the current uses of the hability on the fly from the intermediate table
-      // which are the REAL current uses
+      // which are the REAL current uses.
       if (userHabilities) {
         userHabilities.forEach(hability => {
           let habilityInfo = habilities.find(h => h.hability_id === hability.id);
