@@ -54,8 +54,6 @@ export class ProfileComponent implements OnInit {
 
         if (this._user) {
             let profile = (await this._supabaseService.getProfileInfo(this._user.id)).data;
-
-            console.log('Profile: ', profile);
             
             if (profile) {
                 this.profile = profile;

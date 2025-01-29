@@ -116,7 +116,7 @@ export class SupabaseService {
     return error ? error : habilities;
   }
 
-  public async getHabilitiesFromUser(profile: Profile) : Promise<Hability[]> {
+  public async getHabilities(profile: Profile) : Promise<Hability[]> {
     let { data: habilities, error } = await this._supabaseClient
     .from('habilities')
     .select('*')
@@ -127,6 +127,47 @@ export class SupabaseService {
 
     return habilities ? habilities : [];
   } 
+
+  public async getHabilitiesFromUser(profile: Profile) : Promise<Hability[]> {
+    // We will fetch all the records in the table habilities that have a fk to the user in the intermediate table profile_habilities
+
+    let { data: habilities, error } = await this._supabaseClient
+    .from('profile_habilities')
+    .select('*',)
+    .eq('profile_id', profile.id);
+
+    if (habilities) {
+      let habilitiesIds: string[] = habilities.map(hability => hability.hability_id);
+
+      let { data: userHabilities, error } = await this._supabaseClient
+      .from('habilities')
+      .select('*')
+      .in("id", habilitiesIds)
+      .order("level");
+
+      // First, we will filter the habilities that the user has by the level of the user and the power of the user
+      // and the class of the user
+      if (userHabilities) {
+        userHabilities = userHabilities.filter(hability => hability.level <= profile.level && hability.power === profile.power && (hability.clase === profile.clase || hability.clase === 'Base'));
+      }
+
+      // We will set the current uses of the hability on the fly from the intermediate table
+      // which are the REAL current uses
+      if (userHabilities) {
+        userHabilities.forEach(hability => {
+          let habilityInfo = habilities.find(h => h.hability_id === hability.id);
+
+          if (habilityInfo) {
+            hability.current_uses = habilityInfo.current_uses;
+          }
+        });
+      }
+
+      return userHabilities ? userHabilities : [];
+    }
+
+    return [];
+  }
 
   // Function to update User's habilities
   public async updateHabilities(habilities: Hability[]) {
@@ -155,7 +196,19 @@ export class SupabaseService {
     }
   }
 
-  authChanges(callback: (event: AuthChangeEvent, session: Session | null) => void) {
+  public async updateHabilityUses(hability: Hability, profile: Profile) {
+    try {
+      await this._supabaseClient
+      .from('profile_habilities')
+      .update({ current_uses: hability.current_uses })
+      .eq('profile_id', profile.id)
+      .eq('hability_id', hability.id);
+    } catch(error) {
+      console.error(error);
+    }
+  }
+
+  public authChanges(callback: (event: AuthChangeEvent, session: Session | null) => void) {
     return this._supabaseClient.auth.onAuthStateChange(callback)
   }
 

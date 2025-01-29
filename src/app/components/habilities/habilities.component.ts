@@ -27,6 +27,7 @@ export class HabilitiesComponent implements OnInit {
     public animateDice: boolean = false;
 
     public user: User | null = null;
+
     @Input() public profile: Profile | null = null;
 
     public userHabilities: Hability[] = [];
@@ -60,7 +61,12 @@ export class HabilitiesComponent implements OnInit {
             }
 
             hability.current_uses++;
-            this._supabaseService.updateHability(hability);
+
+            if (this.profile) {
+                this._supabaseService.updateHabilityUses(hability, this.profile);
+            } else {
+                console.error('Profile is null');
+            }
         }
     }
 
@@ -73,7 +79,11 @@ export class HabilitiesComponent implements OnInit {
 
             hability.current_uses--;
 
-            this._supabaseService.updateHability(hability);
+            if (this.profile) {
+                this._supabaseService.updateHabilityUses(hability, this.profile);
+            } else {
+                console.error('Profile is null');
+            }
         }
     }
 
@@ -96,10 +106,6 @@ export class HabilitiesComponent implements OnInit {
             },
             width: '80vw',
             height: '90vh'
-        });
-    
-        dialogRef.afterClosed().subscribe(result => {
-            console.log('The dialog was closed');
         });
     }
 

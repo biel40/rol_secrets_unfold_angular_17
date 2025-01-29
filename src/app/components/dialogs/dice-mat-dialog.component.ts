@@ -101,8 +101,7 @@ export class DiceMatDialogComponent implements OnInit {
                 }
 
                 this.damage = damage;
-
-                console.log('Total damage: ', this.damage);
+                
                 alert('Daño total: ' + this.damage);
             }
         }
