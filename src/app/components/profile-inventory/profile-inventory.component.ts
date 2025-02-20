@@ -36,14 +36,14 @@ export class ProfileInventoryComponent implements OnInit {
     public items: any[] | null = null;
     public createNewItem: boolean = false;
 
-    public newItem = {
-        id: '',
+    public newItem: Item = {
+        id: 0,
         name: '',
         description: '',
         quantity: 0,
         profile_id: '',
-        price: 0,
-        img_src: ''
+        value: 0,
+        img_src: '',
     };
         
     constructor(
@@ -81,6 +81,54 @@ export class ProfileInventoryComponent implements OnInit {
 
     public goToEditStats(): void {
         this._router.navigate(['profile-stats-edit']);
+    }
+
+    public async saveItemToProfile(): Promise<void> {
+
+        if (!this._user) {
+            console.error('User is null!');
+        } else {
+            this.newItem.profile_id = this._user.id;
+            this.newItem.quantity += 1;
+
+            await this._supabaseService.saveItemToProfile(this.newItem);
+        }
+
+        this.createNewItem = false;
+        
+        this._snackBar.open('Objeto guardado con exito!', 'Cerrar', {
+            duration: 3000,
+            verticalPosition: 'bottom',
+            panelClass: ['snack-bar-success']
+        });
+        
+        this._loadData();
+    }
+
+    public async deleteItem(item: Item): Promise<void> {
+        // We open a dialog to confirm the deletion of the item
+        const dialogRef = this._snackBar.open('¿Estas seguro de eliminar este objeto?', 'Si', {
+            duration: 10000,
+            verticalPosition: 'bottom',
+            panelClass: ['snack-bar-danger']
+        });
+
+        dialogRef.afterDismissed().subscribe(result => {
+            if (result) {
+                this.confirmDeleteItem(item);
+            }
+        });
+    }
+
+    public async confirmDeleteItem(item: Item): Promise<void> {
+
+        if (!this._user) {
+            console.error('User is null!');
+        } else {
+            await this._supabaseService.deleteItemFromProfile(item);
+        }
+
+        this._loadData();
     }
 
 }

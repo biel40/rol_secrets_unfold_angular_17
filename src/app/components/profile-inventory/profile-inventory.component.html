@@ -5,14 +5,14 @@
 @if (createNewItem == true) {
     <div class="new-item-form">
         <form>
-            <input type="text" placeholder="Nombre del objeto" [(ngModel)]="newItem.name">
-            <input type="text" placeholder="Descripción del objeto" [(ngModel)]="newItem.description">
-            <input type="text" placeholder="Precio del objeto" [(ngModel)]="newItem.price">
-            <input type="text" placeholder="URL de la imagen" [(ngModel)]="newItem.img_src">
-        </form>
+            <input type="text" name="name" placeholder="Nombre del objeto" [(ngModel)]="newItem.name">
+            <input type="text" name="description" placeholder="Descripción del objeto" [(ngModel)]="newItem.description">
+            <input type="text" name="value" placeholder="Precio del objeto" [(ngModel)]="newItem.value">
+            <input type="text" name="img_src" placeholder="URL de la imagen" [(ngModel)]="newItem.img_src">
+          </form>
 
         <button class="!mt-7 !mr-7" (click)="createNewItem = false">Cancelar</button>
-        <button>Añadir objeto</button>
+        <button (click)="saveItemToProfile()">Añadir objeto</button>
     </div>
 }
 
@@ -22,15 +22,16 @@
             <div class="inventory_item_info">
                 <h2 class="!pt-4">{{ item.name }}</h2>
                 <p class="item-description">{{ item.description }}</p>
-                <p>{{ item.price }}</p>
+                <p>Precio del objeto: {{ item.value }} monedas de Oro</p>
             </div>
 
             <div class="inventory_item_wrapper">
                 <img src="{{ item.img_src }}" alt="{{ item.name }}">
             </div>
 
-            <div class="inventory_item_actions | flex justify-center !mt-3">
+            <div class="inventory_item_actions | flex justify-center !mt-3 gap-10">
                 <button class="use-item-button">Usar</button>
+                <button (click)="deleteItem(item)" class="delete-item-button">Eliminar</button>
             </div>
         </div>
     }
