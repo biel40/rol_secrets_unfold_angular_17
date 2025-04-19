@@ -1,64 +1,78 @@
-<div class="dice-wrapper | !mt-14">
-    <div class="dice | flex items-center">
-        <ol class="die-list even-roll" data-roll="1" id="die-1">
-            <li class="die-item" data-side="1">
-                <span class="dot"></span>
-            </li>
-            <li class="die-item" data-side="2">
-                <span class="dot"></span>
-                <span class="dot"></span>
-            </li>
-            <li class="die-item" data-side="3">
-                <span class="dot"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
-            </li>
-            <li class="die-item" data-side="4">
-                <span class="dot"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
-            </li>
-            <li class="die-item" data-side="5">
-                <span class="dot"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
-            </li>
-            <li class="die-item" data-side="6">
-                <span class="dot"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
-            </li>
-        </ol>
+<div class="dice-container mt-8 flex flex-col items-center justify-center">
+    <!-- Hability name and info -->
+    <div class="text-center mb-6 px-4">
+        <h1 class="text-2xl font-bold text-amber-500 mb-2 tracking-wide">
+            {{ hability?.name }}
+        </h1>
+        <p class="text-sm text-slate-300 italic max-w-md mx-auto">{{ hability?.description }}</p>
     </div>
 
-    <div class="flex flex-col items-center justify-start p-8 bg-slate-800 rounded-lg shadow-xl max-w-xs mx-auto border-2 border-amber-600">
+    <!-- Simple dice display -->
+    <div class="dice-box mb-6">
+        <div class="dice-face">
+            <span class="dice-number">{{ diceNumber }}</span>
+        </div>
+    </div>
+
+    <!-- Roll again button -->
+    <button 
+        class="roll-button px-6 py-2 bg-amber-700 hover:bg-amber-600 text-white rounded-full 
+               transition-all duration-200 transform hover:scale-105 active:scale-95
+               font-semibold shadow-lg mb-6"
+        (click)="rollDice()">
+        {{ 'Tirar de nuevo' }}
+    </button>
+
+    <!-- Damage result display -->
+    <div class="damage-display flex flex-col items-center justify-start p-6 bg-slate-800 rounded-lg shadow-xl max-w-xs mx-auto border-2 border-amber-600"
+         [ngClass]="{'damage-calculated': damage > 0}">
         <div class="text-center mb-4">
-            <h1 class="text-xl font-medieval text-amber-500 mb-2 tracking-wide">
+            <h1 class="text-xl font-bold text-amber-500 mb-2 tracking-wide">
                 ✦ TOTAL DE DAÑO ✦
             </h1>
             <p class="text-sm text-slate-300 italic">(incluyendo todos los bonificadores)</p>
         </div>
     
-        <!-- Valor del daño destacado -->
+        <!-- Damage value display -->
         <div class="bg-slate-700 p-4 pb-0 mb-6 rounded-full shadow-inner">
             <h2 class="text-4xl font-bold text-red-500 animate-pulse">
                 {{ damage }}
             </h2>
         </div>
+
+        <!-- Dice roll result -->
+        <div class="text-center mb-4">
+            <p class="text-sm text-slate-300">
+                <span class="text-amber-400 font-bold">Resultado del dado:</span> {{ diceNumber }}
+            </p>
+            @if (profile) {
+                <p class="text-sm text-slate-300">
+                    <span class="text-amber-400 font-bold">Bonificador de ataque:</span> {{ profile.attack }}
+                </p>
+                @if (profile.weapon === 'Espada' || profile.weapon === 'Dagas') {
+                    <p class="text-sm text-slate-300">
+                        <span class="text-amber-400 font-bold">Bonificador de arma:</span> +2
+                    </p>
+                }
+                @if (profile.clase === 'Guerrero') {
+                    <p class="text-sm text-slate-300">
+                        <span class="text-amber-400 font-bold">Bonificador de clase:</span> +2
+                    </p>
+                } @else if (profile.clase === 'Pícaro') {
+                    <p class="text-sm text-slate-300">
+                        <span class="text-amber-400 font-bold">Bonificador de clase:</span> +1
+                    </p>
+                }
+            }
+        </div>
     
+        <!-- Close button -->
         <button 
             class="px-6 py-2 bg-amber-700 hover:bg-amber-600 text-white rounded-full 
                    transition-all duration-200 transform hover:scale-105 active:scale-95
-                   font-semibold text-shadow shadow-lg"
+                   font-semibold shadow-lg"
             (click)="closeDialog()">
             {{ 'close' | transloco }}
         </button>
     </div>
-
 </div>
