@@ -1,78 +1,116 @@
-<div class="dice-container mt-8 flex flex-col items-center justify-center">
-    <!-- Hability name and info -->
-    <div class="text-center mb-6 px-4">
-        <h1 class="text-2xl font-bold text-amber-500 mb-2 tracking-wide">
-            {{ hability?.name }}
-        </h1>
-        <p class="text-sm text-slate-300 italic max-w-md mx-auto">{{ hability?.description }}</p>
+<div class="dice-dialog-container">
+    <!-- Fantasy-style header with decorative elements -->
+    <div class="dialog-header">
+        <div class="header-decoration left"></div>
+        <h2 mat-dialog-title class="title">{{ hability?.name }}</h2>
+        <div class="header-decoration right"></div>
     </div>
-
-    <!-- Simple dice display -->
-    <div class="dice-box mb-6">
-        <div class="dice-face">
-            <span class="dice-number">{{ diceNumber }}</span>
-        </div>
-    </div>
-
-    <!-- Roll again button -->
-    <button 
-        class="roll-button px-6 py-2 bg-amber-700 hover:bg-amber-600 text-white rounded-full 
-               transition-all duration-200 transform hover:scale-105 active:scale-95
-               font-semibold shadow-lg mb-6"
-        (click)="rollDice()">
-        {{ 'Tirar de nuevo' }}
-    </button>
-
-    <!-- Damage result display -->
-    <div class="damage-display flex flex-col items-center justify-start p-6 bg-slate-800 rounded-lg shadow-xl max-w-xs mx-auto border-2 border-amber-600"
-         [ngClass]="{'damage-calculated': damage > 0}">
-        <div class="text-center mb-4">
-            <h1 class="text-xl font-bold text-amber-500 mb-2 tracking-wide">
-                ✦ TOTAL DE DAÑO ✦
-            </h1>
-            <p class="text-sm text-slate-300 italic">(incluyendo todos los bonificadores)</p>
-        </div>
     
-        <!-- Damage value display -->
-        <div class="bg-slate-700 p-4 pb-0 mb-6 rounded-full shadow-inner">
-            <h2 class="text-4xl font-bold text-red-500 animate-pulse">
-                {{ damage }}
-            </h2>
-        </div>
+    <!-- Description with scroll styling -->
+    <div class="description-scroll">
+        <p class="description-text">{{ hability?.description }}</p>
+    </div>
 
-        <!-- Dice roll result -->
-        <div class="text-center mb-4">
-            <p class="text-sm text-slate-300">
-                <span class="text-amber-400 font-bold">Resultado del dado:</span> {{ diceNumber }}
+    <!-- 3D Dice animation container with enhanced background -->
+    <div class="dice-scene">
+        <div class="dice-container">
+            <div class="dice-wrapper" [class.rolling]="isRolling">
+                <div class="dice">
+                    <!-- Front face (1) -->
+                    <div class="dice-face front">
+                        <div class="dot center"></div>
+                    </div>
+                    
+                    <!-- Back face (6) -->
+                    <div class="dice-face back">
+                        <div class="dot top-left"></div>
+                        <div class="dot top-right"></div>
+                        <div class="dot middle-left"></div>
+                        <div class="dot middle-right"></div>
+                        <div class="dot bottom-left"></div>
+                        <div class="dot bottom-right"></div>
+                    </div>
+                    
+                    <!-- Right face (3) -->
+                    <div class="dice-face right">
+                        <div class="dot top-left"></div>
+                        <div class="dot center"></div>
+                        <div class="dot bottom-right"></div>
+                    </div>
+                    
+                    <!-- Left face (4) -->
+                    <div class="dice-face left">
+                        <div class="dot top-left"></div>
+                        <div class="dot top-right"></div>
+                        <div class="dot bottom-left"></div>
+                        <div class="dot bottom-right"></div>
+                    </div>
+                    
+                    <!-- Top face (2) -->
+                    <div class="dice-face top">
+                        <div class="dot top-right"></div>
+                        <div class="dot bottom-left"></div>
+                    </div>
+                    
+                    <!-- Bottom face (5) -->
+                    <div class="dice-face bottom">
+                        <div class="dot top-left"></div>
+                        <div class="dot top-right"></div>
+                        <div class="dot center"></div>
+                        <div class="dot bottom-left"></div>
+                        <div class="dot bottom-right"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Enhanced dice result display -->
+            <div class="dice-result" *ngIf="!isRolling">
+                <span>{{ diceNumber }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Damage display with enhanced visual effects -->
+    <div class="damage-display" [class.damage-calculated]="damage > 0">
+        <div class="damage-content">
+            <h3 class="damage-label">TOTAL DE DAÑO</h3>
+            <p class="damage-value">{{ damage }}</p>
+        </div>
+    </div>
+
+    <!-- Dice roll result -->
+    <div class="roll-details">
+        <p class="detail-item">
+            <span class="detail-label">Resultado del dado:</span> {{ diceNumber }}
+        </p>
+        @if (profile) {
+            <p class="detail-item">
+                <span class="detail-label">Bonificador de ataque:</span> {{ profile.attack }}
             </p>
-            @if (profile) {
-                <p class="text-sm text-slate-300">
-                    <span class="text-amber-400 font-bold">Bonificador de ataque:</span> {{ profile.attack }}
+            @if (profile.weapon === 'Espada' || profile.weapon === 'Dagas') {
+                <p class="detail-item">
+                    <span class="detail-label">Bonificador de arma:</span> +2
                 </p>
-                @if (profile.weapon === 'Espada' || profile.weapon === 'Dagas') {
-                    <p class="text-sm text-slate-300">
-                        <span class="text-amber-400 font-bold">Bonificador de arma:</span> +2
-                    </p>
-                }
-                @if (profile.clase === 'Guerrero') {
-                    <p class="text-sm text-slate-300">
-                        <span class="text-amber-400 font-bold">Bonificador de clase:</span> +2
-                    </p>
-                } @else if (profile.clase === 'Pícaro') {
-                    <p class="text-sm text-slate-300">
-                        <span class="text-amber-400 font-bold">Bonificador de clase:</span> +1
-                    </p>
-                }
             }
-        </div>
+            @if (profile.clase === 'Guerrero') {
+                <p class="detail-item">
+                    <span class="detail-label">Bonificador de clase:</span> +2
+                </p>
+            } @else if (profile.clase === 'Pícaro') {
+                <p class="detail-item">
+                    <span class="detail-label">Bonificador de clase:</span> +1
+                </p>
+            }
+        }
+    </div>
     
-        <!-- Close button -->
-        <button 
-            class="px-6 py-2 bg-amber-700 hover:bg-amber-600 text-white rounded-full 
-                   transition-all duration-200 transform hover:scale-105 active:scale-95
-                   font-semibold shadow-lg"
-            (click)="closeDialog()">
-            {{ 'close' | transloco }}
+    <!-- Action buttons -->
+    <div class="action-buttons">
+        <button class="roll-button" (click)="rollDice()" [disabled]="isRolling">
+            <span class="button-text">Tirar de nuevo</span>
+        </button>
+        <button class="close-button" mat-dialog-close>
+            <span class="button-text">Cerrar</span>
         </button>
     </div>
 </div>

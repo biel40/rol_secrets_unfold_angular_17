@@ -59,12 +59,16 @@ export class DiceMatDialogComponent implements OnInit {
     }
 
     /**
-     * Roll the dice with enhanced animation and visual feedback
+     * Roll the dice with enhanced 3D animation and visual feedback
      */
     public rollDice() {
         // Get elements
-        const diceFace = document.querySelector('.dice-face');
+        const diceWrapper = document.querySelector('.dice-wrapper');
+        const dice = document.querySelector('.dice');
         const damageDisplay = document.querySelector('.damage-display');
+        
+        // Set rolling state
+        this.isRolling = true;
         
         // Reset damage display
         this.damage = 0;
@@ -72,25 +76,55 @@ export class DiceMatDialogComponent implements OnInit {
             damageDisplay.classList.remove('damage-calculated');
         }
         
-        // Generate random number
+        // Generate random number for the dice
         this.diceNumber = this.getRandomNumber(1, 6);
         
         // Add rolling animation
-        if (diceFace) {
+        if (diceWrapper) {
             // Remove animation if it exists (to restart it)
-            diceFace.classList.remove('rolling');
+            diceWrapper.classList.remove('rolling');
             
             // Force reflow to restart animation
-            void (diceFace as HTMLElement).offsetWidth;
+            void (diceWrapper as HTMLElement).offsetWidth;
             
             // Add rolling animation
-            diceFace.classList.add('rolling');
+            diceWrapper.classList.add('rolling');
         }
 
-        // Calculate damage after animation completes
+        // Calculate damage after animation completes and set final dice position
         setTimeout(() => {
             this._calculateDamage();
-        }, 800); // Match this with the CSS animation duration
+            this._setFinalDicePosition();
+            this.isRolling = false;
+            
+            // Add damage-calculated class to the damage display
+            if (damageDisplay) {
+                damageDisplay.classList.add('damage-calculated');
+            }
+        }, 1500); // Match this with the CSS animation duration
+    }
+    
+    /**
+     * Set the final position of the dice based on the rolled number
+     * Each face of the dice corresponds to a specific rotation
+     */
+    private _setFinalDicePosition() {
+        const dice = document.querySelector('.dice');
+        if (!dice) return;
+        
+        // Define rotations for each face to show the correct number
+        // These rotations ensure the correct face is shown facing up
+        const rotations = {
+            1: 'rotateX(0deg) rotateY(0deg)', // Front face (1)
+            2: 'rotateX(90deg) rotateY(0deg)', // Top face (2)
+            3: 'rotateX(0deg) rotateY(90deg)', // Right face (3)
+            4: 'rotateX(0deg) rotateY(-90deg)', // Left face (4)
+            5: 'rotateX(-90deg) rotateY(0deg)', // Bottom face (5)
+            6: 'rotateX(0deg) rotateY(180deg)' // Back face (6)
+        };
+        
+        // Apply the rotation for the current dice number
+        (dice as HTMLElement).style.transform = rotations[this.diceNumber as keyof typeof rotations];
     }
 
     /**
