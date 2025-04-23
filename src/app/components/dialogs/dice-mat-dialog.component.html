@@ -1,17 +1,14 @@
 <div class="dice-dialog-container">
-    <!-- Fantasy-style header with decorative elements -->
     <div class="dialog-header">
         <div class="header-decoration left"></div>
         <h2 mat-dialog-title class="title">{{ hability?.name }}</h2>
         <div class="header-decoration right"></div>
     </div>
     
-    <!-- Description with scroll styling -->
     <div class="description-scroll">
         <p class="description-text">{{ hability?.description }}</p>
     </div>
 
-    <!-- 3D Dice animation container with enhanced background -->
     <div class="dice-scene">
         <div class="dice-container">
             <div class="dice-wrapper" [class.rolling]="isRolling">
@@ -62,23 +59,18 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- Enhanced dice result display -->
+
             <div class="dice-result" *ngIf="!isRolling">
                 <span>{{ diceNumber }}</span>
             </div>
         </div>
     </div>
 
-    <!-- Damage display with enhanced visual effects -->
-    <div class="damage-display" [class.damage-calculated]="damage > 0">
-        <div class="damage-content">
-            <h3 class="damage-label">TOTAL DE DAÑO</h3>
-            <p class="damage-value">{{ damage }}</p>
-        </div>
+    <div class="damage-display" style="padding-bottom: 40px;" [class.damage-calculated]="damage > 0">
+        <h3 class="damage-label">TOTAL DE DAÑO</h3>
+        <p class="damage-value">{{ damage }}</p>
     </div>
 
-    <!-- Dice roll result -->
     <div class="roll-details">
         <p class="detail-item">
             <span class="detail-label">Resultado del dado:</span> {{ diceNumber }}
