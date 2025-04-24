@@ -24,7 +24,6 @@ export class ProfileStatsComponent implements OnInit {
 
     private _userService: UserService = inject(UserService);
     private _loaderService: LoaderService = inject(LoaderService);
-    private _supabaseService: SupabaseService = inject(SupabaseService);
     private _router = inject(Router);
 
     public keys: string[] = [];

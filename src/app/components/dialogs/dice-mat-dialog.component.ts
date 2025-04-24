@@ -60,6 +60,7 @@ export class DiceMatDialogComponent implements OnInit {
 
     /**
      * Roll the dice with enhanced 3D animation and visual feedback
+     * Optimized for mobile performance
      */
     public rollDice() {
         // Get elements
@@ -77,7 +78,12 @@ export class DiceMatDialogComponent implements OnInit {
         }
         
         // Generate random number for the dice
-        this.diceNumber = this.getRandomNumber(1, 6);
+        // We'll store this but not apply it until the animation completes
+        const rolledNumber = this.getRandomNumber(1, 6);
+        
+        // Optimize for mobile by checking if device is mobile
+        const isMobile = window.innerWidth <= 768;
+        const animationDuration = isMobile ? 1200 : 1200; // Same duration but we can adjust if needed
         
         // Add rolling animation
         if (diceWrapper) {
@@ -93,24 +99,39 @@ export class DiceMatDialogComponent implements OnInit {
 
         // Calculate damage after animation completes and set final dice position
         setTimeout(() => {
-            this._calculateDamage();
+            // Now set the dice number to ensure synchronization between visual and value
+            this.diceNumber = rolledNumber;
+            
+            // Set the final dice position to match the rolled number
             this._setFinalDicePosition();
+            
+            // Calculate damage based on the rolled number
+            this._calculateDamage();
+            
+            // End rolling state
             this.isRolling = false;
             
             // Add damage-calculated class to the damage display
             if (damageDisplay) {
                 damageDisplay.classList.add('damage-calculated');
             }
-        }, 1500); // Match this with the CSS animation duration
+        }, animationDuration); // Match this with the CSS animation duration
     }
     
     /**
      * Set the final position of the dice based on the rolled number
      * Each face of the dice corresponds to a specific rotation
+     * Enhanced for better mobile display
      */
     private _setFinalDicePosition() {
         const dice = document.querySelector('.dice');
         if (!dice) return;
+        
+        // Verify that diceNumber is valid (1-6)
+        if (this.diceNumber < 1 || this.diceNumber > 6) {
+            console.error('Invalid dice number:', this.diceNumber);
+            this.diceNumber = 1; // Default to 1 if invalid
+        }
         
         // Define rotations for each face to show the correct number
         // These rotations ensure the correct face is shown facing up
@@ -123,8 +144,37 @@ export class DiceMatDialogComponent implements OnInit {
             6: 'rotateX(0deg) rotateY(180deg)' // Back face (6)
         };
         
-        // Apply the rotation for the current dice number
-        (dice as HTMLElement).style.transform = rotations[this.diceNumber as keyof typeof rotations];
+        // Apply the rotation for the current dice number with a smooth transition
+        const diceElement = dice as HTMLElement;
+        diceElement.style.transition = 'transform 0.5s cubic-bezier(0.17, 0.67, 0.83, 0.67)';
+        diceElement.style.transform = rotations[this.diceNumber as keyof typeof rotations];
+        
+        // Log for debugging
+        console.log('Setting dice position to show:', this.diceNumber);
+        
+        // Update the dice result display to ensure it matches
+        const diceResultElement = document.querySelector('.dice-result span');
+        if (diceResultElement) {
+            diceResultElement.textContent = this.diceNumber.toString();
+        }
+        
+        // Also update any detail items showing the dice result
+        const diceDetailElement = document.querySelector('.detail-item .detail-label + span');
+        if (diceDetailElement) {
+            diceDetailElement.textContent = this.diceNumber.toString();
+        }
+        
+        // Detect if we're on a mobile device for potential optimizations
+        const isMobile = window.innerWidth <= 768;
+        if (isMobile) {
+            // For mobile, we can add specific optimizations if needed
+            diceElement.style.willChange = 'transform';
+            
+            // Clean up will-change after transition to save memory on mobile
+            setTimeout(() => {
+                diceElement.style.willChange = 'auto';
+            }, 500);
+        }
     }
 
     /**

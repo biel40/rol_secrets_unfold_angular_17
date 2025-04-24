@@ -123,11 +123,12 @@
 
 /* Dice wrapper */
 .dice-wrapper {
-    width: min(100px, 15vw);
-    height: min(100px, 15vw);
+    width: min(100px, 20vw);
+    height: min(100px, 20vw);
     position: relative;
-    perspective: 1000px;
+    perspective: 1200px;
     margin-bottom: 20px;
+    transform-style: preserve-3d;
 }
 
 /* Dice styling */
@@ -138,6 +139,7 @@
     transform-style: preserve-3d;
     transition: transform 0.1s;
     transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+    will-change: transform;
 }
 
 /* Dice faces */
@@ -250,20 +252,20 @@
 /* Rolling animations */
 @keyframes roll {
     0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
-    10% { transform: rotateX(45deg) rotateY(90deg) rotateZ(45deg); }
-    20% { transform: rotateX(90deg) rotateY(180deg) rotateZ(90deg); }
-    30% { transform: rotateX(135deg) rotateY(270deg) rotateZ(135deg); }
-    40% { transform: rotateX(180deg) rotateY(360deg) rotateZ(180deg); }
-    50% { transform: rotateX(225deg) rotateY(450deg) rotateZ(225deg); }
-    60% { transform: rotateX(270deg) rotateY(540deg) rotateZ(270deg); }
-    70% { transform: rotateX(315deg) rotateY(630deg) rotateZ(315deg); }
-    80% { transform: rotateX(360deg) rotateY(720deg) rotateZ(360deg); }
-    90% { transform: rotateX(405deg) rotateY(810deg) rotateZ(405deg); }
-    100% { transform: rotateX(450deg) rotateY(900deg) rotateZ(450deg); }
+    10% { transform: rotateX(36deg) rotateY(72deg) rotateZ(36deg); }
+    20% { transform: rotateX(72deg) rotateY(144deg) rotateZ(72deg); }
+    30% { transform: rotateX(108deg) rotateY(216deg) rotateZ(108deg); }
+    40% { transform: rotateX(144deg) rotateY(288deg) rotateZ(144deg); }
+    50% { transform: rotateX(180deg) rotateY(360deg) rotateZ(180deg); }
+    60% { transform: rotateX(216deg) rotateY(432deg) rotateZ(216deg); }
+    70% { transform: rotateX(252deg) rotateY(504deg) rotateZ(252deg); }
+    80% { transform: rotateX(288deg) rotateY(576deg) rotateZ(288deg); }
+    90% { transform: rotateX(324deg) rotateY(648deg) rotateZ(324deg); }
+    100% { transform: rotateX(360deg) rotateY(720deg) rotateZ(360deg); }
 }
 
 .dice-wrapper.rolling .dice {
-    animation: roll 1.5s ease-out forwards;
+    animation: roll 1.2s cubic-bezier(0.17, 0.67, 0.83, 0.67) forwards;
 }
 
 /* Add magical particles effect during rolling */
@@ -275,16 +277,23 @@
     top: -50%;
     left: -50%;
     background-image: radial-gradient(circle, #d4af37 1px, transparent 1px);
-    background-size: 16px 16px;
+    background-size: 12px 12px;
     opacity: 0;
-    animation: particles 1.5s ease-out;
+    animation: particles 1.2s ease-out;
     pointer-events: none;
+    will-change: transform, opacity;
+}
+
+@media (max-width: 480px) {
+    .dice-wrapper.rolling::before {
+        background-size: 8px 8px;
+    }
 }
 
 @keyframes particles {
     0% { transform: scale(0.5); opacity: 0; }
-    50% { opacity: 0.5; }
-    100% { transform: scale(1.5); opacity: 0; }
+    40% { opacity: 0.6; }
+    100% { transform: scale(1.4); opacity: 0; }
 }
 
 /* Final positions based on dice number */
@@ -524,12 +533,68 @@
     }
     
     .dice-wrapper {
+        width: 90px;
+        height: 90px;
+        perspective: 900px;
+        margin: 0 auto 20px;
+    }
+    
+    .dice-scene {
+        min-height: 180px;
+    }
+    
+    .front, .back, .right, .left, .top, .bottom {
+        transform: translateZ(45px);
+    }
+    
+    .back {
+        transform: rotateY(180deg) translateZ(45px);
+    }
+    
+    .right {
+        transform: rotateY(90deg) translateZ(45px);
+    }
+    
+    .left {
+        transform: rotateY(-90deg) translateZ(45px);
+    }
+    
+    .top {
+        transform: rotateX(90deg) translateZ(45px);
+    }
+    
+    .bottom {
+        transform: rotateX(-90deg) translateZ(45px);
+    }
+    
+    .dot {
+        width: 14px;
+        height: 14px;
+    }
+    
+    .title {
+        font-size: 1.5rem;
+    }
+    
+    .damage-value {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .dice-wrapper {
         width: 80px;
-        height: min(80px, 12vw);
+        height: 80px;
+        perspective: 800px;
+    }
+    
+    .dice-scene {
+        min-height: 160px;
     }
     
     .front, .back, .right, .left, .top, .bottom {
         transform: translateZ(40px);
+        border-width: 1px;
     }
     
     .back {
@@ -553,56 +618,13 @@
     }
     
     .dot {
-        width: 14px;
-        height: 14px;
-    }
-    
-    .title {
-        font-size: 1.5rem;
-    }
-    
-    .damage-value {
-        font-size: 2.5rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .dice-wrapper {
-        width: 70px;
-        height: min(70px, 10vw);
-    }
-    
-    .front, .back, .right, .left, .top, .bottom {
-        transform: translateZ(35px);
-    }
-    
-    .back {
-        transform: rotateY(180deg) translateZ(35px);
-    }
-    
-    .right {
-        transform: rotateY(90deg) translateZ(35px);
-    }
-    
-    .left {
-        transform: rotateY(-90deg) translateZ(35px);
-    }
-    
-    .top {
-        transform: rotateX(90deg) translateZ(35px);
-    }
-    
-    .bottom {
-        transform: rotateX(-90deg) translateZ(35px);
-    }
-    
-    .dot {
         width: 12px;
         height: 12px;
     }
     
     .dice-result {
         font-size: 1.5rem;
+        margin-top: 15px;
     }
     
     .action-buttons {
@@ -612,6 +634,12 @@
     
     .roll-button, .close-button {
         width: 100%;
+        padding: 12px 15px;
+    }
+    
+    .damage-display {
+        padding: 15px;
+        margin: 20px auto;
     }
 }
 
