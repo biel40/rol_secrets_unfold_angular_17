@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { User } from '@supabase/supabase-js';
 import { MatDialog } from '@angular/material/dialog';
 import { DiceMatDialogComponent } from '../dialogs/dice-mat-dialog.component';
+import { Overlay, ScrollStrategy } from '@angular/cdk/overlay';
 
 @Component({
     selector: 'app-habilities',
@@ -23,6 +24,7 @@ export class HabilitiesComponent implements OnInit {
     private _loaderService: LoaderService = inject(LoaderService);
     private _supabaseService: SupabaseService = inject(SupabaseService);
     private _router = inject(Router);
+    private _overlay = inject(Overlay);
 
     public animateDice: boolean = false;
 
@@ -104,8 +106,12 @@ export class HabilitiesComponent implements OnInit {
             data: { 
                 hability: hability
             },
-            width: '80vw',
-            height: '90vh'
+            width: '500px',
+            maxHeight: '90vh',
+            panelClass: 'responsive-dialog',
+            autoFocus: false,
+            disableClose: false,
+            scrollStrategy: this._overlay.scrollStrategies.noop()
         });
     }
 

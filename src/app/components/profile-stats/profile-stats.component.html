@@ -1,26 +1,58 @@
-<div class="mt-12 w-full mb-12">
-    <div class="flex flex-col items-center">
-        <h1 class="text-2xl font-bold">{{ 'stats of the character' | transloco }} </h1>
-        <div>
-            <table>
-                <thead>
-                    <tr>
-
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (key of keys; track $index) {
-                        <tr>
-                            <td>
-                                {{ key }} : {{ dataSource[0][key] }}
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+<div class="pokemon-stats-container">
+    <div class="pokemon-card">
+        <div class="card-header">
+            <h1 class="character-name">{{ profile?.username || 'Character' }}</h1>
+            <div class="character-class">{{ profile?.clase || 'Unknown Class' }}</div>
         </div>
-
-        <div class="mt-8 flex flex-col items-center">
-            <button class="hover:cursor-pointer" (click)="goToEditStats()">{{ 'edit-stats' | transloco }}</button>
+        
+        <div class="character-info">
+            <div class="character-avatar">
+                <!-- Character avatar or silhouette -->
+                <div class="avatar-placeholder">
+                    @if (profile && profile.image_url) {
+                        <img [src]="profile.image_url" alt="Character" class="character-image">
+                    } @else {
+                        <div class="avatar-icon">👤</div>
+                    }
+                </div>
+                <div class="character-level">Lvl {{ profile?.level || '1' }}</div>
+            </div>
+            
+            <div class="character-vitals">
+                <div class="hp-bar">
+                    <div class="stat-label">❤️ HP</div>
+                    <div class="stat-value">{{ profile?.current_hp || 0 }}/{{ profile?.total_hp || 0 }}</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar hp" [style.width.%]="profile && profile.current_hp && profile.total_hp ? (profile.current_hp / profile.total_hp) * 100 : 0"></div>
+                    </div>
+                </div>
+                
+                <div class="weapon-info">
+                    <div class="weapon-label">⚔️ Weapon</div>
+                    <div class="weapon-value">{{ profile?.weapon || 'None' }}</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="stats-container">
+            @for (key of keys; track $index) {
+                @if (key !== '❤️ Vida') {
+                    <div class="stat-row">
+                        <div class="stat-name">{{ key }}</div>
+                        <div class="stat-value">{{ dataSource[0][key] }}</div>
+                        <div class="stat-bar-container">
+                            <div class="stat-bar" [style.width.%]="getStatPercentage(dataSource[0][key])"></div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        
+        <div class="card-footer">
+            <button class="edit-button" (click)="goToEditStats()">
+                <span class="edit-icon">✏️</span>
+                <span>{{ 'edit-stats' | transloco }}</span>
+            </button>
         </div>
     </div>
+</div>

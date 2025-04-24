@@ -7,6 +7,7 @@ import { User } from '@supabase/supabase-js';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslocoModule } from '@jsverse/transloco';
+import { NgIf, NgFor, CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-profile-stats',
@@ -15,7 +16,10 @@ import { TranslocoModule } from '@jsverse/transloco';
     standalone: true,
     imports: [
         MaterialModule,
-        TranslocoModule
+        TranslocoModule,
+        CommonModule,
+        NgIf,
+        NgFor
     ]
 })
 export class ProfileStatsComponent implements OnInit {
@@ -82,4 +86,19 @@ export class ProfileStatsComponent implements OnInit {
         });
     }
 
+    /**
+     * Converts a stat value to a percentage for the stat bar
+     * @param value The stat value
+     * @returns A percentage between 0-100
+     */
+    public getStatPercentage(value: any): number {
+        if (!value || isNaN(Number(value))) return 0;
+        
+        // Max stat value is considered to be 20 (typical for RPG games)
+        const maxStat = 20;
+        const percentage = (Number(value) / maxStat) * 100;
+        
+        // Cap at 100%
+        return Math.min(percentage, 100);
+    }
 }

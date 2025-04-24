@@ -2,7 +2,8 @@
 .dice-dialog-container {
     width: 100%;
     min-width: 300px;
-    height: 100%;
+    max-width: 100%;
+    height: auto;
     margin: 0 auto;
     padding: 20px;
     background: linear-gradient(to bottom, #2c3e50, #1a2530);
@@ -10,7 +11,8 @@
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(255, 215, 0, 0.1);
     color: #e0e0e0;
     position: relative;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
     border: 1px solid #d4af37;
     box-sizing: border-box;
     display: flex;
@@ -428,6 +430,8 @@
 @media (min-width: 1024px) {
     .dice-dialog-container {
         padding: 30px;
+        max-width: 600px;
+        margin: 0 auto;
     }
 
     .dice-wrapper {
@@ -512,6 +516,13 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+    .dice-dialog-container {
+        padding: 15px;
+        max-width: 100%;
+        height: auto;
+        min-height: 100%;
+    }
+    
     .dice-wrapper {
         width: 80px;
         height: min(80px, 12vw);
