@@ -18,8 +18,6 @@ import { NgIf, NgFor, CommonModule } from '@angular/common';
         MaterialModule,
         TranslocoModule,
         CommonModule,
-        NgIf,
-        NgFor
     ]
 })
 export class ProfileStatsComponent implements OnInit {
