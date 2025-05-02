@@ -10,9 +10,11 @@
                             <mat-card-subtitle>{{ hability.description }}</mat-card-subtitle>
                         </mat-card-header>
                         <mat-card-content>
-                            <p>
-                                {{ hability.current_uses }} / {{ hability.total_uses }}
-                            </p>
+                            <div class="uses-stat">
+  <span class="uses-current">{{ hability.current_uses }}</span>
+  <span class="uses-separator">/</span>
+  <span class="uses-total">{{ hability.total_uses }}</span>
+</div>
                             <div class="example-button-container">
                                 <button (click)="removeUses(hability)">
                                     <mat-icon> - </mat-icon>
