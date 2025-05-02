@@ -11,63 +11,32 @@
 
     <div class="dice-scene">
         <div class="dice-container">
+            <!-- Simplified dice with single face that changes dots based on number -->
             <div class="dice-wrapper" [class.rolling]="isRolling">
-                <div class="dice">
-                    <!-- Front face (1) -->
-                    <div class="dice-face front">
-                        <div class="dot center"></div>
-                    </div>
-                    
-                    <!-- Back face (6) -->
-                    <div class="dice-face back">
-                        <div class="dot top-left"></div>
-                        <div class="dot top-right"></div>
-                        <div class="dot middle-left"></div>
-                        <div class="dot middle-right"></div>
-                        <div class="dot bottom-left"></div>
-                        <div class="dot bottom-right"></div>
-                    </div>
-                    
-                    <!-- Right face (3) -->
-                    <div class="dice-face right">
-                        <div class="dot top-left"></div>
-                        <div class="dot center"></div>
-                        <div class="dot bottom-right"></div>
-                    </div>
-                    
-                    <!-- Left face (4) -->
-                    <div class="dice-face left">
-                        <div class="dot top-left"></div>
-                        <div class="dot top-right"></div>
-                        <div class="dot bottom-left"></div>
-                        <div class="dot bottom-right"></div>
-                    </div>
-                    
-                    <!-- Top face (2) -->
-                    <div class="dice-face top">
-                        <div class="dot top-right"></div>
-                        <div class="dot bottom-left"></div>
-                    </div>
-                    
-                    <!-- Bottom face (5) -->
-                    <div class="dice-face bottom">
-                        <div class="dot top-left"></div>
-                        <div class="dot top-right"></div>
-                        <div class="dot center"></div>
-                        <div class="dot bottom-left"></div>
-                        <div class="dot bottom-right"></div>
+                <div class="dice" [attr.data-face]="diceNumber">
+                    <div class="dice-face">
+                        <!-- Dots are dynamically shown based on the data-face attribute in CSS -->
+                        <div class="dot dot-1"></div>
+                        <div class="dot dot-2"></div>
+                        <div class="dot dot-3"></div>
+                        <div class="dot dot-4"></div>
+                        <div class="dot dot-5"></div>
+                        <div class="dot dot-6"></div>
+                        <div class="dot dot-7"></div>
+                        <div class="dot dot-8"></div>
+                        <div class="dot dot-9"></div>
                     </div>
                 </div>
             </div>
 
-            <div class="dice-result" *ngIf="!isRolling">
+            <div class="dice-result">
                 <span>{{ diceNumber }}</span>
             </div>
         </div>
     </div>
 
     <div class="damage-display" style="padding-bottom: 40px;" [class.damage-calculated]="damage > 0">
-        <h3 class="damage-label">TOTAL DE DAÑO</h3>
+        <h3 class="damage-label" style="margin-top: 5px; margin-bottom: 25px;">TOTAL DE DAÑO</h3>
         <p class="damage-value">{{ damage }}</p>
     </div>
 

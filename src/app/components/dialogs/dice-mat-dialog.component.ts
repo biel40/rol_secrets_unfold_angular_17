@@ -59,129 +59,65 @@ export class DiceMatDialogComponent implements OnInit {
     }
 
     /**
-     * Roll the dice with enhanced 3D animation and visual feedback
-     * Optimized for mobile performance
+     * Roll the dice with simple animation and visual feedback
      */
     public rollDice() {
-        // Get elements
-        const diceWrapper = document.querySelector('.dice-wrapper');
-        const dice = document.querySelector('.dice');
-        const damageDisplay = document.querySelector('.damage-display');
+        // Don't allow rolling while already rolling
+        if (this.isRolling) return;
         
         // Set rolling state
         this.isRolling = true;
         
         // Reset damage display
         this.damage = 0;
+        const damageDisplay = document.querySelector('.damage-display');
         if (damageDisplay) {
             damageDisplay.classList.remove('damage-calculated');
         }
         
-        // Generate random number for the dice
-        // We'll store this but not apply it until the animation completes
+        // Generate random number for the dice (1-6)
         const rolledNumber = this.getRandomNumber(1, 6);
+        console.log('Generated random number:', rolledNumber);
         
-        // Optimize for mobile by checking if device is mobile
-        const isMobile = window.innerWidth <= 768;
-        const animationDuration = isMobile ? 1200 : 1200; // Same duration but we can adjust if needed
+        // Get dice elements
+        const diceWrapper = document.querySelector('.dice-wrapper');
+        const dice = document.querySelector('.dice') as HTMLElement | null;
         
-        // Add rolling animation
-        if (diceWrapper) {
-            // Remove animation if it exists (to restart it)
+        if (!dice || !diceWrapper) {
+            console.error('Dice elements not found');
+            this.isRolling = false;
+            return;
+        }
+        
+        // Start the rolling animation
+        diceWrapper.classList.add('rolling');
+        
+        // Animation duration (match with CSS)
+        const animationDuration = 1000; // 1s for the enhanced animations
+        
+        // After animation completes
+        setTimeout(() => {
+            // Stop the animation
             diceWrapper.classList.remove('rolling');
             
-            // Force reflow to restart animation
-            void (diceWrapper as HTMLElement).offsetWidth;
-            
-            // Add rolling animation
-            diceWrapper.classList.add('rolling');
-        }
-
-        // Calculate damage after animation completes and set final dice position
-        setTimeout(() => {
-            // Now set the dice number to ensure synchronization between visual and value
+            // Update the dice number - this will automatically update the face via data-face attribute
             this.diceNumber = rolledNumber;
             
-            // Set the final dice position to match the rolled number
-            this._setFinalDicePosition();
-            
-            // Calculate damage based on the rolled number
+            // Calculate damage
             this._calculateDamage();
             
             // End rolling state
             this.isRolling = false;
             
-            // Add damage-calculated class to the damage display
-            if (damageDisplay) {
-                damageDisplay.classList.add('damage-calculated');
-            }
-        }, animationDuration); // Match this with the CSS animation duration
+            console.log('Animation complete, dice showing:', this.diceNumber);
+        }, animationDuration);
     }
     
-    /**
-     * Set the final position of the dice based on the rolled number
-     * Each face of the dice corresponds to a specific rotation
-     * Enhanced for better mobile display
-     */
-    private _setFinalDicePosition() {
-        const dice = document.querySelector('.dice');
-        if (!dice) return;
-        
-        // Verify that diceNumber is valid (1-6)
-        if (this.diceNumber < 1 || this.diceNumber > 6) {
-            console.error('Invalid dice number:', this.diceNumber);
-            this.diceNumber = 1; // Default to 1 if invalid
-        }
-        
-        // Define rotations for each face to show the correct number
-        // These rotations ensure the correct face is shown facing up
-        const rotations = {
-            1: 'rotateX(0deg) rotateY(0deg)', // Front face (1)
-            2: 'rotateX(90deg) rotateY(0deg)', // Top face (2)
-            3: 'rotateX(0deg) rotateY(90deg)', // Right face (3)
-            4: 'rotateX(0deg) rotateY(-90deg)', // Left face (4)
-            5: 'rotateX(-90deg) rotateY(0deg)', // Bottom face (5)
-            6: 'rotateX(0deg) rotateY(180deg)' // Back face (6)
-        };
-        
-        // Apply the rotation for the current dice number with a smooth transition
-        const diceElement = dice as HTMLElement;
-        diceElement.style.transition = 'transform 0.5s cubic-bezier(0.17, 0.67, 0.83, 0.67)';
-        diceElement.style.transform = rotations[this.diceNumber as keyof typeof rotations];
-        
-        // Log for debugging
-        console.log('Setting dice position to show:', this.diceNumber);
-        
-        // Update the dice result display to ensure it matches
-        const diceResultElement = document.querySelector('.dice-result span');
-        if (diceResultElement) {
-            diceResultElement.textContent = this.diceNumber.toString();
-        }
-        
-        // Also update any detail items showing the dice result
-        const diceDetailElement = document.querySelector('.detail-item .detail-label + span');
-        if (diceDetailElement) {
-            diceDetailElement.textContent = this.diceNumber.toString();
-        }
-        
-        // Detect if we're on a mobile device for potential optimizations
-        const isMobile = window.innerWidth <= 768;
-        if (isMobile) {
-            // For mobile, we can add specific optimizations if needed
-            diceElement.style.willChange = 'transform';
-            
-            // Clean up will-change after transition to save memory on mobile
-            setTimeout(() => {
-                diceElement.style.willChange = 'auto';
-            }, 500);
-        }
-    }
-
     /**
      * Calculate damage based on dice roll and character stats
      */
     private async _calculateDamage() {
-        console.log('Calculating damage...');
+        console.log('Calculating damage for dice number:', this.diceNumber);
 
         if (this.hability) {
             // Decrement ability uses
@@ -214,27 +150,23 @@ export class DiceMatDialogComponent implements OnInit {
                     damage += 1;
                 }
 
-                // Set final damage value with a slight delay for visual effect
+                console.log('Final calculated damage:', damage);
+                
+                // Set the damage value
+                this.damage = damage;
+                
+                // Show the damage display with animation
                 setTimeout(() => {
-                    this.damage = damage;
-                    
-                    // Add damage-calculated class to the damage display element
                     const damageDisplay = document.querySelector('.damage-display');
                     if (damageDisplay) {
                         damageDisplay.classList.add('damage-calculated');
                     }
-                }, 200);
+                }, 300);
             }
         }
     }
 
-    /**
-     * Toggle die animation classes
-     */
-    public toggleClasses(die: any) {
-        die.classList.toggle("odd-roll");
-        die.classList.toggle("even-roll");
-    }
+    // This method is no longer needed with the simplified dice implementation
 
     /**
      * Generate a random number between min and max (inclusive)
