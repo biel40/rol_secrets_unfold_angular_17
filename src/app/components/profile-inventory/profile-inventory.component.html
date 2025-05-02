@@ -1,38 +1,68 @@
-<div class="m-8 flex items-center justify-center">
-    <button (click)="createNewItem = true">Añadir nuevo objeto al inventario</button>
-</div>
-
-@if (createNewItem == true) {
-    <div class="new-item-form">
-        <form>
-            <input type="text" name="name" placeholder="Nombre del objeto" [(ngModel)]="newItem.name">
-            <input type="text" name="description" placeholder="Descripción del objeto" [(ngModel)]="newItem.description">
-            <input type="text" name="value" placeholder="Precio del objeto" [(ngModel)]="newItem.value">
-            <input type="text" name="img_src" placeholder="URL de la imagen" [(ngModel)]="newItem.img_src">
-          </form>
-
-        <button class="!mt-7 !mr-7" (click)="createNewItem = false">Cancelar</button>
-        <button (click)="saveItemToProfile()">Añadir objeto</button>
-    </div>
-}
-
-<div class="inventory">
-    @for (item of items; track $index) {
-        <div class="inventory_item">
-            <div class="inventory_item_info">
-                <h2 class="!pt-4">{{ item.name }}</h2>
-                <p class="item-description">{{ item.description }}</p>
-                <p>Precio del objeto: {{ item.value }} monedas de Oro</p>
-            </div>
-
-            <div class="inventory_item_wrapper">
-                <img src="{{ item.img_src }}" alt="{{ item.name }}">
-            </div>
-
-            <div class="inventory_item_actions | flex justify-center !mt-3 gap-10">
-                <button class="use-item-button">Usar</button>
-                <button (click)="deleteItem(item)" class="delete-item-button">Eliminar</button>
-            </div>
+<div class="inventory-container">
+    <div class="inventory-card">
+        <div class="card-header">
+            <h1 class="inventory-title">Inventario</h1>
+            <button class="add-button" (click)="createNewItem = true">
+                <span class="add-icon">➕</span>
+                <span>Añadir objeto</span>
+            </button>
         </div>
-    }
+
+        @if (createNewItem) {
+            <div class="new-item-form">
+                <h2 class="form-title">Nuevo objeto</h2>
+                <form>
+                    <div class="form-group">
+                        <input type="text" name="name" placeholder="Nombre del objeto" [(ngModel)]="newItem.name" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea name="description" placeholder="Descripción del objeto" [(ngModel)]="newItem.description" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" name="value" placeholder="Precio (monedas de oro)" [(ngModel)]="newItem.value">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="img_src" placeholder="URL de la imagen" [(ngModel)]="newItem.img_src">
+                    </div>
+                    <div class="form-actions">
+                        <button class="cancel-button" (click)="createNewItem = false">Cancelar</button>
+                        <button class="save-button" (click)="saveItemToProfile()">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        }
+
+        <div class="inventory-grid">
+            @if (items && items.length > 0) {
+                @for (item of items; track $index) {
+                    <div class="item-card">
+                        <div class="item-header">
+                            <h2 class="item-name">{{ item.name }}</h2>
+                            <div class="item-value">{{ item.value }} 💰</div>
+                        </div>
+                        
+                        <div class="item-image-container">
+                            @if (item.img_src) {
+                                <img [src]="item.img_src" [alt]="item.name" class="item-image">
+                            } @else {
+                                <div class="item-placeholder">🎒</div>
+                            }
+                        </div>
+                        
+                        <div class="item-description">{{ item.description }}</div>
+                        
+                        <div class="item-actions">
+                            <button class="use-button">Usar</button>
+                            <button class="delete-button" (click)="deleteItem(item)">Eliminar</button>
+                        </div>
+                    </div>
+                }
+            } @else {
+                <div class="empty-inventory">
+                    <div class="empty-icon">🎒</div>
+                    <p>Tu inventario está vacío</p>
+                </div>
+            }
+        </div>
+    </div>
 </div>

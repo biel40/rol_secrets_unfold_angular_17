@@ -1,136 +1,324 @@
-.container {
-    max-width: 1200px;
+/* Inventory Container */
+.inventory-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding: 20px;
+    font-family: 'Segoe UI', 'Roboto', sans-serif;
 }
 
-h1 {
-    text-align: center;
-    color: #ff4fa2;
+/* Inventory Card */
+.inventory-card {
+    background: linear-gradient(to bottom, #2a2a2a, #1a1a1a);
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 900px;
+    padding: 20px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid #444;
 }
 
-.inventory {
+/* Card Header */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.inventory-title {
+    font-size: 1.8rem;
+    margin: 0;
+    color: #ffcb05; /* Pokemon yellow */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    letter-spacing: 1px;
+}
+
+.add-button {
+    background: #3d7dca; /* Pokemon blue */
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
     display: flex;
     align-items: center;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.add-button:hover {
+    background: #5090e0;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+}
+
+.add-icon {
+    margin-right: 8px;
+}
+
+/* New Item Form */
+.new-item-form {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(61, 125, 202, 0.5); /* Pokemon blue border */
+}
+
+.form-title {
+    color: #ffcb05; /* Pokemon yellow */
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.4rem;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.new-item-form input,
+.new-item-form textarea {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 10px 15px;
+    color: #fff;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.new-item-form input:focus,
+.new-item-form textarea:focus {
+    border-color: #3d7dca; /* Pokemon blue */
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(61, 125, 202, 0.3);
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.cancel-button {
+    background: #666;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cancel-button:hover {
+    background: #888;
+}
+
+.save-button {
+    background: #3d7dca; /* Pokemon blue */
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.save-button:hover {
+    background: #5090e0;
+}
+
+/* Inventory Grid */
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+/* Item Card */
+.item-card {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    height: 100%;
+    display: flex;
     flex-direction: column;
 }
 
-.button-group {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 20px;
+.item-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+    border-color: rgba(61, 125, 202, 0.5); /* Pokemon blue border */
 }
 
-button {
-    background-color: #ff4fa2;
-    color: #ffffff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
+.item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
+}
+
+.item-name {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #ffcb05; /* Pokemon yellow */
     font-weight: bold;
 }
 
-button:hover {
-    background-color: #ffffff;
-    color: #ff4fa2;
-    border: 1px solid #ff4fa2;
-}
-
-.inventory-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 10px;
-    border: 1px solid #ff4fa2;
-}
-
-.card {
-    background-color: #292929;
-    border-radius: 10px;
-    padding: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    transition: transform 0.2s;
-}
-
-.inventory_item {
-    border: 1px solid whitesmoke;
-    margin-bottom: 3em;
-    width: 100%;
-    max-width: 50em;
-    height: 30em;
-}
-
-/* Estilos para pantallas pequeñas */
-@media (max-width: 768px) {
-    .inventory_item {
-        width: 95%;
-        height: 22em;
-    }
-
-    .item-description {
-        padding-left: 1.5em;
-    }
-}
-
-/* Estilos para pantallas grandes */
-@media (min-width: 1200px) {
-    .inventory_item {
-        width: 90%;
-        height: 29em;
-    }
-}
-
-.inventory_item_info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.inventory_item_wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-img {
-    max-width: 40%;
-    width: 30%;
-    height: auto;
-    border-radius: 10px;
-    margin-bottom: 10px;
-}
-
-.new-item-form {
-    background: #1a1a1a;
-    padding: 2rem;
+.item-value {
+    background: #cc0000; /* Pokemon red */
+    color: white;
+    padding: 3px 8px;
     border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-    margin: 2rem auto;
-    max-width: 800px;
+    font-size: 0.9rem;
+    font-weight: bold;
 }
 
-.new-item-form form {
+.item-image-container {
     display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
     justify-content: center;
-}
-
-.new-item-form input {
-    background: #2d2d2d;
-    border: 2px solid #444;
-    color: #fff;
-    padding: 0.8rem 1.2rem;
+    align-items: center;
+    height: 120px;
+    margin: 10px 0;
+    overflow: hidden;
     border-radius: 8px;
-    flex: 1 1 200px;
-    min-width: 200px;
-    transition: all 0.3s ease;
+    background: rgba(0, 0, 0, 0.3);
 }
 
+.item-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.item-image:hover {
+    transform: scale(1.1);
+}
+
+.item-placeholder {
+    font-size: 3rem;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.item-description {
+    flex-grow: 1;
+    margin: 10px 0;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.4;
+}
+
+.item-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.use-button {
+    background: #3d7dca; /* Pokemon blue */
+    color: white;
+    border: none;
+    padding: 8px 0;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    flex: 1;
+    transition: all 0.2s ease;
+}
+
+.use-button:hover {
+    background: #5090e0;
+}
+
+.delete-button {
+    background: #cc0000; /* Pokemon red */
+    color: white;
+    border: none;
+    padding: 8px 0;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    flex: 1;
+    transition: all 0.2s ease;
+}
+
+.delete-button:hover {
+    background: #ff0000;
+}
+
+/* Empty Inventory */
+.empty-inventory {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    grid-column: 1 / -1;
+    padding: 40px 0;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.empty-icon {
+    font-size: 4rem;
+    margin-bottom: 15px;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* Snackbar Styles */
 .snack-bar-success {
     background-color: #4caf50;
     color: #fff;
+}
+
+.snack-bar-danger {
+    background-color: #cc0000; /* Pokemon red */
+    color: #fff;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .inventory-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+    
+    .card-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .form-actions button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .inventory-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .item-actions {
+        flex-direction: column;
+    }
 }
