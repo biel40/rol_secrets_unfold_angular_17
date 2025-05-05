@@ -11,24 +11,55 @@
 
     <div class="dice-scene">
         <div class="dice-container">
-            <!-- Simplified dice with single face that changes dots based on number -->
-            <div class="dice-wrapper" [class.rolling]="isRolling">
-                <div class="dice" [attr.data-face]="diceNumber">
-                    <div class="dice-face">
-                        <!-- Dots are dynamically shown based on the data-face attribute in CSS -->
-                        <div class="dot dot-1"></div>
-                        <div class="dot dot-2"></div>
-                        <div class="dot dot-3"></div>
-                        <div class="dot dot-4"></div>
-                        <div class="dot dot-5"></div>
-                        <div class="dot dot-6"></div>
-                        <div class="dot dot-7"></div>
-                        <div class="dot dot-8"></div>
-                        <div class="dot dot-9"></div>
+            <div class="dice-wrapper" [class.rolling]="isRolling" id="dice-wrapper">
+                <div class="dice" [attr.data-face]="diceNumber" id="dice">
+                    <!-- Face 1: One dot in center -->
+                    <div class="dice-face front">
+                        <div class="dot center"></div>
+                    </div>
+                    
+                    <!-- Face 6: Six dots in two columns -->
+                    <div class="dice-face back">
+                        <div class="dot top-left"></div>
+                        <div class="dot top-right"></div>
+                        <div class="dot middle-left"></div>
+                        <div class="dot middle-right"></div>
+                        <div class="dot bottom-left"></div>
+                        <div class="dot bottom-right"></div>
+                    </div>
+                    
+                    <!-- Face 4: Four dots in corners -->
+                    <div class="dice-face right">
+                        <div class="dot top-left"></div>
+                        <div class="dot top-right"></div>
+                        <div class="dot bottom-left"></div>
+                        <div class="dot bottom-right"></div>
+                    </div>
+                    
+                    <!-- Face 3: Three dots diagonal -->
+                    <div class="dice-face left">
+                        <div class="dot top-left"></div>
+                        <div class="dot center"></div>
+                        <div class="dot bottom-right"></div>
+                    </div>
+                    
+                    <!-- Face 2: Two dots diagonal -->
+                    <div class="dice-face top">
+                        <div class="dot top-left"></div>
+                        <div class="dot bottom-right"></div>
+                    </div>
+                    
+                    <!-- Face 5: Five dots like on playing cards -->
+                    <div class="dice-face bottom">
+                        <div class="dot top-left"></div>
+                        <div class="dot top-right"></div>
+                        <div class="dot center"></div>
+                        <div class="dot bottom-left"></div>
+                        <div class="dot bottom-right"></div>
                     </div>
                 </div>
+                <div class="dice-shadow"></div>
             </div>
-
             <div class="dice-result">
                 <span>{{ diceNumber }}</span>
             </div>

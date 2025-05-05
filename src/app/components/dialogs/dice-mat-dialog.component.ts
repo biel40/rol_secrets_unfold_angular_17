@@ -89,27 +89,19 @@ export class DiceMatDialogComponent implements OnInit {
             return;
         }
         
-        // Start the rolling animation
         diceWrapper.classList.add('rolling');
         
-        // Animation duration (match with CSS)
-        const animationDuration = 1000; // 1s for the enhanced animations
+
+        const animationDuration = 1500; // 1.5s for the new 3D dice animation
         
-        // After animation completes
         setTimeout(() => {
-            // Stop the animation
             diceWrapper.classList.remove('rolling');
             
-            // Update the dice number - this will automatically update the face via data-face attribute
             this.diceNumber = rolledNumber;
             
-            // Calculate damage
             this._calculateDamage();
             
-            // End rolling state
             this.isRolling = false;
-            
-            console.log('Animation complete, dice showing:', this.diceNumber);
         }, animationDuration);
     }
     
