@@ -92,7 +92,7 @@ export class DiceMatDialogComponent implements OnInit {
         diceWrapper.classList.add('rolling');
         
 
-        const animationDuration = 1500; // 1.5s for the new 3D dice animation
+        const animationDuration = 1500;
         
         setTimeout(() => {
             diceWrapper.classList.remove('rolling');
