@@ -21,5 +21,22 @@
     "edit-stats": "Editar estadísticas",
     "begin-battle": "¡Empezar el combate!",
     "add": "Añadir",
-    "delete": "Eliminar"
+    "delete": "Eliminar",
+    "dm-dashboard": "Panel del DM",
+    "enemies": "Enemigos",
+    "npcs": "NPCs",
+    "quests": "Misiones",
+    "battle-preparation": "Preparación de combate",
+    "clear-all": "Limpiar",
+    "no-enemies-selected": "No hay enemigos seleccionados",
+    "select-enemies-below": "Selecciona enemigos de la biblioteca",
+    "enemy-library": "Biblioteca de Enemigos",
+    "create-enemy": "Crear Enemigo",
+    "search-enemies": "Buscar enemigos...",
+    "add-to-battle": "Añadir al combate",
+    "edit": "Editar",
+    "no-enemies-available": "No hay enemigos disponibles",
+    "create-first-enemy": "Crear primer enemigo",
+    "sign-out": "Cerrar sesión",
+    "master-of-secrets": "Maestro de los Secretos"
 }

@@ -51,7 +51,8 @@ export interface Enemy {
   current_hp: number,
   total_hp: number,
   is_boss: boolean,
-  image_url: string
+  image_url: string,
+  defense?: number
 }
 
 export interface Item {
@@ -311,6 +312,13 @@ export class SupabaseService {
       .from('items')
       .delete()
       .eq('id', item.id);
+  }
+
+  public async deleteEnemy(enemyId: string) {
+    return await this._supabaseClient
+      .from('enemies')
+      .delete()
+      .eq('id', enemyId);
   }
 
 }

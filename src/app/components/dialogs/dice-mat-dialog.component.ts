@@ -79,23 +79,21 @@ export class DiceMatDialogComponent implements OnInit {
         const rolledNumber = this.getRandomNumber(1, 6);
         console.log('Generated random number:', rolledNumber);
         
-        // Get dice elements
-        const diceWrapper = document.querySelector('.dice-wrapper');
-        const dice = document.querySelector('.dice') as HTMLElement | null;
+        // Get dice element
+        const simpleDice = document.querySelector('.simple-dice');
         
-        if (!dice || !diceWrapper) {
-            console.error('Dice elements not found');
+        if (!simpleDice) {
+            console.error('Dice element not found');
             this.isRolling = false;
             return;
         }
         
-        diceWrapper.classList.add('rolling');
+        simpleDice.classList.add('rolling');
         
-
-        const animationDuration = 1500;
+        const animationDuration = 1000;
         
         setTimeout(() => {
-            diceWrapper.classList.remove('rolling');
+            simpleDice.classList.remove('rolling');
             
             this.diceNumber = rolledNumber;
             

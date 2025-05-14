@@ -1,60 +1,144 @@
-<div class="flex flex-col h-full w-full items-center mt-10 overflow-scroll">
-    <h1 class="mt-4"> Perfil de Admin: DM </h1>
+<div class="dm-dashboard">
+    <!-- Header with DM tools navigation -->
+    <div class="dm-header">
+        <div class="dm-title-container">
+            <h1 class="dm-title">{{ 'dm-dashboard' | transloco }}</h1>
+        </div>
 
-    @if (enemiesList && enemiesList.length > 0) {
-        @for (enemy of enemiesListToStartBattle; track $index) {
-            <div>
-                <h2> Enemigos preparados para el combate: </h2>
-                <ul>
-                    <li>
-                        <p> {{ enemy.name }} </p>
-                    </li>
-                </ul>
-            </div>
-        }
-    }
-
-    <div class="flex flex-row m-5">
-        <button (click)="startBattle()">
-            {{ 'begin-battle' | transloco }}
-        </button>
+        <div class="dm-tabs">
+            <button class="dm-tab active" (click)="switchTab('enemies')">{{ 'enemies' | transloco }}</button>
+            <button class="dm-tab" (click)="switchTab('npcs')">{{ 'npcs' | transloco }}</button>
+            <button class="dm-tab" (click)="switchTab('quests')">{{ 'quests' | transloco }}</button>
+            <button class="dm-tab" (click)="switchTab('items')">{{ 'items' | transloco }}</button>
+        </div>
     </div>
 
-    <p> Listado de enemigos disponibles : </p>
+    <!-- Main content area -->
+    <div class="dm-content">
+        <!-- Battle preparation panel -->
+        <div class="battle-panel">
+            <div class="battle-header">
+                <h2 class="battle-title">{{ 'battle-preparation' | transloco }}</h2>
+                <div class="battle-actions">
+                    <button class="battle-button" [disabled]="enemiesListToStartBattle.length === 0"
+                        (click)="startBattle()">
+                        <span class="battle-icon">⚔️</span>
+                        {{ 'begin-battle' | transloco }}
+                    </button>
+                    <button class="battle-button secondary" [disabled]="enemiesListToStartBattle.length === 0"
+                        (click)="clearBattleList()">
+                        {{ 'clear-all' | transloco }}
+                    </button>
+                </div>
+            </div>
 
-    @if (enemiesList && enemiesList.length > 0) {
-        @for (enemy of enemiesList; track $index) {
-            <mat-card class="mt-4 md:w-1/3 w-3/4">
-                <mat-card-header>
-                    <div mat-card-avatar class="example-header-image"></div>
-                    <mat-card-title> {{ enemy.name }} </mat-card-title>
-                    <mat-card-subtitle>  </mat-card-subtitle>
-                </mat-card-header>
-                <img mat-card-image class="m-4" [src]="enemy.image_url" alt="photo of enemy">
-                <mat-card-content>
-                    <p>
-                        {{ enemy.description }}
-                    </p>
-                </mat-card-content>
-                <mat-card-content>
-                    <p>
-                        {{ 'level' | transloco }} : {{ enemy.level }}
-                    </p>
-                </mat-card-content>
-                <mat-card-actions class="flex flex-row m-4">
-                    <button class="ml-4" mat-button (click)="addEnemyToBattle(enemy)"> {{ 'add' | transloco }} </button>
-                    <button class="ml-4" mat-button> {{ 'delete' | transloco }} </button>
-                </mat-card-actions>
-            </mat-card>
-        }
-    }
+            <div class="battle-enemies">
+                @if (enemiesListToStartBattle.length > 0) {
+                <div class="selected-enemies-list">
+                    @for (enemy of enemiesListToStartBattle; track $index) {
+                    <div class="selected-enemy-item">
+                        <div class="enemy-avatar" [style.backgroundImage]="'url(' + enemy.image_url + ')'">
+                            <div class="enemy-level">{{ enemy.level }}</div>
+                        </div>
+                        <div class="enemy-details">
+                            <div class="enemy-name">{{ enemy.name }}</div>
+                            <div class="enemy-stats">HP: {{ enemy.current_hp }}</div>
+                        </div>
+                        <button class="remove-enemy" (click)="removeEnemyFromBattle(enemy)">
+                            <span>×</span>
+                        </button>
+                    </div>
+                    }
+                </div>
+                } @else {
+                <div class="empty-battle-list">
+                    <div class="empty-icon">🛡️</div>
+                    <p>{{ 'no-enemies-selected' | transloco }}</p>
+                    <p class="empty-hint">{{ 'select-enemies-below' | transloco }}</p>
+                </div>
+                }
+            </div>
+        </div>
 
-    <app-locale-changer class="mt-6"></app-locale-changer>
+        <!-- Enemy library section -->
+        <div class="enemies-library">
+            <div class="library-header">
+                <h2 class="library-title">{{ 'enemy-library' | transloco }}</h2>
+                <div class="library-actions">
+                    <button class="library-button" (click)="openCreateEnemyDialog()">
+                        <span class="add-icon">+</span>
+                        {{ 'create-enemy' | transloco }}
+                    </button>
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="{{ 'search-enemies' | transloco }}"
+                            [(ngModel)]="searchTerm">
+                    </div>
+                </div>
+            </div>
 
-    <div class="mt-8 mb-8">
-        <button (click)="signOut()">
+            <div class="enemies-grid">
+                @if (enemiesList && enemiesList.length > 0) {
+                @for (enemy of filteredEnemies; track $index) {
+                <div class="enemy-card">
+                    <div class="enemy-card-header">
+                        <h3 class="enemy-card-title">{{ enemy.name }}</h3>
+                        <div class="enemy-card-level">{{ 'level' | transloco }} {{ enemy.level }}</div>
+                    </div>
+
+                    <div class="enemy-card-image" [style.backgroundImage]="'url(' + enemy.image_url + ')'">
+                        <div class="enemy-card-overlay"></div>
+                    </div>
+
+                    <div class="enemy-card-content">
+                        <p class="enemy-card-description">{{ enemy.description }}</p>
+
+                        <div class="enemy-card-stats">
+                            <div class="stat-item">
+                                <span class="stat-icon">❤️</span>
+                                <span class="stat-value">{{ enemy.total_hp || 100 }}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-icon">⚔️</span>
+                                <span class="stat-value">10</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-icon">🛡️</span>
+                                <span class="stat-value">{{ enemy.defense || 5 }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="enemy-card-actions">
+                        <button class="enemy-action-button primary" (click)="addEnemyToBattle(enemy)">
+                            {{ 'add-to-battle' | transloco }}
+                        </button>
+                        <button class="enemy-action-button" (click)="editEnemy(enemy)">
+                            {{ 'edit' | transloco }}
+                        </button>
+                        <button class="enemy-action-button danger" (click)="deleteEnemy(enemy)">
+                            {{ 'delete' | transloco }}
+                        </button>
+                    </div>
+                </div>
+                }
+                } @else {
+                <div class="empty-enemies-list">
+                    <div class="empty-icon">🐉</div>
+                    <p>{{ 'no-enemies-available' | transloco }}</p>
+                    <button class="create-first-enemy" (click)="openCreateEnemyDialog()">
+                        {{ 'create-first-enemy' | transloco }}
+                    </button>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer with settings and user options -->
+    <div class="dm-footer">
+        <app-locale-changer></app-locale-changer>
+        <button class="enemy-action-button danger" (click)="signOut()">
             {{ 'sign-out' | transloco }}
         </button>
     </div>
-
 </div>
