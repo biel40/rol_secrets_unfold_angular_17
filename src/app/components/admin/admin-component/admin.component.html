@@ -6,15 +6,17 @@
         </div>
 
         <div class="dm-tabs">
-            <button class="dm-tab active" (click)="switchTab('enemies')">{{ 'enemies' | transloco }}</button>
-            <button class="dm-tab" (click)="switchTab('npcs')">{{ 'npcs' | transloco }}</button>
-            <button class="dm-tab" (click)="switchTab('quests')">{{ 'quests' | transloco }}</button>
-            <button class="dm-tab" (click)="switchTab('items')">{{ 'items' | transloco }}</button>
+            <button class="dm-tab" [class.active]="currentTab === 'enemies'" (click)="switchTab('enemies')">{{ 'enemies' | transloco }}</button>
+            <button class="dm-tab" [class.active]="currentTab === 'npcs'" (click)="switchTab('npcs')">{{ 'npcs' | transloco }}</button>
+            <button class="dm-tab" [class.active]="currentTab === 'quests'" (click)="switchTab('quests')">{{ 'quests' | transloco }}</button>
+            <button class="dm-tab" [class.active]="currentTab === 'items'" (click)="switchTab('items')">{{ 'items' | transloco }}</button>
         </div>
     </div>
 
     <!-- Main content area -->
     <div class="dm-content">
+        <!-- Enemies Section - only visible when enemies tab is active -->
+        <ng-container *ngIf="currentTab === 'enemies'">
         <!-- Battle preparation panel -->
         <div class="battle-panel">
             <div class="battle-header">
@@ -132,6 +134,75 @@
                 }
             </div>
         </div>
+        </ng-container>
+        
+        <!-- NPCs Section - only visible when npcs tab is active -->
+        <ng-container *ngIf="currentTab === 'npcs'">
+            <div class="npcs-library">
+                <div class="library-header">
+                    <h2 class="library-title">{{ 'npc-library' | transloco }}</h2>
+                    <div class="library-actions">
+                        <button class="library-button" (click)="createNPC()">
+                            <span class="add-icon">+</span>
+                            {{ 'create-npc' | transloco }}
+                        </button>
+                        <div class="search-container">
+                            <input type="text" class="search-input" placeholder="{{ 'search-npcs' | transloco }}"
+                                [(ngModel)]="searchTermNPCs">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="enemies-grid">
+                    @if (filteredNPCs.length > 0) {
+                    @for (npc of filteredNPCs; track npc.id) {
+                    <div class="enemy-card">
+                        <div class="enemy-card-header">
+                            <h3 class="enemy-card-title">{{ npc.name }}</h3>
+                        </div>
+
+                        <div class="enemy-card-image" [style.backgroundImage]="'url(' + npc.img_url + ')'">
+                            <div class="enemy-card-overlay"></div>
+                        </div>
+
+                        <div class="enemy-card-content">
+                            <div class="enemy-card-stats">
+                                @if (npc.location) {
+                                    <div class="stat-item">
+                                        <span class="stat-icon">📍</span>
+                                        <span class="stat-value">{{ npc.location }}</span>
+                                    </div>  
+                                }
+                                @if (npc.description) {
+                                    <div class="stat-item">
+                                        <span>{{ npc.description }}</span>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="enemy-card-actions">
+                            <button class="enemy-action-button" (click)="editNPC(npc)">
+                                {{ 'edit' | transloco }}
+                            </button>
+                            <button class="enemy-action-button danger" (click)="deleteNPC(npc)">
+                                {{ 'delete' | transloco }}
+                            </button>
+                        </div>
+                    </div>
+                    }
+                    } @else {
+                    <div class="empty-enemies-list">
+                        <div class="empty-icon">👤</div>
+                        <p>{{ 'no-npcs-available' | transloco }}</p>
+                        <button class="create-first-enemy" (click)="createNPC()">
+                            {{ 'create-first-npc' | transloco }}
+                        </button>
+                    </div>
+                    }
+                </div>
+            </div>
+        </ng-container>
     </div>
 
     <!-- Footer with settings and user options -->

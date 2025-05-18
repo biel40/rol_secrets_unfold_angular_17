@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { Profile, Enemy, SupabaseService } from '../../../services/supabase/supabase.service';
+import { Profile, Enemy, NPC, SupabaseService } from '../../../services/supabase/supabase.service';
 import { UserService } from '../../../services/user/user.service';
 import { RealtimeChannel, User } from '@supabase/supabase-js';
 import { MaterialModule } from '../../../modules/material.module';
@@ -40,8 +40,12 @@ export class AdminComponent implements OnInit {
     public enemiesList: Enemy[] = [];
     public enemiesListToStartBattle: Enemy[] = [];
     
+    // NPC properties
+    public npcsList: NPC[] = [];
+    public searchTermNPCs: string = '';
+    
     // New properties for enhanced DM dashboard
-    public currentTab: string = 'enemies';
+    public currentTab: 'enemies' | 'npcs' | 'quests' | 'items' = 'enemies';
     public searchTerm: string = '';
     
     // Computed property for filtered enemies
@@ -55,6 +59,20 @@ export class AdminComponent implements OnInit {
             enemy.name.toLowerCase().includes(term) || 
             (enemy.description && enemy.description.toLowerCase().includes(term)) ||
             (enemy.level && enemy.level.toString().includes(term))
+        );
+    }
+    
+    // Computed property for filtered NPCs
+    public get filteredNPCs(): NPC[] {
+        if (!this.searchTermNPCs.trim()) {
+            return this.npcsList;
+        }
+        
+        const term = this.searchTermNPCs.toLowerCase().trim();
+        return this.npcsList.filter(npc => 
+            npc.name.toLowerCase().includes(term) || 
+            (npc.description && npc.description.toLowerCase().includes(term)) ||
+            (npc.location && npc.location.toLowerCase().includes(term))
         );
     }
 
@@ -76,6 +94,7 @@ export class AdminComponent implements OnInit {
 
     private async _loadData(): Promise<void> {
         this.enemiesList = (await this._supabaseService.getEnemies()).data as Enemy[];
+        this.npcsList = (await this._supabaseService.getNPCs()).data as NPC[];
     }
 
     public async deleteEnemy(enemy: Enemy): Promise<void> {
@@ -142,7 +161,9 @@ export class AdminComponent implements OnInit {
 
     // New methods for enhanced DM dashboard
     public switchTab(tabName: string): void {
-        this.currentTab = tabName;
+        if (tabName === 'enemies' || tabName === 'npcs' || tabName === 'quests' || tabName === 'items') {   
+            this.currentTab = tabName;
+        }
     }
     
     public clearBattleList(): void {
@@ -158,21 +179,41 @@ export class AdminComponent implements OnInit {
     }
     
     public openCreateEnemyDialog(): void {
-        // This would normally open a dialog to create a new enemy
-        // For now, we'll just show a message
+        // Temporarily disabled
         this._displaySnackbar('Funcionalidad de crear enemigo en desarrollo.');
     }
     
     public editEnemy(enemy: Enemy): void {
-        // This would normally open a dialog to edit the enemy
-        // For now, we'll just show a message
-        this._displaySnackbar(`Edición de ${enemy.name} en desarrollo.`);
+        // Temporarily disabled
+        this._displaySnackbar('Funcionalidad de editar enemigo en desarrollo.');
     }
     
+    public async deleteNPC(npc: NPC): Promise<void> {
+        if (confirm(`¿Estás seguro de que deseas eliminar a ${npc.name}?`)) {
+            try {
+                await this._supabaseService.deleteNPC(npc.id);
+                this.npcsList = this.npcsList.filter(n => n.id !== npc.id);
+                this._displaySnackbar(`${npc.name} ha sido eliminado correctamente.`);
+            } catch (error) {
+                console.error('Error deleting NPC:', error);
+                this._displaySnackbar('Error al eliminar el NPC. Inténtalo de nuevo.');
+            }
+        }
+    }
+
+    public async createNPC(): Promise<void> {
+        // Temporarily disabled
+        this._displaySnackbar('Funcionalidad de crear NPC en desarrollo.');
+    }
+
+    public editNPC(npc: NPC): void {
+        // Temporarily disabled
+        this._displaySnackbar('Funcionalidad de editar NPC en desarrollo.');
+    }
+
     public ngOnDestroy(): void {
         if (this.battleChannel) {
             this.battleChannel.unsubscribe();
         }
-    }
-
+    }   
 }

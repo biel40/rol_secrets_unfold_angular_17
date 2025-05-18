@@ -38,5 +38,14 @@
     "no-enemies-available": "No hay enemigos disponibles",
     "create-first-enemy": "Crear primer enemigo",
     "sign-out": "Cerrar sesión",
-    "master-of-secrets": "Maestro de los Secretos"
+    "master-of-secrets": "Maestro de los Secretos",
+    "npc-library": "Biblioteca de NPCs",
+    "create-npc": "Crear NPC",
+    "search-npcs": "Buscar NPCs...",
+    "no-npcs-available": "No hay NPCs disponibles",
+    "create-first-npc": "Crear primer NPC",
+    "quest-giver": "Dador de misiones",
+    "location": "Ubicación",
+    "notes": "Notas",
+    "occupation": "Ocupación"
 }

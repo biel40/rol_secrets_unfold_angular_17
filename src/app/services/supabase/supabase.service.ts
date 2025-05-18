@@ -55,6 +55,14 @@ export interface Enemy {
   defense?: number
 }
 
+export interface NPC {
+  id: string,
+  name: string,
+  description: string,
+  img_url: string,
+  location?: string
+}
+
 export interface Item {
   id: number,
   profile_id: string,
@@ -321,4 +329,32 @@ export class SupabaseService {
       .eq('id', enemyId);
   }
 
+  // NPC methods for Supabase integration
+  public async getNPCs() {
+    return await this._supabaseClient
+      .from('npcs')
+      .select('*');
+  }
+
+  public async createNPC(npc: NPC) {
+    return await this._supabaseClient
+      .from('npcs')
+      .insert(npc)
+      .select();
+  }
+
+  public async updateNPC(npc: NPC) {
+    return await this._supabaseClient
+      .from('npcs')
+      .update(npc)
+      .eq('id', npc.id)
+      .select();
+  }
+
+  public async deleteNPC(npcId: string) {
+    return await this._supabaseClient
+      .from('npcs')
+      .delete()
+      .eq('id', npcId);
+  }
 }
