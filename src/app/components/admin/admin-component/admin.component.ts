@@ -72,8 +72,7 @@ export class AdminComponent implements OnInit {
         const term = this.searchTermNPCs.toLowerCase().trim();
         return this.npcsList.filter(npc => 
             npc.name.toLowerCase().includes(term) || 
-            (npc.description && npc.description.toLowerCase().includes(term)) ||
-            (npc.location && npc.location.toLowerCase().includes(term))
+            (npc.description && npc.description.toLowerCase().includes(term))
         );
     }
 

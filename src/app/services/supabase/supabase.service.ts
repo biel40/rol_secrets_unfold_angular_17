@@ -56,14 +56,10 @@ export interface Enemy {
 }
 
 export interface NPC {
-  id: string,
+  id: number,
   name: string,
   description: string,
-  img_url: string,
-  location?: string,
-  npc_type?: string,
-  notes?: string,
-  occupation?: string
+  img_url: string
 }
 
 export interface Item {
@@ -354,7 +350,7 @@ export class SupabaseService {
       .select();
   }
 
-  public async deleteNPC(npcId: string) {
+  public async deleteNPC(npcId: number) {
     return await this._supabaseClient
       .from('npcs')
       .delete()

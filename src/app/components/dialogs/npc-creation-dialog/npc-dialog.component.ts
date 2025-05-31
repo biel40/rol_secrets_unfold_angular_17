@@ -85,11 +85,7 @@ export class NPCDialogComponent implements OnInit, OnDestroy {
             this.npcForm.patchValue({
                 name: this.data.npc.name,
                 description: this.data.npc.description,
-                img_url: this.data.npc.img_url,
-                location: this.data.npc.location || '',
-                npc_type: this.data.npc.npc_type || 'commoner',
-                notes: this.data.npc.notes || '',
-                occupation: this.data.npc.occupation || ''
+                img_url: this.data.npc.img_url
             });
         }
         
@@ -128,15 +124,14 @@ export class NPCDialogComponent implements OnInit, OnDestroy {
         this.isSubmitting = true;
 
         try {
+            // generamos un numero random para el id si es nuevo
+            const npcId = this.isEditMode ? this.data.npc!.id : Math.floor(Math.random() * 1000000);
+
             const npcData: NPC = {
-                id: this.isEditMode ? this.data.npc!.id : crypto.randomUUID(),
+                id: npcId,
                 name: this.npcForm.value.name,
                 description: this.npcForm.value.description,
-                img_url: this.npcForm.value.img_url,
-                location: this.npcForm.value.location,
-                npc_type: this.npcForm.value.npc_type,
-                notes: this.npcForm.value.notes,
-                occupation: this.npcForm.value.occupation
+                img_url: this.npcForm.value.img_url
             };
 
             if (this.isEditMode) {
@@ -164,11 +159,5 @@ export class NPCDialogComponent implements OnInit, OnDestroy {
 
     public closeDialog(): void {
         this.dialogRef.close();
-    }
-
-    public getNpcTypeLabel(): string {
-        const currentType = this.npcForm.get('npc_type')?.value;
-        const npcType = this.npcTypes.find(t => t.value === currentType);
-        return npcType?.label || 'npc-type-commoner';
     }
 }
