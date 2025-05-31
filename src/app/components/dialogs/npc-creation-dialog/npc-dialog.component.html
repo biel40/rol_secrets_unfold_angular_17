@@ -1,0 +1,148 @@
+<div class="npc-dialog-container">
+    <!-- Header with title and close button -->
+    <div class="dialog-header">
+        <div class="header-content">
+            <mat-icon class="header-icon">{{ isEditMode ? 'edit' : 'person_add' }}</mat-icon>
+            <h2>{{ isEditMode ? ('edit-npc' | transloco) : ('create-npc' | transloco) }}</h2>
+        </div>
+        <button mat-icon-button (click)="closeDialog()" class="close-button">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+    <!-- Main content area -->
+    <mat-dialog-content>
+        <form [formGroup]="npcForm">
+            <!-- Two-column layout for desktop -->
+            <div class="form-layout">
+                <!-- Left column: Form fields -->
+                <div class="form-fields">
+                    <!-- Basic Information Section -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <mat-icon>info</mat-icon>
+                            {{ 'basic-info' | transloco }}
+                        </h3>
+
+                        <!-- Name field -->
+                        <mat-form-field appearance="outline">
+                            <mat-label>{{ 'npc-name' | transloco }}</mat-label>
+                            <mat-icon matPrefix>person</mat-icon>
+                            <input matInput formControlName="name" required>
+                            <mat-error *ngIf="npcForm.get('name')?.hasError('required')">
+                                {{ 'name-required' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+
+                        <!-- NPC Type field -->
+                        <mat-form-field appearance="outline">
+                            <mat-label>{{ 'npc-type' | transloco }}</mat-label>
+                            <mat-icon matPrefix>category</mat-icon>
+                            <mat-select formControlName="npc_type">
+                                <mat-option *ngFor="let type of npcTypes" [value]="type.value">
+                                    {{ type.label | transloco }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <!-- Occupation field -->
+                        <mat-form-field appearance="outline">
+                            <mat-label>{{ 'occupation' | transloco }}</mat-label>
+                            <mat-icon matPrefix>work</mat-icon>
+                            <input matInput formControlName="occupation"
+                                placeholder="{{ 'occupation-placeholder' | transloco }}">
+                        </mat-form-field>
+
+                        <!-- Location field -->
+                        <mat-form-field appearance="outline">
+                            <mat-label>{{ 'npc-location' | transloco }}</mat-label>
+                            <mat-icon matPrefix>place</mat-icon>
+                            <input matInput formControlName="location"
+                                placeholder="{{ 'location-placeholder' | transloco }}">
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Image Section -->
+                    <div class="form-section image-section">
+                        <h3 class="section-title">
+                            <mat-icon>image</mat-icon>
+                            {{ 'image-details' | transloco }}
+                        </h3>
+
+                        <!-- Image URL field -->
+                        <div class="image-url-field">
+                            <mat-form-field appearance="outline">
+                                <mat-label>{{ 'image-url' | transloco }}</mat-label>
+                                <mat-icon matPrefix>link</mat-icon>
+                                <input matInput formControlName="img_url" required>
+                                <mat-hint>{{ 'image-url-hint' | transloco }}</mat-hint>
+                                <mat-error *ngIf="npcForm.get('img_url')?.hasError('required')">
+                                    {{ 'image-url-required' | transloco }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right column: Image preview -->
+                <div class="image-preview-container">
+                    <div class="image-card">
+                        <div class="image-header">
+                            <mat-icon>preview</mat-icon>
+                            <span>{{ 'image-preview' | transloco }}</span>
+                        </div>
+                        <div class="image-content" [class.empty]="!npcForm.get('img_url')?.value"
+                            [class.loading]="imageLoading">
+                            <div *ngIf="imageLoading" class="loading-spinner">
+                                <mat-spinner diameter="40"></mat-spinner>
+                                <p>{{ 'loading-image' | transloco }}</p>
+                            </div>
+                            <img *ngIf="npcForm.get('img_url')?.value && !imageLoading && !imageError"
+                                [src]="npcForm.get('img_url')?.value" alt="NPC Image Preview" (load)="onImageLoad()"
+                                (error)="onImageError()" @imageAnimation>
+                            <div *ngIf="imageError" class="error-placeholder">
+                                <mat-icon>broken_image</mat-icon>
+                                <p>{{ 'image-load-error' | transloco }}</p>
+                            </div>
+                            <div *ngIf="!npcForm.get('img_url')?.value && !imageLoading" class="placeholder">
+                                <mat-icon>image_not_supported</mat-icon>
+                                <p>{{ 'no-image' | transloco }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Character info preview -->
+                        <div class="character-preview" *ngIf="npcForm.get('name')?.value" @fadeIn>
+                            <div class="preview-header">
+                                <h4>{{ npcForm.get('name')?.value }}</h4>
+                                <span class="npc-type-badge">{{ getNpcTypeLabel() | transloco }}</span>
+                            </div>
+                            <div class="preview-details">
+                                <div *ngIf="npcForm.get('occupation')?.value" class="detail-item">
+                                    <mat-icon>work</mat-icon>
+                                    <span>{{ npcForm.get('occupation')?.value }}</span>
+                                </div>
+                                <div *ngIf="npcForm.get('location')?.value" class="detail-item">
+                                    <mat-icon>place</mat-icon>
+                                    <span>{{ npcForm.get('location')?.value }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </mat-dialog-content>
+
+    <!-- Action buttons -->
+    <mat-dialog-actions>
+        <button mat-button (click)="closeDialog()" class="cancel-button">
+            <mat-icon>cancel</mat-icon>
+            {{ 'cancel' | transloco }}
+        </button>
+        <button mat-raised-button color="primary" [disabled]="npcForm.invalid || isSubmitting" (click)="saveNPC()"
+            class="save-button">
+            <mat-spinner *ngIf="isSubmitting" diameter="20"></mat-spinner>
+            <span *ngIf="!isSubmitting">{{ isEditMode ? ('update' | transloco) : ('create' | transloco) }}</span>
+        </button>
+    </mat-dialog-actions>
+</div>

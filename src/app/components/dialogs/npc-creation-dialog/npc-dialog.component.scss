@@ -1,0 +1,770 @@
+// Variables (siguiendo el patrón de la aplicación)
+$primary-color: #2c3e50;
+$secondary-color: #d4af37;
+$background-color: #1a2530;
+$text-color: #e0e0e0;
+$accent-color: #ffeba7;
+$border-radius: 8px;
+$card-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+$transition-speed: 0.3s;
+
+.npc-dialog-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  max-width: 100%; // Asegurar que no exceda el ancho del viewport
+  background: linear-gradient(to bottom, $primary-color, $background-color);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  color: $text-color;
+  font-family: Roboto, "Helvetica Neue", Inter, Avenir, Helvetica, Arial, sans-serif;
+  
+  // Estilos específicos para reducir altura de campos de formulario
+  :deep(.image-url-field) {
+    .mat-mdc-form-field-wrapper {
+      height: 48px !important;
+    }
+    
+    .mat-mdc-form-field-flex {
+      height: 48px !important;
+      min-height: 48px !important;
+    }
+    
+    .mat-mdc-form-field-infix {
+      min-height: 40px !important;
+      padding-top: 8px !important;
+      padding-bottom: 8px !important;
+    }
+    
+    .mat-mdc-text-field-wrapper {
+      height: 48px !important;
+    }
+    
+    .mdc-notched-outline {
+      height: 48px !important;
+    }
+    
+    input {
+      height: 32px !important;
+      line-height: 32px !important;
+    }
+  }
+  
+  // Estilos específicos para el botón de cerrar
+  :deep(.close-button) {
+    .mat-icon {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      line-height: 1 !important;
+      vertical-align: middle !important;
+    }
+    
+    .mat-mdc-button-base {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+  }
+}
+
+// Dialog header styles
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  color: $text-color;
+  border-bottom: 1px solid rgba($secondary-color, 0.3);
+  
+  // Decorative line at top
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, $secondary-color, transparent);
+  }
+  
+  .header-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    
+    .header-icon {
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+      color: $secondary-color;
+    }
+    
+    h2 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 600;
+      color: $secondary-color;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+  }
+  
+  .close-button {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $text-color;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba($secondary-color, 0.3);
+    transition: all $transition-speed ease;
+    position: relative;
+    overflow: hidden;
+    padding: 0; // Eliminar cualquier padding que pueda afectar el centrado
+    
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0; // Eliminar cualquier margen
+      position: relative;
+      z-index: 1; // Asegurar que esté sobre el efecto ::before
+      text-align: center;
+      
+      // Asegurar que el ícono esté perfectamente centrado
+      &::before {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+      }
+    }
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba($secondary-color, 0.1), transparent);
+      transition: transform $transition-speed ease;
+      transform: rotate(-45deg) translate(-100%, -100%);
+      z-index: 0;
+    }
+    
+    &:hover {
+      background: rgba($secondary-color, 0.2);
+      color: $secondary-color;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba($secondary-color, 0.3);
+      
+      &::before {
+        transform: rotate(-45deg) translate(0%, 0%);
+      }
+    }
+    
+    &:active {
+      transform: translateY(0px);
+      box-shadow: 0 2px 6px rgba($secondary-color, 0.2);
+    }
+  }
+}
+
+// Dialog content styles
+mat-dialog-content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  
+  form {
+    height: 100%;
+  }
+}
+
+// Form layout - responsivo y optimizado
+.form-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  
+  @media (min-width: 900px) { // Reducido a 900px para mejor adaptación en pantallas medianas
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+// Form fields container
+.form-fields {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  
+  // Form sections
+  .form-section {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: $border-radius;
+    padding: 20px;
+    box-shadow: $card-shadow;
+    border: 1px solid rgba($secondary-color, 0.2);
+    
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 16px 0;
+      font-size: 16px;
+      font-weight: 600;
+      color: $secondary-color;
+      
+      mat-icon {
+        color: $secondary-color;
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+    
+    mat-form-field {
+      width: 100%;
+      margin-bottom: 8px;
+    }
+  }
+  
+  // Make description fields grow to fill available space
+  .description-field {
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+  }
+  
+  // Image URL field - optimizado para URLs completas sin causar overflow
+  .image-url-field {
+    mat-form-field {
+      width: 100%;
+      min-width: min(400px, 100%); // Usar el menor entre 400px y 100% del contenedor
+      
+      // Reducir altura del campo de entrada
+      .mat-mdc-form-field-wrapper {
+        height: 48px; // Altura reducida del contenedor
+      }
+      
+      .mat-mdc-form-field-flex {
+        height: 48px; // Altura reducida del campo flex
+        min-height: 48px;
+      }
+      
+      .mat-mdc-form-field-infix {
+        min-height: 40px; // Altura reducida del área de input
+        padding-top: 8px;
+        padding-bottom: 8px;
+      }
+      
+      .mat-mdc-text-field-wrapper {
+        height: 48px; // Altura del wrapper del text field
+      }
+      
+      .mdc-notched-outline {
+        height: 48px; // Altura del outline
+      }
+    }
+    
+    input {
+      font-size: 0.9rem; // Ligeramente más grande para mejor legibilidad
+      padding: 8px 14px; // Padding reducido vertical
+      min-width: min(350px, 100%); // Ancho responsivo
+      font-family: 'Roboto Mono', Monaco, 'Consolas', monospace; // Fuente monospace para URLs
+      height: 32px; // Altura específica del input
+      
+      // En dispositivos pequeños, asegurar que ocupe todo el ancho disponible
+      @media (max-width: 768px) {
+        min-width: unset;
+        width: 100%;
+        font-size: 0.85rem;
+        height: 30px; // Altura ligeramente menor en móviles
+        padding: 6px 12px;
+      }
+    }
+  }
+  
+  // Sección de imagen responsiva y optimizada
+  .image-section {
+    // Expandir el ancho pero sin causar overflow
+    width: 100%;
+    min-width: min(500px, 100%); // Responsivo: usa el menor entre 500px y 100%
+    
+    .form-section {
+      min-width: 100%;
+      padding: 24px 28px; // Más padding horizontal para contenido espacioso
+    }
+    
+    mat-form-field {
+      width: 100%;
+      min-width: min(450px, 100%); // Responsivo para URLs largas
+    }
+    
+    // En dispositivos pequeños, adaptar el diseño responsivamente
+    @media (max-width: 768px) {
+      min-width: unset;
+      width: 100%;
+      
+      .form-section {
+        padding: 16px 20px;
+      }
+      
+      mat-form-field {
+        min-width: unset;
+        width: 100%;
+      }
+    }
+  }
+}
+
+// Image preview container - totalmente responsivo
+.image-preview-container {
+  width: 100%;
+  
+  @media (min-width: 900px) { // Ajustado para consistencia con form-layout
+    width: min(450px, 40%); // Usa el menor entre 450px y 40% del contenedor
+    min-width: min(450px, 40%);
+  }
+}
+
+// Image card styling
+.image-card {
+  border-radius: $border-radius;
+  overflow: hidden;
+  box-shadow: $card-shadow;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba($secondary-color, 0.2);
+  
+  // Card header
+  .image-header {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    background: rgba($secondary-color, 0.2);
+    color: $secondary-color;
+    border-bottom: 1px solid rgba($secondary-color, 0.3);
+    
+    mat-icon {
+      margin-right: 8px;
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    span {
+      font-weight: 600;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
+  
+  // Card content/image area
+  .image-content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    min-height: 280px;
+    background: rgba(0, 0, 0, 0.1);
+    position: relative;
+    
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: cover;
+      border-radius: $border-radius;
+      transition: all $transition-speed ease;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      
+      &:hover {
+        transform: scale(1.02);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      }
+    }
+    
+    // Loading state
+    &.loading {
+      .loading-spinner {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        color: $secondary-color;
+        
+        p {
+          margin: 0;
+          font-size: 14px;
+          font-weight: 500;
+          color: $text-color;
+        }
+      }
+    }
+    
+    // Error state
+    .error-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #e53e3e;
+      text-align: center;
+      padding: 20px;
+      
+      mat-icon {
+        font-size: 64px;
+        height: 64px;
+        width: 64px;
+        margin-bottom: 16px;
+        opacity: 0.7;
+      }
+      
+      p {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 500;
+      }
+    }
+    
+    // Empty state
+    &.empty:not(.loading) {
+      background: rgba(0, 0, 0, 0.05);
+      
+      .placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: rgba($text-color, 0.6);
+        text-align: center;
+        padding: 20px;
+        
+        mat-icon {
+          font-size: 64px;
+          height: 64px;
+          width: 64px;
+          margin-bottom: 16px;
+          opacity: 0.6;
+        }
+        
+        p {
+          margin: 0;
+          font-size: 16px;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+  
+  // Character preview section
+  .character-preview {
+    padding: 16px 20px;
+    background: rgba(0, 0, 0, 0.2);
+    border-top: 1px solid rgba($secondary-color, 0.2);
+    
+    .preview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      
+      h4 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+        color: $secondary-color;
+      }
+      
+      .npc-type-badge {
+        background: rgba($secondary-color, 0.2);
+        color: $secondary-color;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border: 1px solid rgba($secondary-color, 0.3);
+      }
+    }
+    
+    .preview-details {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      
+      .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: $text-color;
+        font-size: 14px;
+        
+        mat-icon {
+          font-size: 16px;
+          width: 16px;
+          height: 16px;
+          color: $secondary-color;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+    }
+  }
+}
+
+// Form field icon styling
+mat-form-field {
+  ::ng-deep .mat-mdc-form-field-icon-prefix {
+    padding-right: 10px;
+    color: $secondary-color;
+    
+    // Hacer los iconos más pequeños y mejor ajustados
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 2px;
+    }
+  }
+  
+  // Form field theming for dark mode
+  ::ng-deep .mdc-text-field--outlined .mdc-notched-outline__leading,
+  ::ng-deep .mdc-text-field--outlined .mdc-notched-outline__notch,
+  ::ng-deep .mdc-text-field--outlined .mdc-notched-outline__trailing {
+    border-color: rgba($secondary-color, 0.3);
+  }
+  
+  ::ng-deep .mdc-text-field--outlined:not(.mdc-text-field--disabled):hover .mdc-notched-outline__leading,
+  ::ng-deep .mdc-text-field--outlined:not(.mdc-text-field--disabled):hover .mdc-notched-outline__notch,
+  ::ng-deep .mdc-text-field--outlined:not(.mdc-text-field--disabled):hover .mdc-notched-outline__trailing {
+    border-color: rgba($secondary-color, 0.6);
+  }
+  
+  // Input text color
+  ::ng-deep .mdc-text-field__input {
+    color: $text-color;
+  }
+  
+  // Label color
+  ::ng-deep .mdc-floating-label {
+    color: rgba($text-color, 0.7);
+  }
+  
+  ::ng-deep .mdc-text-field--focused .mdc-floating-label {
+    color: $secondary-color;
+  }
+}
+
+// Dialog actions
+mat-dialog-actions {
+  display: flex;
+  justify-content: center; // Centrar los botones
+  padding: 20px 24px;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba($secondary-color, 0.2);
+  gap: 16px;
+  
+  .cancel-button {
+    min-width: 120px;
+    color: $text-color;
+    border: 1px solid rgba($text-color, 0.2);
+    background: rgba(0, 0, 0, 0.2);
+    transition: all $transition-speed ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    
+    &:hover {
+      background: rgba($text-color, 0.1);
+      border-color: rgba($text-color, 0.3);
+      color: $text-color;
+    }
+  }
+  
+  .save-button {
+    min-width: 140px;
+    background: linear-gradient(to right, $secondary-color, darken($secondary-color, 10%));
+    color: $primary-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all $transition-speed ease;
+    box-shadow: 0 4px 16px rgba($secondary-color, 0.3);
+    font-weight: 600;
+    
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba($secondary-color, 0.4);
+    }
+    
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// Loading spinner
+mat-spinner {
+  display: inline-block;
+  margin-right: 8px;
+  
+  ::ng-deep circle {
+    stroke: $secondary-color;
+  }
+}
+
+// Select field styling for dark mode
+mat-select {
+  ::ng-deep .mat-mdc-select-value {
+    color: $text-color;
+  }
+  
+  ::ng-deep .mat-mdc-select-arrow {
+    color: $secondary-color;
+  }
+}
+
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes imageAnimation {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// Apply animations
+.form-section,
+.image-card {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.image-content img {
+  animation: imageAnimation 0.4s ease-out;
+}
+
+// Responsive adjustments for smaller screens
+@media (max-width: 768px) {
+  .npc-dialog-container {
+    border-radius: 0;
+    height: 100vh;
+  }
+  
+  .dialog-header {
+    padding: 16px 20px;
+    
+    .header-content {
+      h2 {
+        font-size: 20px;
+      }
+      
+      .header-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+      }
+    }
+  }
+  
+  mat-dialog-content {
+    padding: 16px 20px;
+  }
+  
+  .form-layout {
+    gap: 16px;
+  }
+  
+  .form-fields .form-section {
+    padding: 16px;
+  }
+  
+  .image-content {
+    min-height: 200px !important;
+  }
+  
+  .image-preview-container {
+    order: -1;
+  }
+  
+  mat-dialog-actions {
+    padding: 16px 20px;
+    flex-direction: column;
+    justify-content: center; // Mantener centrado en móvil
+    
+    .cancel-button,
+    .save-button {
+      width: 100%;
+      margin: 0;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .dialog-header .header-content {
+    h2 {
+      font-size: 18px;
+    }
+  }
+  
+  .form-fields .form-section .section-title {
+    font-size: 14px;
+  }
+}

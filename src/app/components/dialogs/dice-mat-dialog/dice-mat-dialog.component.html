@@ -1,0 +1,102 @@
+<div class="dice-dialog-container">
+    <div class="dialog-header">
+        <div class="header-decoration left"></div>
+        <h2 mat-dialog-title class="title">{{ hability?.name }}</h2>
+        <div class="header-decoration right"></div>
+    </div>
+    
+    <div class="description-scroll">
+        <p class="description-text">{{ hability?.description }}</p>
+    </div>
+
+    <div class="dice-scene">
+        <div class="dice-container">
+            <div class="simple-dice" [class.rolling]="isRolling" [attr.data-value]="diceNumber">
+                <!-- Face 1: One dot in center -->
+                <ng-container *ngIf="diceNumber === 1">
+                    <div class="dot center"></div>
+                </ng-container>
+                
+                <!-- Face 2: Two dots diagonal -->
+                <ng-container *ngIf="diceNumber === 2">
+                    <div class="dot top-left"></div>
+                    <div class="dot bottom-right"></div>
+                </ng-container>
+                
+                <!-- Face 3: Three dots diagonal -->
+                <ng-container *ngIf="diceNumber === 3">
+                    <div class="dot top-left"></div>
+                    <div class="dot center"></div>
+                    <div class="dot bottom-right"></div>
+                </ng-container>
+                
+                <!-- Face 4: Four dots in corners -->
+                <ng-container *ngIf="diceNumber === 4">
+                    <div class="dot top-left"></div>
+                    <div class="dot top-right"></div>
+                    <div class="dot bottom-left"></div>
+                    <div class="dot bottom-right"></div>
+                </ng-container>
+                
+                <!-- Face 5: Five dots like on playing cards -->
+                <ng-container *ngIf="diceNumber === 5">
+                    <div class="dot top-left"></div>
+                    <div class="dot top-right"></div>
+                    <div class="dot center"></div>
+                    <div class="dot bottom-left"></div>
+                    <div class="dot bottom-right"></div>
+                </ng-container>
+                
+                <!-- Face 6: Six dots in two columns -->
+                <ng-container *ngIf="diceNumber === 6">
+                    <div class="dot top-left"></div>
+                    <div class="dot top-right"></div>
+                    <div class="dot middle-left"></div>
+                    <div class="dot middle-right"></div>
+                    <div class="dot bottom-left"></div>
+                    <div class="dot bottom-right"></div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+
+    <div class="damage-display" style="padding-bottom: 40px;" [class.damage-calculated]="damage > 0">
+        <h3 class="damage-label" style="margin-top: 5px; margin-bottom: 25px;">TOTAL DE DAÑO</h3>
+        <p class="damage-value">{{ damage }}</p>
+    </div>
+
+    <div class="roll-details">
+        <p class="detail-item">
+            <span class="detail-label">Resultado del dado:</span> {{ diceNumber }}
+        </p>
+        @if (profile) {
+            <p class="detail-item">
+                <span class="detail-label">Bonificador de ataque:</span> {{ profile.attack }}
+            </p>
+            @if (profile.weapon === 'Espada' || profile.weapon === 'Dagas') {
+                <p class="detail-item">
+                    <span class="detail-label">Bonificador de arma:</span> +2
+                </p>
+            }
+            @if (profile.clase === 'Guerrero') {
+                <p class="detail-item">
+                    <span class="detail-label">Bonificador de clase:</span> +2
+                </p>
+            } @else if (profile.clase === 'Pícaro') {
+                <p class="detail-item">
+                    <span class="detail-label">Bonificador de clase:</span> +1
+                </p>
+            }
+        }
+    </div>
+    
+    <!-- Action buttons -->
+    <div class="action-buttons">
+        <button class="roll-button" (click)="rollDice()" [disabled]="isRolling">
+            <span class="button-text">Tirar de nuevo</span>
+        </button>
+        <button class="close-button" mat-dialog-close>
+            <span class="button-text">Cerrar</span>
+        </button>
+    </div>
+</div>

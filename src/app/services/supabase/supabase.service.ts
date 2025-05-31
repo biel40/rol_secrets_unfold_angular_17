@@ -60,7 +60,10 @@ export interface NPC {
   name: string,
   description: string,
   img_url: string,
-  location?: string
+  location?: string,
+  npc_type?: string,
+  notes?: string,
+  occupation?: string
 }
 
 export interface Item {

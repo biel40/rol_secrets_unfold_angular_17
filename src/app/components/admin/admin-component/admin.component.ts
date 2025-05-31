@@ -10,6 +10,7 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { LocaleChangerComponent } from '../../locale-changer/locale-changer.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { NPCDialogComponent } from '../../dialogs/npc-creation-dialog/npc-dialog.component';
 
 @Component({
     selector: 'app-admin',
@@ -199,16 +200,41 @@ export class AdminComponent implements OnInit {
                 this._displaySnackbar('Error al eliminar el NPC. Inténtalo de nuevo.');
             }
         }
-    }
+    }    public async createNPC(): Promise<void> {
+        const dialogRef = this._dialog.open(NPCDialogComponent, {
+            width: '95vw', // Usar viewport width para mejor responsividad
+            maxWidth: '1200px', // Ancho máximo para pantallas grandes
+            maxHeight: '90vh',
+            disableClose: false,
+            autoFocus: false,
+            panelClass: 'npc-dialog-panel'
+        });
 
-    public async createNPC(): Promise<void> {
-        // Temporarily disabled
-        this._displaySnackbar('Funcionalidad de crear NPC en desarrollo.');
-    }
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                // NPC was created, reload the data
+                this._loadData();
+                this._displaySnackbar(`NPC "${result.name}" creado correctamente.`);
+            }
+        });
+    }    public editNPC(npc: NPC): void {
+        const dialogRef = this._dialog.open(NPCDialogComponent, {
+            width: '95vw', // Usar viewport width para mejor responsividad
+            maxWidth: '1200px', // Ancho máximo para pantallas grandes
+            maxHeight: '90vh',
+            disableClose: false,
+            autoFocus: false,
+            panelClass: 'npc-dialog-panel',
+            data: { npc }
+        });
 
-    public editNPC(npc: NPC): void {
-        // Temporarily disabled
-        this._displaySnackbar('Funcionalidad de editar NPC en desarrollo.');
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                // NPC was updated, reload the data
+                this._loadData();
+                this._displaySnackbar(`NPC "${result.name}" actualizado correctamente.`);
+            }
+        });
     }
 
     public ngOnDestroy(): void {
