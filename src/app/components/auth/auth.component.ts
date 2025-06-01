@@ -22,7 +22,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   ]
 })
 export class AuthComponent implements OnInit, OnDestroy {
-  
+
   private _supabaseService: SupabaseService = inject(SupabaseService);
   protected readonly formBuilder = inject(FormBuilder);
   private _router = inject(Router);
@@ -54,38 +54,42 @@ export class AuthComponent implements OnInit, OnDestroy {
 
   constructor(
     private _snackBar: MatSnackBar
-  ) { 
+  ) {
     this._checkUserSession();
   }
 
-  public ngOnInit(): void { 
-    
+  public ngOnInit(): void {
+
   }
 
   private async _checkUserSession() {
     try {
       this.user = this._userService.getUser();
-      
+
       if (this.user && this.user.email_confirmed_at) {
         let userIsInDb = await this._supabaseService.profile(this.user).then((response: any) => {
-          if (response.error) {
-            return false;
-          } else {
-            return true;
-          }
+            return !response.error;
         });
 
-        if (userIsInDb) {
-          alert('Ya hay sesión iniciada. Redirigiendo a la página de perfil.');
-          this._router.navigate(['profile']);
-        } else {
+        if (!userIsInDb) {
           this._displaySnackbar('No se ha podido cargar el perfil. Por favor, vuelve a iniciar sesión.');
           this._router.navigate(['']);
+          return;
         }
+
+        const isAdmin = this.user?.email === "dmthesecretsunfold@gmail.com";
+        const redirectPath = isAdmin ? 'admin' : 'profile';
+        
+        const message = isAdmin
+          ? 'Ya hay sesión iniciada. Redirigiendo al panel de administrador.'
+          : 'Ya hay sesión iniciada. Redirigiendo a la página de perfil.';
+
+        alert(message);
+        this._router.navigate([redirectPath]);
       }
-    } catch(error) {
+    } catch (error) {
       console.error(error);
-    }  
+    }
   }
 
   async handleLogin(): Promise<void> {
@@ -116,7 +120,7 @@ export class AuthComponent implements OnInit, OnDestroy {
         console.error('Error: ', error);
         this._displaySnackbar(error.message);
       }
-    } 
+    }
   }
 
   public async handleSignup(): Promise<void> {
@@ -170,7 +174,7 @@ export class AuthComponent implements OnInit, OnDestroy {
     }
   }
 
-  private _displaySnackbar(message: string) : void {
+  private _displaySnackbar(message: string): void {
     this._snackBar.open(message, 'Cerrar', {
       duration: 4000,
     });
