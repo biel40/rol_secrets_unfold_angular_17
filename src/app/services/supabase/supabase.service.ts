@@ -72,6 +72,19 @@ export interface Item {
   img_src: string
 }
 
+export interface Mission {
+  id?: number,
+  title: string,
+  description: string,
+  status: 'pending' | 'in_progress' | 'completed' | 'failed',
+  difficulty: 'easy' | 'medium' | 'hard' | 'legendary',
+  created_at?: string,
+  updated_at?: string,
+  assigned_to?: string,
+  reward_xp?: number,
+  reward_gold?: number
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -355,5 +368,74 @@ export class SupabaseService {
       .from('npcs')
       .delete()
       .eq('id', npcId);
+  }
+
+  // Mission methods for Supabase integration
+  public async getMissions() {
+    return await this._supabaseClient
+      .from('misions')
+      .select('*')
+      .order('created_at', { ascending: false });
+  }
+
+  public async createMission(mission: Mission) {
+    const missionData = {
+      ...mission,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+    
+    return await this._supabaseClient
+      .from('misions')
+      .insert(missionData)
+      .select();
+  }
+
+  public async updateMission(mission: Mission) {
+    const updateData = {
+      ...mission,
+      updated_at: new Date().toISOString()
+    };
+    
+    return await this._supabaseClient
+      .from('misions')
+      .update(updateData)
+      .eq('id', mission.id)
+      .select();
+  }
+
+  public async deleteMission(missionId: number) {
+    return await this._supabaseClient
+      .from('misions')
+      .delete()
+      .eq('id', missionId);
+  }
+
+  public async assignMissionToProfile(missionId: number, profileId: string) {
+    return await this._supabaseClient
+      .from('misions')
+      .update({ 
+        assigned_to: profileId,
+        status: 'in_progress',
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', missionId)
+      .select();
+  }
+
+  public async getMissionsByProfile(profileId: string) {
+    return await this._supabaseClient
+      .from('misions')
+      .select('*')
+      .eq('assigned_to', profileId)
+      .order('created_at', { ascending: false });
+  }
+
+  // Methods for getting all profiles for mission assignment
+  public async getAllProfiles() {
+    return await this._supabaseClient
+      .from('profiles')
+      .select('id, username, clase, level')
+      .order('username', { ascending: true });
   }
 }

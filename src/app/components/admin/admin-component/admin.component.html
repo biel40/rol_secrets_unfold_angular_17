@@ -6,9 +6,12 @@
         </div>
 
         <div class="dm-tabs">
-            <button class="dm-tab" [class.active]="currentTab === 'enemies'" (click)="switchTab('enemies')">{{ 'enemies' | transloco }}</button>
-            <button class="dm-tab" [class.active]="currentTab === 'npcs'" (click)="switchTab('npcs')">{{ 'npcs' | transloco }}</button>
-            <button class="dm-tab" [class.active]="currentTab === 'quests'" (click)="switchTab('quests')">{{ 'quests' | transloco }}</button>
+            <button class="dm-tab" [class.active]="currentTab === 'enemies'" (click)="switchTab('enemies')">{{ 'enemies'
+                | transloco }}</button>
+            <button class="dm-tab" [class.active]="currentTab === 'npcs'" (click)="switchTab('npcs')">{{ 'npcs' |
+                transloco }}</button>
+            <button class="dm-tab" [class.active]="currentTab === 'quests'" (click)="switchTab('quests')">{{ 'quests' |
+                transloco }}</button>
         </div>
     </div>
 
@@ -16,125 +19,125 @@
     <div class="dm-content">
         <!-- Enemies Section - only visible when enemies tab is active -->
         <ng-container *ngIf="currentTab === 'enemies'">
-        <!-- Battle preparation panel -->
-        <div class="battle-panel">
-            <div class="battle-header">
-                <h2 class="battle-title">{{ 'battle-preparation' | transloco }}</h2>
-                <div class="battle-actions">
-                    <button class="battle-button" [disabled]="enemiesListToStartBattle.length === 0"
-                        (click)="startBattle()">
-                        <span class="battle-icon">⚔️</span>
-                        {{ 'begin-battle' | transloco }}
-                    </button>
-                    <button class="battle-button secondary" [disabled]="enemiesListToStartBattle.length === 0"
-                        (click)="clearBattleList()">
-                        {{ 'clear-all' | transloco }}
-                    </button>
+            <!-- Battle preparation panel -->
+            <div class="battle-panel">
+                <div class="battle-header">
+                    <h2 class="battle-title">{{ 'battle-preparation' | transloco }}</h2>
+                    <div class="battle-actions">
+                        <button class="battle-button" [disabled]="enemiesListToStartBattle.length === 0"
+                            (click)="startBattle()">
+                            <span class="battle-icon">⚔️</span>
+                            {{ 'begin-battle' | transloco }}
+                        </button>
+                        <button class="battle-button secondary" [disabled]="enemiesListToStartBattle.length === 0"
+                            (click)="clearBattleList()">
+                            {{ 'clear-all' | transloco }}
+                        </button>
+                    </div>
+                </div>
+
+                <div class="battle-enemies">
+                    @if (enemiesListToStartBattle.length > 0) {
+                    <div class="selected-enemies-list">
+                        @for (enemy of enemiesListToStartBattle; track $index) {
+                        <div class="selected-enemy-item">
+                            <div class="enemy-avatar" [style.backgroundImage]="'url(' + enemy.image_url + ')'">
+                                <div class="enemy-level">{{ enemy.level }}</div>
+                            </div>
+                            <div class="enemy-details">
+                                <div class="enemy-name">{{ enemy.name }}</div>
+                                <div class="enemy-stats">HP: {{ enemy.current_hp }}</div>
+                            </div>
+                            <button class="remove-enemy" (click)="removeEnemyFromBattle(enemy)">
+                                <span>×</span>
+                            </button>
+                        </div>
+                        }
+                    </div>
+                    } @else {
+                    <div class="empty-battle-list">
+                        <div class="empty-icon">🛡️</div>
+                        <p>{{ 'no-enemies-selected' | transloco }}</p>
+                        <p class="empty-hint">{{ 'select-enemies-below' | transloco }}</p>
+                    </div>
+                    }
                 </div>
             </div>
 
-            <div class="battle-enemies">
-                @if (enemiesListToStartBattle.length > 0) {
-                <div class="selected-enemies-list">
-                    @for (enemy of enemiesListToStartBattle; track $index) {
-                    <div class="selected-enemy-item">
-                        <div class="enemy-avatar" [style.backgroundImage]="'url(' + enemy.image_url + ')'">
-                            <div class="enemy-level">{{ enemy.level }}</div>
+            <!-- Enemy library section -->
+            <div class="enemies-library">
+                <div class="library-header">
+                    <h2 class="library-title">{{ 'enemy-library' | transloco }}</h2>
+                    <div class="library-actions">
+                        <button class="library-button" (click)="openCreateEnemyDialog()">
+                            <span class="add-icon">+</span>
+                            {{ 'create-enemy' | transloco }}
+                        </button>
+                        <div class="search-container">
+                            <input type="text" class="search-input" placeholder="{{ 'search-enemies' | transloco }}"
+                                [(ngModel)]="searchTerm">
                         </div>
-                        <div class="enemy-details">
-                            <div class="enemy-name">{{ enemy.name }}</div>
-                            <div class="enemy-stats">HP: {{ enemy.current_hp }}</div>
+                    </div>
+                </div>
+
+                <div class="enemies-grid">
+                    @if (enemiesList && enemiesList.length > 0) {
+                    @for (enemy of filteredEnemies; track $index) {
+                    <div class="enemy-card">
+                        <div class="enemy-card-header">
+                            <h3 class="enemy-card-title">{{ enemy.name }}</h3>
+                            <div class="enemy-card-level">{{ 'level' | transloco }} {{ enemy.level }}</div>
                         </div>
-                        <button class="remove-enemy" (click)="removeEnemyFromBattle(enemy)">
-                            <span>×</span>
+
+                        <div class="enemy-card-image" [style.backgroundImage]="'url(' + enemy.image_url + ')'">
+                            <div class="enemy-card-overlay"></div>
+                        </div>
+
+                        <div class="enemy-card-content">
+                            <p class="enemy-card-description">{{ enemy.description }}</p>
+
+                            <div class="enemy-card-stats">
+                                <div class="stat-item">
+                                    <span class="stat-icon">❤️</span>
+                                    <span class="stat-value">{{ enemy.total_hp || 100 }}</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-icon">⚔️</span>
+                                    <span class="stat-value">10</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-icon">🛡️</span>
+                                    <span class="stat-value">{{ enemy.defense || 5 }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="enemy-card-actions">
+                            <button class="enemy-action-button primary" (click)="addEnemyToBattle(enemy)">
+                                {{ 'add-to-battle' | transloco }}
+                            </button>
+                            <button class="enemy-action-button" (click)="editEnemy(enemy)">
+                                {{ 'edit' | transloco }}
+                            </button>
+                            <button class="enemy-action-button danger" (click)="deleteEnemy(enemy)">
+                                {{ 'delete' | transloco }}
+                            </button>
+                        </div>
+                    </div>
+                    }
+                    } @else {
+                    <div class="empty-enemies-list">
+                        <div class="empty-icon">🐉</div>
+                        <p>{{ 'no-enemies-available' | transloco }}</p>
+                        <button class="create-first-enemy" (click)="openCreateEnemyDialog()">
+                            {{ 'create-first-enemy' | transloco }}
                         </button>
                     </div>
                     }
                 </div>
-                } @else {
-                <div class="empty-battle-list">
-                    <div class="empty-icon">🛡️</div>
-                    <p>{{ 'no-enemies-selected' | transloco }}</p>
-                    <p class="empty-hint">{{ 'select-enemies-below' | transloco }}</p>
-                </div>
-                }
             </div>
-        </div>
-
-        <!-- Enemy library section -->
-        <div class="enemies-library">
-            <div class="library-header">
-                <h2 class="library-title">{{ 'enemy-library' | transloco }}</h2>
-                <div class="library-actions">
-                    <button class="library-button" (click)="openCreateEnemyDialog()">
-                        <span class="add-icon">+</span>
-                        {{ 'create-enemy' | transloco }}
-                    </button>
-                    <div class="search-container">
-                        <input type="text" class="search-input" placeholder="{{ 'search-enemies' | transloco }}"
-                            [(ngModel)]="searchTerm">
-                    </div>
-                </div>
-            </div>
-
-            <div class="enemies-grid">
-                @if (enemiesList && enemiesList.length > 0) {
-                @for (enemy of filteredEnemies; track $index) {
-                <div class="enemy-card">
-                    <div class="enemy-card-header">
-                        <h3 class="enemy-card-title">{{ enemy.name }}</h3>
-                        <div class="enemy-card-level">{{ 'level' | transloco }} {{ enemy.level }}</div>
-                    </div>
-
-                    <div class="enemy-card-image" [style.backgroundImage]="'url(' + enemy.image_url + ')'">
-                        <div class="enemy-card-overlay"></div>
-                    </div>
-
-                    <div class="enemy-card-content">
-                        <p class="enemy-card-description">{{ enemy.description }}</p>
-
-                        <div class="enemy-card-stats">
-                            <div class="stat-item">
-                                <span class="stat-icon">❤️</span>
-                                <span class="stat-value">{{ enemy.total_hp || 100 }}</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-icon">⚔️</span>
-                                <span class="stat-value">10</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-icon">🛡️</span>
-                                <span class="stat-value">{{ enemy.defense || 5 }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="enemy-card-actions">
-                        <button class="enemy-action-button primary" (click)="addEnemyToBattle(enemy)">
-                            {{ 'add-to-battle' | transloco }}
-                        </button>
-                        <button class="enemy-action-button" (click)="editEnemy(enemy)">
-                            {{ 'edit' | transloco }}
-                        </button>
-                        <button class="enemy-action-button danger" (click)="deleteEnemy(enemy)">
-                            {{ 'delete' | transloco }}
-                        </button>
-                    </div>
-                </div>
-                }
-                } @else {
-                <div class="empty-enemies-list">
-                    <div class="empty-icon">🐉</div>
-                    <p>{{ 'no-enemies-available' | transloco }}</p>
-                    <button class="create-first-enemy" (click)="openCreateEnemyDialog()">
-                        {{ 'create-first-enemy' | transloco }}
-                    </button>
-                </div>
-                }
-            </div>
-        </div>
         </ng-container>
-        
+
         <!-- NPCs Section - only visible when npcs tab is active -->
         <ng-container *ngIf="currentTab === 'npcs'">
             <div class="npcs-library">
@@ -167,9 +170,9 @@
                         <div class="enemy-card-content">
                             <div class="enemy-card-stats">
                                 @if (npc.description) {
-                                    <div class="stat-item">
-                                        <span>{{ npc.description }}</span>
-                                    </div>
+                                <div class="stat-item">
+                                    <span>{{ npc.description }}</span>
+                                </div>
                                 }
                             </div>
                         </div>
@@ -196,9 +199,128 @@
                 </div>
             </div>
         </ng-container>
+
+        <!-- Missions Section - only visible when quests tab is active -->
+        <ng-container *ngIf="currentTab === 'quests'">
+            <div class="missions-section">
+                <div class="missions-header">
+                    <h2 class="missions-title">{{ 'mission-management' | transloco }}</h2>
+                    <div class="missions-actions">
+                        <button class="mission-button primary" (click)="openMissionForm()">
+                            <span class="add-icon">+</span>
+                            {{ 'create-mission' | transloco }}
+                        </button>
+                        <div class="search-container">
+                            <input type="text" class="search-input" placeholder="{{ 'search-missions' | transloco }}"
+                                [(ngModel)]="searchTermMissions">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Missions Grid -->
+                <div class="missions-grid">
+                    @if (filteredMissions && filteredMissions.length > 0) {
+                    @for (mission of filteredMissions; track mission.id) {
+                    <div class="mission-card">
+                        <div class="mission-card-header">
+                            <h3 class="mission-card-title">{{ mission.title }}</h3>
+                            <div class="mission-badges">
+                                <span class="mission-badge difficulty"
+                                    [style.background-color]="getDifficultyColor(mission.difficulty)">
+                                    {{ mission.difficulty | transloco }}
+                                </span>
+                                <span class="mission-badge status"
+                                    [style.background-color]="getStatusColor(mission.status)">
+                                    {{ mission.status | transloco }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="mission-card-content">
+                            <p class="mission-description">{{ mission.description }}</p>
+                            
+                            <!-- Assignment information -->
+                            @if (mission.assigned_to) {
+                            <div class="assignment-info">
+                                <span class="assignment-label">{{ 'assigned-to' | transloco }}:</span>
+                                <span class="assignment-player">{{ getAssignedProfileName(mission.assigned_to) }}</span>
+                            </div>
+                            }
+                        </div>
+
+                        <div class="mission-card-actions">
+                            <button class="mission-action-button primary" (click)="editMission(mission)">
+                                {{ 'edit' | transloco }}
+                            </button>
+                            @if (mission.assigned_to) {
+                            <button class="mission-action-button secondary" (click)="unassignMission(mission)">
+                                {{ 'unassign' | transloco }}
+                            </button>
+                            } @else {
+                            <button class="mission-action-button assign" (click)="openAssignmentModal(mission)">
+                                {{ 'assign-to-player' | transloco }}
+                            </button>
+                            }
+                            <button class="mission-action-button danger" (click)="deleteMission(mission)">
+                                {{ 'delete' | transloco }}
+                            </button>
+                        </div>
+                    </div>
+                    }
+                    } @else {
+                    <div class="empty-missions-list">
+                        <div class="empty-icon">📋</div>
+                        <p>{{ 'no-missions-available' | transloco }}</p>
+                        <button class="create-first-mission" (click)="openMissionForm()">
+                            {{ 'create-first-mission' | transloco }}
+                        </button>
+                    </div>
+                    }
+                </div>
+
+                <!-- Mission Assignment Modal -->
+                <div class="mission-form-overlay" *ngIf="showAssignmentModal" (click)="closeAssignmentModal()">
+                    <div class="assignment-modal" (click)="$event.stopPropagation()">
+                        <div class="assignment-modal-header">
+                            <h3>{{ 'assign-mission' | transloco }}</h3>
+                            <button class="close-button" (click)="closeAssignmentModal()">×</button>
+                        </div>
+
+                        <div class="assignment-modal-content">
+                            @if (selectedMissionForAssignment) {
+                            <div class="mission-info">
+                                <h4>{{ selectedMissionForAssignment.title }}</h4>
+                                <p>{{ selectedMissionForAssignment.description }}</p>
+                            </div>
+                            }
+
+                            <div class="profile-selector">
+                                <label for="profileSelect">{{ 'select-player' | transloco }}</label>
+                                <select id="profileSelect" [(ngModel)]="selectedProfileId" name="profileId" class="form-select">
+                                    <option value="">{{ 'select-player-option' | transloco }}</option>
+                                    @for (profile of profilesList; track profile.id) {
+                                    <option [value]="profile.id!">
+                                        {{ profile.username }} ({{ profile.clase }} - Lvl {{ profile.level }})
+                                    </option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="assignment-actions">
+                                <button type="button" class="form-button secondary" (click)="closeAssignmentModal()">
+                                    {{ 'cancel' | transloco }}
+                                </button>
+                                <button type="button" class="form-button primary" [disabled]="!selectedProfileId" (click)="assignMissionToProfile()">
+                                    {{ 'assign-mission' | transloco }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
     </div>
 
-    <!-- Footer with settings and user options -->
     <div class="dm-footer">
         <app-locale-changer></app-locale-changer>
         <button class="enemy-action-button danger" (click)="signOut()">

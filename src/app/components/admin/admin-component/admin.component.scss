@@ -621,6 +621,495 @@ $transition-speed: 0.3s;
   font-size: 1.1rem;
 }
 
+// Mission styles
+.missions-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  gap: 30px;
+}
+
+.missions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.missions-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: $secondary-color;
+  margin: 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.missions-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.mission-button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: $border-radius;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all $transition-speed;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &.primary {
+    background: linear-gradient(135deg, $secondary-color, darken($secondary-color, 10%));
+    color: $primary-color;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba($secondary-color, 0.4);
+    }
+  }
+}
+
+// Mission Form Modal
+.mission-form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.mission-form-modal {
+  background: $primary-color;
+  border-radius: $border-radius;
+  box-shadow: $card-shadow;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  border: 1px solid rgba($secondary-color, 0.3);
+}
+
+.mission-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  border-bottom: 1px solid rgba($secondary-color, 0.2);
+
+  h3 {
+    margin: 0;
+    color: $secondary-color;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: $text-color;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+  line-height: 1;
+  transition: color $transition-speed;
+
+  &:hover {
+    color: $danger-color;
+  }
+}
+
+.mission-form {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  label {
+    font-weight: 600;
+    color: $secondary-color;
+  }
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-input, .form-textarea, .form-select {
+  padding: 12px;
+  border: 1px solid rgba($secondary-color, 0.3);
+  border-radius: $border-radius;
+  background: rgba($background-color, 0.5);
+  color: $text-color;
+  font-family: inherit;
+  transition: border-color $transition-speed;
+
+  &:focus {
+    outline: none;
+    border-color: $secondary-color;
+  }
+}
+
+.form-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.form-button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: $border-radius;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all $transition-speed;
+
+  &.primary {
+    background: linear-gradient(135deg, $secondary-color, darken($secondary-color, 10%));
+    color: $primary-color;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba($secondary-color, 0.4);
+    }
+  }
+
+  &.secondary {
+    background: transparent;
+    color: $text-color;
+    border: 1px solid rgba($text-color, 0.3);
+
+    &:hover {
+      background: rgba($text-color, 0.1);
+    }
+  }
+}
+
+// Missions Grid
+.missions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 25px;
+}
+
+.mission-card {
+  background: rgba($primary-color, 0.9);
+  border-radius: $border-radius;
+  border: 1px solid rgba($secondary-color, 0.2);
+  box-shadow: $card-shadow;
+  overflow: hidden;
+  transition: transform $transition-speed, box-shadow $transition-speed;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba($secondary-color, 0.2);
+  }
+}
+
+.mission-card-header {
+  padding: 20px;
+  border-bottom: 1px solid rgba($secondary-color, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.mission-card-title {
+  margin: 0;
+  color: $secondary-color;
+  font-size: 1.3rem;
+  font-weight: 600;
+  flex: 1;
+}
+
+.mission-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.mission-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.mission-card-content {
+  padding: 20px;
+}
+
+.mission-description {
+  color: $text-color;
+  line-height: 1.6;
+  margin: 0 0 15px 0;
+}
+
+.mission-rewards {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.reward-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  background: rgba($secondary-color, 0.1);
+  border-radius: 20px;
+  border: 1px solid rgba($secondary-color, 0.3);
+}
+
+.reward-icon {
+  font-size: 1rem;
+}
+
+.reward-value {
+  font-weight: 600;
+  color: $secondary-color;
+  font-size: 0.9rem;
+}
+
+.mission-card-actions {
+  padding: 15px 20px;
+  border-top: 1px solid rgba($secondary-color, 0.2);
+  display: flex;
+  gap: 10px;
+}
+
+.mission-action-button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: $border-radius;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all $transition-speed;
+
+  &.primary {
+    background: linear-gradient(135deg, $secondary-color, darken($secondary-color, 10%));
+    color: $primary-color;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba($secondary-color, 0.4);
+    }
+  }
+
+  &.danger {
+    background: linear-gradient(135deg, $danger-color, darken($danger-color, 10%));
+    color: white;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba($danger-color, 0.4);
+    }
+  }
+
+  &.assign {
+    background: linear-gradient(135deg, #2196F3, darken(#2196F3, 10%));
+    color: white;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(#2196F3, 0.4);
+    }
+  }
+
+  &.secondary {
+    background: transparent;
+    color: $text-color;
+    border: 1px solid rgba($text-color, 0.3);
+
+    &:hover {
+      background: rgba($text-color, 0.1);
+    }
+  }
+}
+
+.empty-missions-list {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  color: rgba($text-color, 0.7);
+
+  .empty-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    opacity: 0.5;
+  }
+
+  p {
+    font-size: 1.2rem;
+    margin: 10px 0;
+  }
+}
+
+.create-first-mission {
+  padding: 15px 30px;
+  background: linear-gradient(135deg, $secondary-color, darken($secondary-color, 10%));
+  color: $primary-color;
+  border: none;
+  border-radius: $border-radius;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all $transition-speed;
+  margin-top: 20px;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba($secondary-color, 0.4);
+  }
+}
+
+// Assignment information styles
+.assignment-info {
+  margin-top: 15px;
+  padding: 10px;
+  background: rgba($secondary-color, 0.1);
+  border-radius: 6px;
+  border-left: 3px solid $secondary-color;
+
+  .assignment-label {
+    font-weight: 600;
+    color: $secondary-color;
+    font-size: 0.9rem;
+  }
+
+  .assignment-player {
+    color: $text-color;
+    font-weight: 500;
+    margin-left: 8px;
+  }
+}
+
+// Assignment modal styles
+.assignment-modal {
+  background: $primary-color;
+  border-radius: $border-radius;
+  box-shadow: $card-shadow;
+  max-width: 500px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  border: 1px solid rgba($secondary-color, 0.3);
+}
+
+.assignment-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  border-bottom: 1px solid rgba($secondary-color, 0.2);
+
+  h3 {
+    margin: 0;
+    color: $secondary-color;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+}
+
+.assignment-modal-content {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.mission-info {
+  padding: 15px;
+  background: rgba($secondary-color, 0.1);
+  border-radius: $border-radius;
+  border: 1px solid rgba($secondary-color, 0.2);
+
+  h4 {
+    margin: 0 0 10px 0;
+    color: $secondary-color;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  p {
+    margin: 0;
+    color: $text-color;
+    line-height: 1.5;
+  }
+}
+
+.profile-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  label {
+    font-weight: 600;
+    color: $secondary-color;
+    font-size: 1rem;
+  }
+
+  .form-select {
+    padding: 12px;
+    border: 1px solid rgba($secondary-color, 0.3);
+    border-radius: $border-radius;
+    background: rgba($background-color, 0.5);
+    color: $text-color;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: border-color $transition-speed;
+
+    &:focus {
+      outline: none;
+      border-color: $secondary-color;
+      box-shadow: 0 0 0 2px rgba($secondary-color, 0.2);
+    }
+
+    option {
+      background: $primary-color;
+      color: $text-color;
+      padding: 8px;
+    }
+  }
+}
+
+.assignment-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 20px;
+}
+
 // Responsive adjustments
 @media (max-width: 768px) {
   .dm-header {

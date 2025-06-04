@@ -81,4 +81,24 @@ button {
         overflow-y: auto !important;
     }
 }
-  
+
+// Battle Dialog Styles
+.battle-dialog-panel {
+    .mat-mdc-dialog-container {
+        background: transparent !important;
+        box-shadow: none !important;
+        border-radius: 20px !important;
+        overflow: visible !important;
+        
+        .mdc-dialog__surface {
+            background: transparent !important;
+            border-radius: 20px !important;
+            overflow: visible !important;
+        }
+    }
+}
+
+.cdk-overlay-backdrop.cdk-overlay-backdrop-showing {
+    background: rgba(0, 0, 0, 0.8) !important;
+}
+

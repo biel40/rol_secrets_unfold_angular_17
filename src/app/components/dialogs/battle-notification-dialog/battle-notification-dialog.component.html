@@ -1,0 +1,82 @@
+<div class="battle-notification-container" @dialogEnter>
+  <!-- Decorative background effects -->
+  <div class="battle-background">
+    <div class="flame-effect flame-1"></div>
+    <div class="flame-effect flame-2"></div>
+    <div class="flame-effect flame-3"></div>
+  </div>
+
+  <!-- Header with battle announcement -->
+  <div class="battle-header">
+    <div class="sword-icon" @swordAnimation>
+      <mat-icon>sports_martial_arts</mat-icon>
+    </div>
+    <h1 class="battle-title" @battleCry>
+      {{ 'combat-initiated' | transloco }}
+    </h1>
+    <div class="battle-subtitle">
+      {{ 'battle-has-begun' | transloco }}
+    </div>
+  </div>
+
+  <!-- Enemy showcase -->
+  <div class="enemies-section" @enemyStagger>
+    <div class="section-header">
+      <mat-icon>shield</mat-icon>
+      <h2>{{ 'enemies-in-battlefield' | transloco }}</h2>
+    </div>
+
+    <div class="enemies-grid">
+      @for (enemy of enemies; track enemy.id) {
+      <div class="enemy-card">
+        <div class="enemy-image-container">
+          <img [src]="getEnemyImageUrl(enemy)" [alt]="getEnemyDisplayName(enemy)" class="enemy-image">
+
+          <div class="enemy-level-badge">
+            <mat-icon>star</mat-icon>
+            <span>{{ getEnemyLevel(enemy) }}</span>
+          </div>
+        </div>
+
+        <div class="enemy-info">
+          <h3 class="enemy-name">{{ getEnemyDisplayName(enemy) }}</h3>
+          <div class="enemy-stats">
+            <div class="stat-item">
+              <mat-icon>favorite</mat-icon>
+              <span>{{ enemy.current_hp || enemy.total_hp || 100 }} {{ 'hp' | transloco }}</span>
+            </div>
+            <div class="stat-item">
+              <mat-icon>security</mat-icon>
+              <span>{{ enemy.defense || 5 }} {{ 'defense' | transloco }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+
+  <!-- Call to action -->
+  <div class="action-section">
+    <div class="battle-message">
+      <mat-icon>campaign</mat-icon>
+      <p>{{ 'prepare-for-battle' | transloco }}</p>
+    </div>
+
+    <div class="action-buttons">
+      <button mat-raised-button color="primary" (click)="closeDialog()" class="ready-button">
+        <mat-icon>check_circle</mat-icon>
+        {{ 'ready-for-battle' | transloco }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Decorative elements -->
+  <div class="decorative-border"></div>
+  <div class="runes-decoration">
+    <div class="rune">⚔</div>
+    <div class="rune">🛡</div>
+    <div class="rune">⚡</div>
+    <div class="rune">🔥</div>
+  </div>
+</div>

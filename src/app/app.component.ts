@@ -4,6 +4,9 @@ import { RouterOutlet } from '@angular/router';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { TranslocoService } from '@jsverse/transloco';
 import { RealtimeChannel } from '@supabase/supabase-js';
+import { MatDialog } from '@angular/material/dialog';
+import { BattleNotificationDialogComponent } from './components/dialogs/battle-notification-dialog/battle-notification-dialog.component';
+import { MaterialModule } from './modules/material.module';
 
 @Component({
   selector: 'app-root',
@@ -12,12 +15,14 @@ import { RealtimeChannel } from '@supabase/supabase-js';
   styleUrls: ['./app.component.scss'],
   imports: [
     RouterOutlet,
-    SpinnerComponent
+    SpinnerComponent,
+    MaterialModule
   ]
 })
 export class AppComponent implements OnInit {
 
   private _translocoService: TranslocoService = inject(TranslocoService);
+  private _dialog = inject(MatDialog);
 
   public session: any;
   private _supabaseService = inject(SupabaseService);
@@ -54,7 +59,17 @@ export class AppComponent implements OnInit {
     if (payload.payload.enemies && payload.payload.enemies.length > 0) {
       this.enemiesOfBattle = payload.payload.enemies;
       
-      alert('¡Empieza un combate! Los enemigos son: ' + this.enemiesOfBattle.map(enemy => enemy.name).join(', '));
+      // Abre el diálogo de notificación de batalla
+      this._dialog.open(BattleNotificationDialogComponent, {
+        data: {
+          enemies: this.enemiesOfBattle,
+          battleStartedBy: payload.payload.battleStartedBy || 'Game Master'
+        },
+        width: '90vw',
+        maxWidth: '800px',
+        disableClose: true,
+        panelClass: ['battle-dialog-panel']
+      });
     }
     
   }
