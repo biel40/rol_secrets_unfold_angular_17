@@ -82,23 +82,43 @@ button {
     }
 }
 
-// Battle Dialog Styles
+// Battle Dialog Styles - Solo para diálogos de batalla
 .battle-dialog-panel {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 100vh !important;
+    padding: 20px !important;
+    box-sizing: border-box !important;
+    
     .mat-mdc-dialog-container {
         background: transparent !important;
         box-shadow: none !important;
         border-radius: 20px !important;
         overflow: visible !important;
+        margin: auto !important;
         
         .mdc-dialog__surface {
             background: transparent !important;
             border-radius: 20px !important;
             overflow: visible !important;
+            margin: auto !important;
         }
+    }
+    
+    @media (max-width: 768px) {
+        padding: 15px !important;
+    }
+    
+    @media (max-width: 480px) {
+        padding: 10px !important;
+        align-items: flex-start !important;
+        padding-top: 20px !important;
     }
 }
 
-.cdk-overlay-backdrop.cdk-overlay-backdrop-showing {
+// Backdrop específico solo para diálogos de batalla
+.cdk-overlay-backdrop.battle-dialog-overlay {
     background: rgba(0, 0, 0, 0.8) !important;
 }
 

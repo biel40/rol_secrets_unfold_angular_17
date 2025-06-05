@@ -65,10 +65,17 @@ export class AppComponent implements OnInit {
           enemies: this.enemiesOfBattle,
           battleStartedBy: payload.payload.battleStartedBy || 'Game Master'
         },
-        width: '90vw',
-        maxWidth: '800px',
+        width: 'min(90vw, 650px)', // Responsive width
+        minWidth: '280px', // Mínimo para móviles
+        maxWidth: '650px', // Máximo para desktop
+        minHeight: '350px',
+        maxHeight: '95vh', // Para móviles con pantallas pequeñas
         disableClose: true,
-        panelClass: ['battle-dialog-panel']
+        panelClass: ['battle-dialog-panel'],
+        backdropClass: ['battle-dialog-overlay'], // Clase específica para el overlay
+        autoFocus: false,
+        restoreFocus: false,
+        hasBackdrop: true
       });
     }
     

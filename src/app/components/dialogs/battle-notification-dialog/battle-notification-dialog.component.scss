@@ -12,6 +12,7 @@ $transition-speed: 0.3s;
   width: 100%;
   max-width: 600px;
   min-height: 400px;
+  margin: 0 auto; /* Centrado horizontal */
   background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
   border-radius: 15px;
   padding: 0;
@@ -23,6 +24,22 @@ $transition-speed: 0.3s;
     inset 0 0 20px rgba($secondary-color, 0.1);
   color: $text-color;
   font-family: 'Roboto', sans-serif;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    right: -20px;
+    bottom: -20px;
+    background: radial-gradient(circle at center, 
+      rgba(255, 215, 0, 0.1) 0%, 
+      rgba(255, 69, 0, 0.05) 30%, 
+      transparent 70%);
+    animation: battleAura 6s ease-in-out infinite;
+    z-index: -1;
+    border-radius: 30px;
+  }
 }
 
 /* Animated background effects */
@@ -363,8 +380,12 @@ $transition-speed: 0.3s;
 /* Responsive design */
 @media (max-width: 768px) {
   .battle-notification-container {
+    width: calc(100% - 20px); /* Espacio lateral para respirar */
     max-width: 95vw;
-    margin: 10px;
+    min-width: 320px;
+    margin: 10px auto; /* Centrado horizontal con margen */
+    border-radius: 12px;
+    border-width: 2px;
   }
   
   .battle-header {
@@ -372,11 +393,17 @@ $transition-speed: 0.3s;
     
     .battle-title {
       font-size: 2rem;
+      line-height: 1.2;
+    }
+    
+    .battle-subtitle {
+      font-size: 1rem;
     }
     
     .sword-icon {
       width: 50px;
       height: 50px;
+      margin-bottom: 12px;
       
       mat-icon {
         font-size: 24px;
@@ -386,48 +413,272 @@ $transition-speed: 0.3s;
     }
   }
   
+  .enemies-section {
+    padding: 15px;
+  }
+  
   .enemies-grid {
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 12px;
   }
   
   .enemy-card {
-    padding: 10px;
+    padding: 12px;
+    border-radius: 6px;
     
     .enemy-image-container .enemy-image {
       height: 100px;
+    }
+    
+    .enemy-name {
+      font-size: 1rem;
+    }
+    
+    .stat-item {
+      font-size: 0.85rem;
     }
   }
   
   .action-section {
     padding: 15px;
     
-    .battle-message p {
-      font-size: 1rem;
+    .battle-message {
+      margin-bottom: 15px;
+      
+      p {
+        font-size: 1rem;
+      }
+      
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
     }
     
     .ready-button {
-      padding: 10px 20px;
+      padding: 12px 24px;
       font-size: 1rem;
+      border-radius: 20px;
     }
   }
 }
 
 @media (max-width: 480px) {
-  .battle-header .battle-title {
-    font-size: 1.5rem;
-    letter-spacing: 1px;
+  .battle-notification-container {
+    width: calc(100% - 16px); /* Menos padding en pantallas muy pequeñas */
+    max-width: 98vw;
+    min-width: 280px;
+    margin: 8px auto;
+    border-radius: 10px;
+    min-height: 350px;
   }
   
-  .enemies-section .section-header h2 {
-    font-size: 1.1rem;
+  .battle-header {
+    padding: 15px 12px 12px;
+    
+    .battle-title {
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    
+    .battle-subtitle {
+      font-size: 0.9rem;
+    }
+    
+    .sword-icon {
+      width: 45px;
+      height: 45px;
+      margin-bottom: 10px;
+      
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+  
+  .enemies-section {
+    padding: 12px;
+    
+    .section-header {
+      margin-bottom: 15px;
+      
+      h2 {
+        font-size: 1.1rem;
+      }
+      
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+  
+  .enemies-grid {
+    gap: 10px;
+  }
+  
+  .enemy-card {
+    padding: 10px;
+    
+    .enemy-image-container {
+      margin-bottom: 8px;
+      
+      .enemy-image {
+        height: 80px;
+      }
+      
+      .enemy-level-badge {
+        width: 28px;
+        height: 28px;
+        
+        mat-icon {
+          font-size: 12px;
+          width: 12px;
+          height: 12px;
+        }
+      }
+    }
+    
+    .enemy-name {
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+    }
+    
+    .enemy-stats {
+      gap: 8px;
+      
+      .stat-item {
+        font-size: 0.8rem;
+        
+        mat-icon {
+          font-size: 14px;
+          width: 14px;
+          height: 14px;
+        }
+      }
+    }
+  }
+  
+  .action-section {
+    padding: 12px;
+    
+    .battle-message {
+      margin-bottom: 12px;
+      
+      p {
+        font-size: 0.95rem;
+      }
+    }
+    
+    .ready-button {
+      padding: 10px 20px;
+      font-size: 0.95rem;
+      border-radius: 18px;
+      
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+    }
   }
   
   .runes-decoration {
-    gap: 15px;
+    gap: 12px;
+    bottom: 8px;
     
     .rune {
-      font-size: 16px;
+      font-size: 14px;
+    }
+  }
+}
+
+/* Media query para pantallas extra pequeñas */
+@media (max-width: 320px) {
+  .battle-notification-container {
+    width: calc(100% - 12px);
+    max-width: 96vw;
+    min-width: 260px;
+    margin: 6px auto;
+    border-radius: 8px;
+    min-height: 300px;
+  }
+  
+  .battle-header {
+    padding: 12px 10px 10px;
+    
+    .battle-title {
+      font-size: 1.3rem;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    
+    .battle-subtitle {
+      font-size: 0.85rem;
+    }
+    
+    .sword-icon {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 8px;
+      
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+  
+  .enemies-section {
+    padding: 10px;
+    
+    .section-header h2 {
+      font-size: 1rem;
+    }
+  }
+  
+  .enemy-card {
+    padding: 8px;
+    
+    .enemy-image-container .enemy-image {
+      height: 70px;
+    }
+    
+    .enemy-name {
+      font-size: 0.9rem;
+    }
+    
+    .stat-item {
+      font-size: 0.75rem;
+    }
+  }
+  
+  .action-section {
+    padding: 10px;
+    
+    .battle-message p {
+      font-size: 0.9rem;
+    }
+    
+    .ready-button {
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      border-radius: 16px;
+    }
+  }
+  
+  .runes-decoration {
+    gap: 10px;
+    bottom: 6px;
+    
+    .rune {
+      font-size: 12px;
     }
   }
 }

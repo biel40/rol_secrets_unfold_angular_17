@@ -121,9 +121,11 @@
     "battle-notification-subtitle": "Los siguientes enemigos han aparecido para desafiarte:",
     "hp": "Vida",
     "defense": "Defensa",
-    "ready-for-battle": "¡Estoy Listo!",
+    "ready-for-battle": "¡Estoy listo!",
     "combat-initiated": "¡COMBATE INICIADO!",
     "battle-has-begun": "¡Ha comenzado una batalla!",
-    "enemies-in-battlefield": "Enemigos en el Campo de Batalla",
-    "prepare-for-battle": "¡Prepárate para la batalla! Utiliza tus habilidades sabiamente."
+    "enemies-in-battlefield": "Enemigos en el campo de batalla",
+    "prepare-for-battle": "¡Prepárate para la batalla! Utiliza tus habilidades estratégicamente.",
+    "battle-notification-title": "¡Combate Iniciado!",
+    "battle-notification-body": "¡Un combate épico ha comenzado! Los enemigos te esperan."
 }

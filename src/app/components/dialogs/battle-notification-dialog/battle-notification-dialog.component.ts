@@ -75,8 +75,9 @@ export class BattleNotificationDialogComponent implements OnInit {
     this.enemies = this.data.enemies || [];
     this.battleStartedBy = this.data.battleStartedBy || 'El Maestro del Juego';
 
-    // Play battle sound effect (if available)
+    // Play battle sound effect and vibrate on mobile
     this.playBattleSound();
+    this.vibrateMobile();
   }
 
   public closeDialog(): void {
@@ -96,6 +97,26 @@ export class BattleNotificationDialogComponent implements OnInit {
       // });
     } catch (error) {
       // Audio not supported or failed, continue silently
+    }
+  }
+
+  private vibrateMobile(): void {
+    try {
+      // Check if vibration is supported
+      if ('vibrate' in navigator) {
+        const battleVibrationPattern = [
+          200, 100,
+          400, 150,
+          200, 100,
+          600
+        ];
+
+        navigator.vibrate(battleVibrationPattern);
+        console.log('Battle vibration triggered for mobile device!');
+      }
+    } catch (error) {
+      // Vibration not supported or failed, continue silently
+      console.log('Vibration not supported on this device');
     }
   }
 
