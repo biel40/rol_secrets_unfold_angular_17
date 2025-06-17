@@ -1,12 +1,78 @@
-button:active,
-button:focus {
-    background-color: #102770;
-    color: #ffeba7;
-    box-shadow: 0 8px 24px 0 rgba(16, 39, 112, 0.2);
+// Botón de editar perfil
+.edit-profile-btn {
+    background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%);
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+    
+    &:hover::before {
+        left: 100%;
+    }
+    
+    &:active,
+    &:focus {
+        background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
+        box-shadow: 0 12px 32px 0 rgba(29, 78, 216, 0.4);
+        outline: none;
+    }
 }
 
-button:hover {
-    background-color: #102770;
-    color: #ffeba7;
-    box-shadow: 0 8px 24px 0 rgba(16, 39, 112, 0.2);
+// Botón de cerrar sesión
+.sign-out-btn {
+    background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+    
+    &:hover::before {
+        left: 100%;
+    }
+    
+    &:active,
+    &:focus {
+        background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+        box-shadow: 0 12px 32px 0 rgba(239, 68, 68, 0.4);
+        outline: none;
+    }
+}
+
+// Estilos generales para ambos botones
+.edit-profile-btn,
+.sign-out-btn {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    
+    // Animación de pulso sutil en hover
+    &:hover {
+        animation: subtle-pulse 2s infinite;
+    }
+}
+
+@keyframes subtle-pulse {
+    0%, 100% {
+        box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.3);
+    }
+    50% {
+        box-shadow: 0 12px 32px 0 rgba(0, 0, 0, 0.4);
+    }
 }

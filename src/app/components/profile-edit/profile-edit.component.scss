@@ -1,26 +1,306 @@
-.arrow-left {
-    display: inline-block;
-    width: 1.78em;
-    height: 1em;
-    --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 9'%3E%3Cpath fill='%23000' d='M12.5 5h-9c-.28 0-.5-.22-.5-.5s.22-.5.5-.5h9c.28 0 .5.22.5.5s-.22.5-.5.5'/%3E%3Cpath fill='%23000' d='M6 8.5a.47.47 0 0 1-.35-.15l-3.5-3.5c-.2-.2-.2-.51 0-.71L5.65.65c.2-.2.51-.2.71 0s.2.51 0 .71L3.21 4.51l3.15 3.15c.2.2.2.51 0 .71c-.1.1-.23.15-.35.15Z'/%3E%3C/svg%3E");
-    background-color: currentColor;
-    -webkit-mask-image: var(--svg);
-    mask-image: var(--svg);
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    -webkit-mask-size: 100% 100%;
-    mask-size: 100% 100%;
+// Botón de regreso mejorado
+.back-button {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+    
+    &:hover {
+        background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%);
+        box-shadow: 0 8px 24px 0 rgba(30, 64, 175, 0.3);
+        
+        svg {
+            transform: translateX(-2px);
+            transition: transform 0.2s ease-in-out;
+        }
+    }
+    
+    &:active {
+        transform: scale(0.95);
+        background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
+    }
 }
 
-button:active,
-button:focus {
-    background-color: #102770;
-    color: #ffeba7;
-    box-shadow: 0 8px 24px 0 rgba(16, 39, 112, 0.2);
+// Contenedor principal del formulario
+.form-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, rgba(17, 24, 39, 0.1) 0%, rgba(31, 41, 55, 0.1) 100%);
 }
 
-button:hover {
-    background-color: #102770;
-    color: #ffeba7;
-    box-shadow: 0 8px 24px 0 rgba(16, 39, 112, 0.2);
+// Título con gradiente
+.form-header {
+    h1 {
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        letter-spacing: -0.02em;
+    }
+}
+
+// Tarjeta del formulario
+.form-card {
+    position: relative;
+    border: 1px solid rgba(30, 64, 175, 0.4);
+    
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(30, 64, 175, 0.15) 0%, rgba(29, 78, 216, 0.15) 100%);
+        border-radius: inherit;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+        pointer-events: none;
+    }
+    
+    &:hover::before {
+        opacity: 1;
+    }
+}
+
+// Contenedores de campos de formulario
+.form-field-container {
+    position: relative;
+    
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #1e40af, #1d4ed8);
+        transition: all 0.3s ease-in-out;
+        transform: translateX(-50%);
+    }
+    
+    &:focus-within::after {
+        width: 100%;
+    }
+}
+
+// Estilos personalizados para Material fields
+::ng-deep .custom-field {
+    .mat-mdc-form-field-subscript-wrapper {
+        margin-top: 8px;
+    }
+    
+    .mat-mdc-text-field-wrapper {
+        background-color: rgba(55, 65, 81, 0.3) !important;
+        border-radius: 12px !important;
+        transition: all 0.3s ease-in-out;
+        
+        &:hover {
+            background-color: rgba(55, 65, 81, 0.5) !important;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+    }
+    
+    .mat-mdc-form-field-focus-overlay {
+        background-color: rgba(30, 64, 175, 0.1) !important;
+    }
+    
+    // Labels claramente visibles
+    .mat-mdc-floating-label {
+        color: rgba(255, 255, 255, 0.9) !important;
+        font-weight: 600 !important;
+        font-size: 1rem !important;
+        
+        &.mdc-floating-label--float-above {
+            color: #1e40af !important;
+            font-weight: 700 !important;
+            font-size: 0.85rem !important;
+        }
+    }
+    
+    // Texto de input visible
+    .mat-mdc-input-element {
+        color: rgba(255, 255, 255, 0.95) !important;
+        font-weight: 500;
+        font-size: 1rem !important;
+    }
+    
+    // Texto de select visible
+    .mat-mdc-select-value {
+        color: rgba(255, 255, 255, 0.95) !important;
+        font-weight: 500;
+        font-size: 1rem !important;
+    }
+    
+    // Texto placeholder visible
+    .mat-mdc-select-placeholder {
+        color: rgba(255, 255, 255, 0.7) !important;
+        font-weight: 400;
+    }
+    
+    .mat-mdc-outlined-field-outline {
+        color: rgba(75, 85, 99, 0.8) !important;
+    }
+    
+    &.mat-focused .mat-mdc-outlined-field-outline-thick {
+        color: #1e40af !important;
+        opacity: 1 !important;
+    }
+    
+    // Iconos de los campos
+    .field-icon {
+        color: rgba(30, 64, 175, 0.9) !important;
+        margin-right: 8px;
+        font-size: 20px !important;
+        
+        &.mat-icon {
+            height: 20px;
+            width: 20px;
+        }
+    }
+    
+    // Mejorar contraste del label cuando está flotando
+    &.mat-form-field-should-float .mat-mdc-floating-label {
+        color: #1e40af !important;
+        background-color: rgba(31, 41, 55, 0.95) !important;
+        padding: 0 6px;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(30, 64, 175, 0.2);
+    }
+    
+    // Mejoras adicionales para la visibilidad de campos
+    // Asegurar que el label sea siempre visible
+    .mat-mdc-floating-label {
+        &:not(.mdc-floating-label--float-above) {
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+        }
+    }
+    
+    // Mejorar el contraste del texto del select cuando no hay valor
+    .mat-mdc-select-trigger {
+        .mat-mdc-select-value-text {
+            color: rgba(255, 255, 255, 0.95) !important;
+        }
+    }
+    
+    // Placeholder mejorado para campos vacíos
+    .mat-mdc-select:not(.mat-mdc-select-disabled) .mat-mdc-select-value {
+        color: rgba(255, 255, 255, 0.95) !important;
+    }
+}
+
+// Botón de actualizar perfil
+.update-profile-btn {
+    background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%);
+    position: relative;
+    overflow: hidden;
+    font-size: 1.1rem;
+    
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+    
+    &:hover::before {
+        left: 100%;
+    }
+    
+    &:active,
+    &:focus {
+        background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
+        box-shadow: 0 12px 32px 0 rgba(29, 78, 216, 0.4);
+        outline: none;
+    }
+    
+    &:disabled {
+        background: linear-gradient(135deg, #6b7280 0%, #9ca3af 100%);
+        cursor: not-allowed;
+        transform: none !important;
+        
+        &:hover {
+            box-shadow: none !important;
+        }
+    }
+    
+    // Animación de pulso sutil para botones (igual que en profile component)
+    &:hover {
+        animation: subtle-pulse 2s infinite;
+    }
+}
+
+// Animación de pulso para elementos enfocados
+@keyframes subtle-pulse {
+    0%, 100% {
+        box-shadow: 0 8px 24px 0 rgba(30, 64, 175, 0.3);
+    }
+    50% {
+        box-shadow: 0 12px 32px 0 rgba(30, 64, 175, 0.4);
+    }
+}
+
+// Animaciones globales
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+.form-card {
+    animation: float 6s ease-in-out infinite;
+}
+
+// Mejoras para tema oscuro
+::ng-deep .mat-mdc-select-panel {
+    background-color: rgba(31, 41, 55, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(75, 85, 99, 0.3);
+    border-radius: 12px !important;
+}
+
+::ng-deep .mat-mdc-option {
+    color: rgba(255, 255, 255, 0.9) !important;
+    
+    &:hover {
+        background-color: rgba(30, 64, 175, 0.2) !important;
+        box-shadow: 0 2px 8px rgba(30, 64, 175, 0.1);
+    }
+    
+    &.mdc-list-item--selected {
+        background-color: rgba(30, 64, 175, 0.3) !important;
+        box-shadow: 0 4px 12px rgba(30, 64, 175, 0.2);
+    }
+}
+
+// Estilos específicos para cuando el campo está enfocado
+::ng-deep .mat-focused.custom-field {
+    .field-icon {
+        color: #1d4ed8 !important;
+        transform: scale(1.1);
+        transition: all 0.3s ease-in-out;
+        filter: drop-shadow(0 2px 4px rgba(29, 78, 216, 0.3));
+    }
+}
+
+// Mejoras para el tema oscuro específicamente
+::ng-deep .mat-mdc-form-field {
+    &.custom-field {
+        // Label siempre visible con buen contraste
+        .mat-mdc-floating-label {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        
+        // Mejorar visibilidad en estado inactivo
+        &:not(.mat-focused) {
+            .mat-mdc-floating-label {
+                color: rgba(255, 255, 255, 0.8) !important;
+            }
+        }
+    }
 }

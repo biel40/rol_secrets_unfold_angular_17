@@ -1,68 +1,104 @@
 @if (profile) {
- 
-    <div class="arrow-left | absolute top-12 left-7 bg-slate-200 rounded-xl hover:cursor-pointer" (click)="goBack()">
-      
+    <!-- Botón de regreso mejorado -->
+    <div class="back-button | absolute top-6 left-6 bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-600 hover:to-gray-700 rounded-xl p-3 hover:cursor-pointer shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-in-out z-10" (click)="goBack()">
+        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
     </div>
     
-    <div id="editProfileForm" class="form | flex flex-col gap-4 items-center justify-center w-full h-full">
-
-        <h1> {{ 'edit-profile' | transloco }} </h1>
+    <!-- Contenedor principal del formulario -->
+    <div id="editProfileForm" class="form-container | flex flex-col gap-6 items-center justify-center w-full h-full py-8 px-4">
         
-        <form id="edit-form" [formGroup]="updateProfileForm" (ngSubmit)="updateProfile()"
-            class="form-widget w-full gap-7 flex flex-col justify-center items-center">
+        <!-- Título mejorado -->
+        <div class="form-header | text-center mb-4">
+            <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-700 to-blue-800 bg-clip-text text-transparent mb-2"> 
+                {{ 'edit-profile' | transloco }} 
+            </h1>
+            <div class="w-20 h-1 bg-gradient-to-r from-blue-700 to-blue-800 mx-auto rounded-full"></div>
+        </div>
+        
+        <!-- Formulario con diseño de tarjeta -->
+        <div class="form-card | bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-lg rounded-2xl shadow-2xl border border-blue-700/30 p-8 w-full max-w-md">
+            <form id="edit-form" [formGroup]="updateProfileForm" (ngSubmit)="updateProfile()"
+                class="form-widget w-full gap-6 flex flex-col justify-center items-center">
 
-                <mat-form-field class="md:w-1/3 w-3/4">
-                    <mat-label for="username"> {{ 'name' | transloco }}</mat-label>
-                    <input id="username" matInput appearance="outline" formControlName="username" type="text" required />
-                </mat-form-field>
+                <div class="form-field-container w-full">
+                    <mat-form-field class="w-full custom-field">
+                        <mat-label for="username">{{ 'name' | transloco }}</mat-label>
+                        <input id="username" matInput appearance="outline" formControlName="username" type="text" required />
+                        <mat-icon matPrefix class="field-icon">person</mat-icon>
+                    </mat-form-field>
+                </div>
     
-                <mat-form-field class="md:w-1/3 w-3/4">
-                    <mat-label> Clase: </mat-label>
-                    <mat-select formControlName="clase" required>
-                        @for (class of classList; track $index) {
-                            <mat-option [value]="class">
-                                {{ class }}
-                            </mat-option>
-                        }
-                    </mat-select>
-                </mat-form-field>
+                <div class="form-field-container w-full">
+                    <mat-form-field class="w-full custom-field">
+                        <mat-label>Clase</mat-label>
+                        <mat-select formControlName="clase" required>
+                            @for (class of classList; track $index) {
+                                <mat-option [value]="class">
+                                    {{ class }}
+                                </mat-option>
+                            }
+                        </mat-select>
+                        <mat-icon matPrefix class="field-icon">badge</mat-icon>
+                    </mat-form-field>
+                </div>
 
-                <mat-form-field class="md:w-1/3 w-3/4">
-                    <mat-label> Poder: </mat-label>
-                    <mat-select formControlName="power" required>
-                        @for (power of powerList; track $index) {
-                            <mat-option [value]="power">
-                                {{ power }}
-                            </mat-option>
-                        }
-                    </mat-select>
-                </mat-form-field>
+                <div class="form-field-container w-full">
+                    <mat-form-field class="w-full custom-field">
+                        <mat-label>Poder</mat-label>
+                        <mat-select formControlName="power" required>
+                            @for (power of powerList; track $index) {
+                                <mat-option [value]="power">
+                                    {{ power }}
+                                </mat-option>
+                            }
+                        </mat-select>
+                        <mat-icon matPrefix class="field-icon">flash_on</mat-icon>
+                    </mat-form-field>
+                </div>
             
-                <mat-form-field class="md:w-1/3 w-3/4">
-                    <mat-label> Nivel: </mat-label>
-                    <mat-select formControlName="level" required>
-                        @for (level of levels; track $index) {
-                            <mat-option [value]="level">
-                                {{ level }}
-                            </mat-option>
-                        }
-                    </mat-select>
-                </mat-form-field>
+                <div class="form-field-container w-full">
+                    <mat-form-field class="w-full custom-field">
+                        <mat-label>Nivel</mat-label>
+                        <mat-select formControlName="level" required>
+                            @for (level of levels; track $index) {
+                                <mat-option [value]="level">
+                                    {{ level }}
+                                </mat-option>
+                            }
+                        </mat-select>
+                        <mat-icon matPrefix class="field-icon">trending_up</mat-icon>
+                    </mat-form-field>
+                </div>
             
-                <mat-form-field class="md:w-1/3 w-3/4">
-                    <mat-label> Arma: </mat-label>
-                    <mat-select formControlName="weapon" required>
-                        @for (weapon of weaponList; track $index) {
-                            <mat-option [value]="weapon">
-                                {{ weapon }}
-                            </mat-option>
-                        }
-                    </mat-select>
-                </mat-form-field>
-        </form>
+                <div class="form-field-container w-full">
+                    <mat-form-field class="w-full custom-field">
+                        <mat-label>Arma</mat-label>
+                        <mat-select formControlName="weapon" required>
+                            @for (weapon of weaponList; track $index) {
+                                <mat-option [value]="weapon">
+                                    {{ weapon }}
+                                </mat-option>
+                            }
+                        </mat-select>
+                        <mat-icon matPrefix class="field-icon">gps_fixed</mat-icon>
+                    </mat-form-field>
+                </div>
+            </form>
 
-        <button id="submit_button" type="submit" form="edit-form" class="button primary block submit">
-            {{ 'update-profile' | transloco }}
-        </button>
+            <!-- Botón de actualizar mejorado -->
+            <div class="submit-container | w-full mt-6">
+                <button id="submit_button" type="submit" form="edit-form" 
+                    class="update-profile-btn w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-in-out border border-blue-500 hover:border-blue-400">
+                    <span class="flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                        </svg>
+                        {{ 'update-profile' | transloco }}
+                    </span>
+                </button>
+            </div>
+        </div>
     </div>
 } 

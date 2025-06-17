@@ -1,37 +1,57 @@
 @if (profile) {
-    <div class="flex flex-col items-center justify-start w-full h-full mt-10">
-        <mat-tab-group class="justify-start w-4/5">
-            <mat-tab label="{{ 'profile' | transloco}}">
-                <app-card></app-card>
-            </mat-tab>
-            <mat-tab class="w-full" label="{{ 'stats' | transloco}}">
-                <app-profile-stats [profile]="profile"></app-profile-stats>
-            </mat-tab>
-            <mat-tab label="{{ 'inventory' | transloco}}">
-                <app-profile-inventory [profile]="profile"></app-profile-inventory> 
-            </mat-tab>
-            <mat-tab label="{{ 'habilities' | transloco}}">
-                <app-habilities [profile]="profile"></app-habilities>
-            </mat-tab>
-        </mat-tab-group>
+<div class="flex flex-col items-center justify-start w-full h-full mt-10">
+    <mat-tab-group class="justify-start w-4/5">
+        <mat-tab label="{{ 'profile' | transloco}}">
+            <app-card></app-card>
+        </mat-tab>
+        <mat-tab class="w-full" label="{{ 'stats' | transloco}}">
+            <app-profile-stats [profile]="profile"></app-profile-stats>
+        </mat-tab>
+        <mat-tab label="{{ 'inventory' | transloco}}">
+            <app-profile-inventory [profile]="profile"></app-profile-inventory>
+        </mat-tab>
+        <mat-tab label="{{ 'habilities' | transloco}}">
+            <app-habilities [profile]="profile"></app-habilities>
+        </mat-tab>
+    </mat-tab-group>
 
-        <div class="flex flex-row items-center justify-center mt-4">
-            <button [routerLink]="['/profile-edit']">
-                <a [routerLink]="['/profile-edit']"> {{ 'edit-profile' | transloco }} </a>
-            </button>
-        </div>
-
-        <div class="mt-8">
-            <button class="hover:cursor-pointer" (click)="signOut()">{{'signOut' | transloco}}</button>
-        </div>
+    <div class="flex flex-row items-center justify-center mt-6">
+        <button [routerLink]="['/profile-edit']"
+            class="edit-profile-btn bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-in-out border border-blue-500 hover:border-blue-400">
+            <span class="flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                    </path>
+                </svg>
+                {{ 'edit-profile' | transloco }}
+            </span>
+        </button>
     </div>
+
+    <div class="mt-6">
+        <button (click)="signOut()"
+            class="sign-out-btn bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-in-out border border-red-500 hover:border-red-400">
+            <span class="flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
+                    </path>
+                </svg>
+                {{ 'signOut' | transloco }}
+            </span>
+        </button>
+    </div>
+</div>
 }
 
 @if (errorConfirmEmail) {
-    <div class="flex flex-col items-center justify-center h-full w-full mt-4">
-        <h1 class="">{{ 'error-confirm-email' | transloco }}</h1>
-        <button (click)="goBack()" >
-            <p> {{ 'go-back' | transloco }} </p>
-        </button>
-    </div>
+<div class="flex flex-col items-center justify-center h-full w-full mt-4">
+    <h1 class="">{{ 'error-confirm-email' | transloco }}</h1>
+    <button (click)="goBack()">
+        <p> {{ 'go-back' | transloco }} </p>
+    </button>
+</div>
 }
