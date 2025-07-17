@@ -8,7 +8,6 @@ import {
   SupabaseClient,
   User,
 } from '@supabase/supabase-js';
-
 import { environment } from '../../../environments/environment';
 
 export interface Profile {
@@ -28,6 +27,13 @@ export interface Profile {
   speed?: number,
   current_experience?: number,
   image_url?: string
+}
+
+export interface ProfileSummary {
+  id?: string
+  username?: string
+  clase: string
+  level: number
 }
 
 export interface Hability {
@@ -85,6 +91,36 @@ export interface Mission {
   reward_gold?: number
 }
 
+export interface UserReplica {
+  id: string,
+  email: string,
+  created_at: string,
+  updated_at?: string,
+  last_sign_in_at?: string,
+  email_confirmed_at?: string,
+  phone?: string,
+  phone_confirmed_at?: string,
+  banned_until?: string,
+  confirmation_sent_at?: string,
+  recovery_sent_at?: string,
+  email_change_sent_at?: string,
+  new_email?: string,
+  invited_at?: string,
+  action_link?: string,
+  email_change?: string,
+  email_change_confirm_status?: number,
+  phone_change?: string,
+  phone_change_token?: string,
+  phone_change_sent_at?: string,
+  user_metadata?: {
+    full_name?: string,
+    [key: string]: any
+  },
+  app_metadata?: {
+    [key: string]: any
+  }
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -111,30 +147,36 @@ export class SupabaseService {
       .from('profiles')
       .select(`username, clase, power, level, weapon, current_hp, total_hp, attack, defense, special_attack, special_defense, speed, current_experience`)
       .eq('id', user.id)
-      .single()
+      .single();
   }
 
-  public async getProfileInfo(userId: string) {
+  public async getProfileInfo(userId: string): Promise<{ data: Profile | null, error: any }> {
     try {
-      let profileInfo: any = this._supabaseClient
+      const { data, error } = await this._supabaseClient
         .from('profiles')
         .select(`id, username, clase, power, level, weapon, current_hp, total_hp, attack, defense, special_attack, special_defense, speed, current_experience, image_url`)
         .eq('id', userId)
         .single();
 
-      return profileInfo;
+      if (error) throw error;
+      return { data, error: null };
     } catch (error) {
       console.error(error);
-      return error;
+      return { data: null, error };
     }
   }
 
-  public async getAllHabilities() {
-    let { data: habilities, error } = await this._supabaseClient
+  public async getAllHabilities(): Promise<Hability[] | null> {
+    const { data: habilities, error } = await this._supabaseClient
       .from('habilities')
       .select('*');
 
-    return error ? error : habilities;
+    if (error) {
+      console.error('Error fetching habilities:', error);
+      return null;
+    }
+
+    return habilities;
   }
 
   public async getHabilities(profile: Profile): Promise<Hability[]> {
@@ -191,16 +233,21 @@ export class SupabaseService {
   }
 
   // Function to update User's habilities
-  public async updateHabilities(habilities: Hability[]) {
+  public async updateHabilities(habilities: Hability[]): Promise<Hability[] | null> {
     try {
-      let { data: habilitiesUpdated, error } = await this._supabaseClient
+      const { data: habilitiesUpdated, error } = await this._supabaseClient
         .from('habilities')
         .upsert(habilities)
         .select('*');
 
-      return error ? error : habilitiesUpdated;
+      if (error) {
+        throw error;
+      }
+
+      return habilitiesUpdated;
     } catch (error) {
-      return error;
+      console.error('Error updating habilities:', error);
+      return null;
     }
   }
 
@@ -294,7 +341,7 @@ export class SupabaseService {
       .select();
   }
 
-  public async getEnemies() {
+  public async getEnemies(): Promise<{ data: Enemy[] | null, error: any }> {
     return await this._supabaseClient
       .from('enemies')
       .select('*');
@@ -306,35 +353,34 @@ export class SupabaseService {
     return channel;
   }
 
-  public async getItems(userId: string) {
+  public async getItems(userId: string): Promise<{ data: Item[] | null, error: any }> {
     return await this._supabaseClient
       .from('items')
       .select('*')
       .eq('profile_id', userId);
   }
 
-  public async saveItemToProfile(item: Item) {
-
+  public async saveItemToProfile(item: Item): Promise<{ data: Item[] | null, error: any }> {
     if (item.id === 0) {
       // We will generate a random int to be the id of the item
       item.id = Math.floor(Math.random() * 1000000);
     }
 
     // We will insert the new item into the table items
-    await this._supabaseClient
+    return await this._supabaseClient
       .from('items')
       .insert(item)
       .select();
   }
 
-  public async deleteItemFromProfile(item: Item) {
-    await this._supabaseClient
+  public async deleteItemFromProfile(item: Item): Promise<{ data: any, error: any }> {
+    return await this._supabaseClient
       .from('items')
       .delete()
       .eq('id', item.id);
   }
 
-  public async deleteEnemy(enemyId: string) {
+  public async deleteEnemy(enemyId: string): Promise<{ data: any, error: any }> {
     return await this._supabaseClient
       .from('enemies')
       .delete()
@@ -342,20 +388,20 @@ export class SupabaseService {
   }
 
   // NPC methods for Supabase integration
-  public async getNPCs() {
+  public async getNPCs(): Promise<{ data: NPC[] | null, error: any }> {
     return await this._supabaseClient
       .from('npcs')
       .select('*');
   }
 
-  public async createNPC(npc: NPC) {
+  public async createNPC(npc: NPC): Promise<{ data: NPC[] | null, error: any }> {
     return await this._supabaseClient
       .from('npcs')
       .insert(npc)
       .select();
   }
 
-  public async updateNPC(npc: NPC) {
+  public async updateNPC(npc: NPC): Promise<{ data: NPC[] | null, error: any }> {
     return await this._supabaseClient
       .from('npcs')
       .update(npc)
@@ -363,7 +409,7 @@ export class SupabaseService {
       .select();
   }
 
-  public async deleteNPC(npcId: number) {
+  public async deleteNPC(npcId: number): Promise<{ data: any, error: any }> {
     return await this._supabaseClient
       .from('npcs')
       .delete()
@@ -371,32 +417,32 @@ export class SupabaseService {
   }
 
   // Mission methods for Supabase integration
-  public async getMissions() {
+  public async getMissions(): Promise<{ data: Mission[] | null, error: any }> {
     return await this._supabaseClient
       .from('misions')
       .select('*')
       .order('created_at', { ascending: false });
   }
 
-  public async createMission(mission: Mission) {
+  public async createMission(mission: Mission): Promise<{ data: Mission[] | null, error: any }> {
     const missionData = {
       ...mission,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     };
-    
+
     return await this._supabaseClient
       .from('misions')
       .insert(missionData)
       .select();
   }
 
-  public async updateMission(mission: Mission) {
+  public async updateMission(mission: Mission): Promise<{ data: Mission[] | null, error: any }> {
     const updateData = {
       ...mission,
       updated_at: new Date().toISOString()
     };
-    
+
     return await this._supabaseClient
       .from('misions')
       .update(updateData)
@@ -404,17 +450,17 @@ export class SupabaseService {
       .select();
   }
 
-  public async deleteMission(missionId: number) {
+  public async deleteMission(missionId: number): Promise<{ data: any, error: any }> {
     return await this._supabaseClient
       .from('misions')
       .delete()
       .eq('id', missionId);
   }
 
-  public async assignMissionToProfile(missionId: number, profileId: string) {
+  public async assignMissionToProfile(missionId: number, profileId: string): Promise<{ data: Mission[] | null, error: any }> {
     return await this._supabaseClient
       .from('misions')
-      .update({ 
+      .update({
         assigned_to: profileId,
         status: 'in_progress',
         updated_at: new Date().toISOString()
@@ -423,7 +469,7 @@ export class SupabaseService {
       .select();
   }
 
-  public async getMissionsByProfile(profileId: string) {
+  public async getMissionsByProfile(profileId: string): Promise<{ data: Mission[] | null, error: any }> {
     return await this._supabaseClient
       .from('misions')
       .select('*')
@@ -432,10 +478,110 @@ export class SupabaseService {
   }
 
   // Methods for getting all profiles for mission assignment
-  public async getAllProfiles() {
+  public async getAllProfiles(): Promise<{ data: ProfileSummary[] | null, error: any }> {
     return await this._supabaseClient
       .from('profiles')
       .select('id, username, clase, level')
       .order('username', { ascending: true });
+  }
+
+  public async getAllUsers(): Promise<{ data: UserReplica[] | null, error: any }> {
+    try {
+      const { data: users, error } = await this._supabaseClient
+        .from('users_replica')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      return { data: users, error: null };
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      return { data: null, error };
+    }
+  }
+
+  public async getAllProfilesDetailed(): Promise<{ data: Profile[] | null, error: any }> {
+    return await this._supabaseClient
+      .from('profiles')
+      .select('*')
+      .order('username', { ascending: true });
+  }
+
+  public async createProfile(profile: Partial<Profile>): Promise<{ data: Profile | null, error: any }> {
+    return await this._supabaseClient
+      .from('profiles')
+      .insert(profile)
+      .select()
+      .single();
+  }
+
+  public async deleteUser(userId: string): Promise<{ data: boolean | null, error: any }> {
+    try {
+      // First delete the profile
+      await this._supabaseClient
+        .from('profiles')
+        .delete()
+        .eq('id', userId);
+
+      // Then delete the user from users_replica table
+      const { error } = await this._supabaseClient
+        .from('users_replica')
+        .delete()
+        .eq('id', userId);
+
+      if (error) throw error;
+
+      return { data: true, error: null };
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      return { data: null, error };
+    }
+  }
+
+  public async updateUserProfile(userId: string, updates: Partial<Profile>): Promise<{ data: Profile | null, error: any }> {
+    return await this._supabaseClient
+      .from('profiles')
+      .update(updates)
+      .eq('id', userId)
+      .select()
+      .single();
+  }
+
+  public async createUserInReplica(userData: Partial<UserReplica>): Promise<{ data: UserReplica | null, error: any }> {
+    try {
+      const { data, error } = await this._supabaseClient
+        .from('users_replica')
+        .insert(userData)
+        .select()
+        .single();
+
+      if (error) {
+        throw error;
+      }
+      return { data, error: null };
+    } catch (error) {
+      console.error('Error creating user in replica:', error);
+      return { data: null, error };
+    }
+  }
+
+  public async updateUserInReplica(userId: string, updates: Partial<UserReplica>): Promise<{ data: UserReplica | null, error: any }> {
+    try {
+      const { data, error } = await this._supabaseClient
+        .from('users_replica')
+        .update(updates)
+        .eq('id', userId)
+        .select()
+        .single();
+
+      if (error) {
+        throw error;
+      }
+
+      return { data, error: null };
+    } catch (error) {
+      console.error('Error updating user in replica:', error);
+      return { data: null, error };
+    }
   }
 }

@@ -1,72 +1,310 @@
-form {
+// Variables con tema oscuro consistente con la app
+$primary-color: #2c3e50;
+$secondary-color: #3d7dca;
+$accent-color: #d4af37;
+$text-color: rgba(255, 255, 255, 0.87);
+$background-dark: #1a2530;
+$background-card: rgba(44, 62, 80, 0.9);
+$error-color: #e74c3c;
+$card-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+$border-radius: 12px;
+$transition-speed: 0.3s;
+
+// Contenedor principal de autenticación
+.auth-container {
+    min-height: 100vh;
+    background: linear-gradient(
+        135deg,
+        $background-dark 0%,
+        rgba($primary-color, 0.8) 50%,
+        rgba($background-dark, 0.9) 100%
+    );
+    position: relative;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%233d7dca" fill-opacity="0.03"><polygon points="36 34 6 34 6 4 36 4"/></g></g></svg>');
+        opacity: 0.4;
+        pointer-events: none;
+    }
+}
+
+// Título principal mejorado
+.auth-header {
+    .auth-title {
+        color: $text-color;
+        font-weight: 700;
+        text-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+        letter-spacing: 0.5px;
+        margin-bottom: 3rem !important;
+        position: relative;
+        display: inline-block;
+
+        .title-accent {
+            background: linear-gradient(
+                135deg,
+                $secondary-color 0%,
+                $accent-color 50%,
+                lighten($secondary-color, 15%) 100%
+            );
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            font-weight: 800;
+
+            &::after {
+                content: "";
+                position: absolute;
+                bottom: -8px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 60%;
+                height: 2px;
+                background: linear-gradient(90deg, transparent, $accent-color, transparent);
+                border-radius: 2px;
+                opacity: 0.8;
+                box-shadow: 0 0 10px rgba($accent-color, 0.5);
+            }
+        }
+
+        // Efecto de resplandor sutil alrededor del título
+        &::before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: radial-gradient(ellipse at center, rgba($secondary-color, 0.1) 0%, transparent 70%);
+            border-radius: 20px;
+            z-index: -1;
+        }
+
+        @media (max-width: 768px) {
+            font-size: 2.2rem !important;
+            margin-bottom: 2rem !important;
+            letter-spacing: 0.3px;
+        }
+
+        @media (max-width: 480px) {
+            font-size: 1.8rem !important;
+            margin-bottom: 1.5rem !important;
+            letter-spacing: 0.2px;
+        }
+    }
+}
+
+// Contenedor principal del formulario
+.auth-form {
     display: flex;
     justify-content: center;
     flex-direction: column;
     width: 100%;
+    max-width: 450px;
+    margin: 0 auto;
     text-align: center;
-    min-height: 40vh;
+    min-height: 50vh;
     align-items: center;
     justify-content: space-between;
+    padding: 40px 30px;
+    background: $background-card;
+    border-radius: $border-radius;
+    border: 1px solid rgba($secondary-color, 0.2);
+    box-shadow: $card-shadow;
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+            135deg,
+            rgba($secondary-color, 0.03) 0%,
+            transparent 50%,
+            rgba($accent-color, 0.02) 100%
+        );
+        border-radius: inherit;
+        pointer-events: none;
+    }
+
+    animation: float 6s ease-in-out infinite;
+
+    @media (max-width: 768px) {
+        max-width: 90%;
+        padding: 30px 20px;
+        min-height: 45vh;
+    }
 }
 
-button {
-    border-radius: 4px;
-    height: 44px;
-    font-size: 13px;
+.form-field-container {
+    width: 100%;
+    margin: 8px 0;
+}
+
+.primary-button,
+.secondary-button {
+    border-radius: 8px;
+    height: 48px;
+    font-size: 14px;
     font-weight: 600;
     text-transform: uppercase;
-    -webkit-transition: all 200ms linear;
-    transition: all 200ms linear;
-    padding: 0 30px;
     letter-spacing: 1px;
-    display: -webkit-inline-flex;
-    display: -ms-inline-flexbox;
+    padding: 0 35px;
+    margin: 8px 0;
+    min-width: 200px;
     display: inline-flex;
-    -webkit-align-items: center;
-    -moz-align-items: center;
-    -ms-align-items: center;
     align-items: center;
-    -webkit-justify-content: center;
-    -moz-justify-content: center;
-    -ms-justify-content: center;
     justify-content: center;
-    -ms-flex-pack: center;
     text-align: center;
     border: none;
-    background-color: #ffeba7;
-    color: #102770;
-    box-shadow: 0 8px 24px 0 rgba(255, 235, 167, 0.2);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all $transition-speed ease;
+    font-family: inherit;
+
+    @media (max-width: 768px) {
+        min-width: 180px;
+        height: 44px;
+        font-size: 13px;
+    }
+
+    @media (max-width: 480px) {
+        min-width: 160px;
+        height: 42px;
+        margin: 6px 0;
+    }
 }
 
-button:active,
-button:focus {
-    background-color: #102770;
-    color: #ffeba7;
-    box-shadow: 0 8px 24px 0 rgba(16, 39, 112, 0.2);
+// Botón principal (login) - Estilo oscuro elegante
+.primary-button {
+    background: linear-gradient(135deg, $secondary-color 0%, darken($secondary-color, 10%) 100%);
+    color: white;
+    box-shadow: 0 8px 24px rgba($secondary-color, 0.3);
+
+    // Efecto shimmer
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    &:hover::before {
+        left: 100%;
+    }
+
+    &:hover {
+        background: linear-gradient(135deg, lighten($secondary-color, 5%) 0%, $secondary-color 100%);
+        box-shadow: 0 12px 32px rgba($secondary-color, 0.4);
+        transform: translateY(-2px);
+    }
+
+    &:active,
+    &:focus {
+        background: linear-gradient(135deg, darken($secondary-color, 5%) 0%, darken($secondary-color, 15%) 100%);
+        box-shadow: 0 6px 16px rgba($secondary-color, 0.5);
+        transform: translateY(0);
+        outline: none;
+    }
+
+    // Estados disabled
+    &:disabled {
+        background: rgba(108, 117, 125, 0.3) !important;
+        color: rgba($text-color, 0.5) !important;
+        cursor: not-allowed;
+        transform: none !important;
+        box-shadow: none !important;
+    }
 }
 
-button:hover {
-    background-color: #102770;
-    color: #ffeba7;
-    box-shadow: 0 8px 24px 0 rgba(16, 39, 112, 0.2);
+// Botón secundario (registro) - Estilo outline dorado
+.secondary-button {
+    background: transparent;
+    color: $accent-color;
+    border: 2px solid $accent-color;
+    box-shadow: 0 4px 16px rgba($accent-color, 0.2);
+
+    &:hover {
+        background: rgba($accent-color, 0.1);
+        color: lighten($accent-color, 10%);
+        box-shadow: 0 8px 24px rgba($accent-color, 0.3);
+        transform: translateY(-2px);
+        border-color: lighten($accent-color, 10%);
+    }
+
+    &:active,
+    &:focus {
+        background: rgba($accent-color, 0.2);
+        color: $accent-color;
+        box-shadow: 0 4px 12px rgba($accent-color, 0.4);
+        transform: translateY(0);
+        outline: none;
+    }
+
+    // Estados disabled
+    &:disabled {
+        background: transparent !important;
+        color: rgba($text-color, 0.5) !important;
+        cursor: not-allowed;
+        transform: none !important;
+        box-shadow: none !important;
+        border-color: rgba(108, 117, 125, 0.3) !important;
+    }
 }
 
+// Contenedor de acciones del formulario
+.form-actions {
+    width: 100%;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+// Mensaje de error mejorado con colores originales
 .error-message {
-    background-color: #ffcccc;
-    border: 1px solid #ff9999;
-    color: #ff3333;
-    padding: 10px;
-    margin: 3em;
-    border-radius: 4px;
+    background: linear-gradient(135deg, rgba($error-color, 0.1) 0%, rgba($error-color, 0.05) 100%);
+    border: 1px solid rgba($error-color, 0.4);
+    border-left: 4px solid $error-color;
+    color: lighten($error-color, 10%);
+    padding: 16px 20px;
+    margin: 20px 0;
+    border-radius: 8px;
     font-size: 14px;
-    animation: fade-in-up 0.3s ease forwards;
+    font-weight: 500;
+    animation: fade-in-up 0.4s ease forwards;
     opacity: 0;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 16px rgba($error-color, 0.2);
+
+    &::before {
+        content: "⚠️";
+        margin-right: 8px;
+        font-size: 16px;
+    }
 }
 
+// Estilos para los campos de input (compatibilidad con Angular Material)
 .input-field {
     font: inherit;
     background: transparent;
-    color: currentColor;
+    color: $text-color;
     border: none;
     outline: none;
     padding: 0;
@@ -78,14 +316,161 @@ button:hover {
     box-sizing: content-box;
 }
 
+// Mejorar los campos de formulario de Angular Material
+::ng-deep {
+    .mat-mdc-form-field {
+        width: 100%;
+        margin: 12px 0;
+
+        .mat-mdc-text-field-wrapper {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            transition: all $transition-speed ease;
+            border: 1px solid rgba($secondary-color, 0.2);
+
+            &:hover {
+                background: rgba(0, 0, 0, 0.4);
+                border-color: rgba($secondary-color, 0.4);
+            }
+        }
+
+        &.mat-focused {
+            .mat-mdc-text-field-wrapper {
+                border-color: $secondary-color;
+                box-shadow: 0 0 0 2px rgba($secondary-color, 0.2);
+                background: rgba(0, 0, 0, 0.5);
+            }
+
+            .mat-mdc-floating-label {
+                color: $secondary-color !important;
+            }
+        }
+
+        .mat-mdc-floating-label {
+            color: rgba($text-color, 0.7) !important;
+            font-weight: 500;
+
+            &.mdc-floating-label--float-above {
+                color: $accent-color !important;
+                font-weight: 600;
+            }
+        }
+
+        .mat-mdc-input-element {
+            color: $text-color !important;
+            font-weight: 500;
+
+            &::placeholder {
+                color: rgba($text-color, 0.5) !important;
+            }
+        }
+
+        .mat-mdc-form-field-error {
+            color: lighten($error-color, 15%) !important;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        .mat-mdc-form-field-icon-prefix,
+        .mat-mdc-form-field-icon-suffix {
+            color: $accent-color;
+        }
+    }
+}
+
+// Texto separador mejorado con tema oscuro
+.separator-text {
+    color: rgba($text-color, 0.8);
+    font-weight: 500;
+    font-size: 16px;
+    margin: 16px 0 !important;
+    position: relative;
+
+    &::before,
+    &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        width: 40px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba($accent-color, 0.4), transparent);
+    }
+
+    &::before {
+        left: -50px;
+    }
+
+    &::after {
+        right: -50px;
+    }
+
+    @media (max-width: 768px) {
+        &::before,
+        &::after {
+            width: 30px;
+        }
+
+        &::before {
+            left: -35px;
+        }
+
+        &::after {
+            right: -35px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        &::before,
+        &::after {
+            display: none;
+        }
+    }
+}
+
+// Animaciones
 @keyframes fade-in-up {
     from {
         opacity: 0;
         transform: translateY(20px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@keyframes float {
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+// Animación de pulso sutil para elementos en foco
+@keyframes subtle-pulse {
+    0%,
+    100% {
+        box-shadow: 0 8px 24px rgba($secondary-color, 0.3);
+    }
+    50% {
+        box-shadow: 0 12px 32px rgba($secondary-color, 0.4);
+    }
+}
+
+// Responsive design mejorado
+@media (max-width: 768px) {
+    .auth-form {
+        padding: 25px 20px;
+        margin: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-form {
+        padding: 20px 15px;
+        min-height: 40vh;
     }
 }

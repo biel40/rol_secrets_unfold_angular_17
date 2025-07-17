@@ -12,6 +12,8 @@
                 transloco }}</button>
             <button class="dm-tab" [class.active]="currentTab === 'quests'" (click)="switchTab('quests')">{{ 'quests' |
                 transloco }}</button>
+            <button class="dm-tab" [class.active]="currentTab === 'users'" (click)="switchTab('users')">{{ 'users' |
+                transloco }}</button>
         </div>
     </div>
 
@@ -238,7 +240,7 @@
 
                         <div class="mission-card-content">
                             <p class="mission-description">{{ mission.description }}</p>
-                            
+
                             <!-- Assignment information -->
                             @if (mission.assigned_to) {
                             <div class="assignment-info">
@@ -296,7 +298,8 @@
 
                             <div class="profile-selector">
                                 <label for="profileSelect">{{ 'select-player' | transloco }}</label>
-                                <select id="profileSelect" [(ngModel)]="selectedProfileId" name="profileId" class="form-select">
+                                <select id="profileSelect" [(ngModel)]="selectedProfileId" name="profileId"
+                                    class="form-select">
                                     <option value="">{{ 'select-player-option' | transloco }}</option>
                                     @for (profile of profilesList; track profile.id) {
                                     <option [value]="profile.id!">
@@ -310,10 +313,171 @@
                                 <button type="button" class="form-button secondary" (click)="closeAssignmentModal()">
                                     {{ 'cancel' | transloco }}
                                 </button>
-                                <button type="button" class="form-button primary" [disabled]="!selectedProfileId" (click)="assignMissionToProfile()">
+                                <button type="button" class="form-button primary" [disabled]="!selectedProfileId"
+                                    (click)="assignMissionToProfile()">
                                     {{ 'assign-mission' | transloco }}
                                 </button>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+
+        <ng-container *ngIf="currentTab === 'users'">
+            <div class="users-section">
+                <div class="users-header">
+                    <h2 class="users-title">{{ 'user-management' | transloco }}</h2>
+                    <div class="users-actions">
+                        <div class="search-container">
+                            <input type="text" class="search-input" placeholder="{{ 'search-users' | transloco }}"
+                                [(ngModel)]="searchTermUsers">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users Grid -->
+                <div class="users-grid">
+                    @if (filteredUsers && filteredUsers.length > 0) {
+                    @for (user of filteredUsers; track user.id) {
+                    <div class="user-card">
+                        <div class="user-card-header">
+                            <div class="user-basic-info">
+                                <h3 class="user-email">{{ user.email }}</h3>
+                            </div>
+                            <div class="user-dates">
+                                <small class="user-created">{{ 'created' | transloco }}: {{
+                                    formatUserDate(user.created_at) }}</small>
+                                @if (user.last_sign_in_at) {
+                                <small class="user-last-login">{{ 'last-login' | transloco }}: {{
+                                    formatUserDate(user.last_sign_in_at) }}</small>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="user-card-content">
+                            @if (user.profile) {
+                            <!-- User has a profile -->
+                            <div class="user-profile">
+                                <div class="profile-info">
+                                    <div class="profile-avatar"
+                                        [style.backgroundImage]="'url(' + user.profile.image_url + ')'">
+                                        <div class="profile-level">{{ user.profile.level }}</div>
+                                    </div>
+                                    <div class="profile-details">
+                                        <h4 class="profile-username">{{ user.profile.username }}</h4>
+                                        <div class="profile-class">{{ user.profile.clase }} {{ user.profile.power }}
+                                        </div>
+                                        <div class="profile-stats">
+                                            <span class="stat">HP: {{ user.profile.current_hp }}/{{
+                                                user.profile.total_hp }}</span>
+                                            <span class="stat">ATK: {{ user.profile.attack }}</span>
+                                            <span class="stat">DEF: {{ user.profile.defense }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            } @else {
+                            <!-- User doesn't have a profile -->
+                            <div class="no-profile">
+                                <div class="no-profile-icon">👤</div>
+                                <p class="no-profile-text">{{ 'no-profile-created' | transloco }}</p>
+                            </div>
+                            }
+                        </div>
+
+                        <div class="user-card-actions">
+                            @if (user.profile) {
+                            <button class="user-action-button primary" (click)="editUserProfile(user)">
+                                {{ 'edit-profile' | transloco }}
+                            </button>
+                            } @else {
+                            <button class="user-action-button primary" (click)="openCreateProfileModal(user)">
+                                {{ 'create-profile' | transloco }}
+                            </button>
+                            }
+                            <button class="user-action-button danger" (click)="deleteUser(user)">
+                                {{ 'delete-user' | transloco }}
+                            </button>
+                        </div>
+                    </div>
+                    }
+                    } @else {
+                    <div class="empty-users-list">
+                        <div class="empty-icon">👥</div>
+                        <p>{{ 'no-users-available' | transloco }}</p>
+                    </div>
+                    }
+                </div>
+
+                <!-- Create Profile Modal -->
+                <div class="user-form-overlay" *ngIf="showUserProfileModal" (click)="closeUserProfileModal()">
+                    <div class="profile-modal" (click)="$event.stopPropagation()">
+                        <div class="profile-modal-header">
+                            <h3>{{ 'create-profile-for-user' | transloco }}</h3>
+                            <button class="close-button" (click)="closeUserProfileModal()">×</button>
+                        </div>
+
+                        <div class="profile-modal-content">
+                            @if (selectedUserForProfile) {
+                            <div class="user-info">
+                                <h4>{{ selectedUserForProfile.email }}</h4>
+                            </div>
+
+                            <form #profileForm="ngForm" (ngSubmit)="createProfileForUser(profileForm.value)">
+                                <div class="form-group">
+                                    <label for="username">{{ 'username' | transloco }}</label>
+                                    <input type="text" id="username" name="username" class="form-input" required
+                                        ngModel>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="clase">{{ 'class' | transloco }}</label>
+                                        <select id="clase" name="clase" class="form-select" required ngModel>
+                                            <option value="">{{ 'select-class' | transloco }}</option>
+                                            <option value="Guerrero">{{ 'warrior' | transloco }}</option>
+                                            <option value="Mago">{{ 'mage' | transloco }}</option>
+                                            <option value="Explorador">{{ 'explorer' | transloco }}</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="power">{{ 'power' | transloco }}</label>
+                                        <select id="power" name="power" class="form-select" required ngModel>
+                                            <option value="">{{ 'select-power' | transloco }}</option>
+                                            <option value="Fuego">{{ 'fire' | transloco }}</option>
+                                            <option value="Agua">{{ 'water' | transloco }}</option>
+                                            <option value="Tierra">{{ 'earth' | transloco }}</option>
+                                            <option value="Aire">{{ 'air' | transloco }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="level">{{ 'level' | transloco }}</label>
+                                        <input type="number" id="level" name="level" class="form-input" min="1"
+                                            max="100" value="1" ngModel>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="weapon">{{ 'weapon' | transloco }}</label>
+                                        <input type="text" id="weapon" name="weapon" class="form-input" ngModel>
+                                    </div>
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="button" class="form-button secondary"
+                                        (click)="closeUserProfileModal()">
+                                        {{ 'cancel' | transloco }}
+                                    </button>
+                                    <button type="submit" class="form-button primary" [disabled]="!profileForm.valid">
+                                        {{ 'create-profile' | transloco }}
+                                    </button>
+                                </div>
+                            </form>
+                            }
                         </div>
                     </div>
                 </div>

@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { Profile, Enemy, NPC, Mission, SupabaseService } from '../../../services/supabase/supabase.service';
+import { Profile, Enemy, NPC, Mission, SupabaseService, UserReplica, ProfileSummary } from '../../../services/supabase/supabase.service';
 import { UserService } from '../../../services/user/user.service';
 import { RealtimeChannel, User } from '@supabase/supabase-js';
 import { MaterialModule } from '../../../modules/material.module';
@@ -49,16 +49,22 @@ export class AdminComponent implements OnInit {
     // Mission properties
     public missionsList: Mission[] = [];
     public searchTermMissions: string = '';
-    
+
     // Profile selector properties
-    public profilesList: Profile[] = [];
+    public profilesList: ProfileSummary[] = [];
     public showAssignmentModal: boolean = false;
     public selectedMissionForAssignment: Mission | null = null;
     public selectedProfileId: string = '';
 
-    // New properties for enhanced DM dashboard
-    public currentTab: 'enemies' | 'npcs' | 'quests' | 'items' = 'enemies';
+    public currentTab: 'enemies' | 'npcs' | 'quests' | 'users' = 'enemies';
     public searchTerm: string = '';
+
+    // User management properties
+    public usersList: (UserReplica & { profile?: Profile })[] = [];
+    public allProfiles: Profile[] = [];
+    public searchTermUsers: string = '';
+    public showUserProfileModal: boolean = false;
+    public selectedUserForProfile: UserReplica | null = null;
 
     // Computed property for filtered enemies
     public get filteredEnemies(): Enemy[] {
@@ -102,6 +108,20 @@ export class AdminComponent implements OnInit {
         );
     }
 
+    // Computed property for filtered users
+    public get filteredUsers(): (UserReplica & { profile?: Profile })[] {
+        if (!this.searchTermUsers.trim()) {
+            return this.usersList;
+        }
+
+        const term = this.searchTermUsers.toLowerCase().trim();
+        return this.usersList.filter(user =>
+            user.email.toLowerCase().includes(term) ||
+            (user.user_metadata?.full_name && user.user_metadata.full_name.toLowerCase().includes(term)) ||
+            (user.profile?.username && user.profile.username.toLowerCase().includes(term))
+        );
+    }
+
     constructor() { }
 
     public async ngOnInit(): Promise<void> {
@@ -122,7 +142,28 @@ export class AdminComponent implements OnInit {
         this.enemiesList = (await this._supabaseService.getEnemies()).data as Enemy[];
         this.npcsList = (await this._supabaseService.getNPCs()).data as NPC[];
         this.missionsList = (await this._supabaseService.getMissions()).data as Mission[];
-        this.profilesList = (await this._supabaseService.getAllProfiles()).data as Profile[];
+        this.profilesList = (await this._supabaseService.getAllProfiles()).data as ProfileSummary[];
+
+        // Load detailed profiles for user association
+        const detailedProfiles = await this._supabaseService.getAllProfilesDetailed();
+        this.allProfiles = detailedProfiles.data as Profile[];
+
+        // Load users with their profiles
+        await this._loadUsers();
+    } private async _loadUsers(): Promise<void> {
+        try {
+            const usersData = await this._supabaseService.getAllUsers();
+            this.usersList = usersData.data || [];
+
+            // Associate profiles with users
+            for (let user of this.usersList) {
+                const profile = this.allProfiles.find(p => p.id === user.id);
+                user.profile = profile || undefined;
+            }
+        } catch (error) {
+            console.error('Error loading users:', error);
+            this._displaySnackbar('Error al cargar los usuarios.');
+        }
     }
 
     public async deleteEnemy(enemy: Enemy): Promise<void> {
@@ -188,7 +229,7 @@ export class AdminComponent implements OnInit {
 
     // New methods for enhanced DM dashboard
     public switchTab(tabName: string): void {
-        if (tabName === 'enemies' || tabName === 'npcs' || tabName === 'quests' || tabName === 'items') {
+        if (tabName === 'enemies' || tabName === 'npcs' || tabName === 'quests' || tabName === 'users') {
             this.currentTab = tabName;
         }
     }
@@ -351,12 +392,12 @@ export class AdminComponent implements OnInit {
                     this.selectedMissionForAssignment.id!,
                     this.selectedProfileId
                 );
-                
+
                 if (result.data) {
                     const selectedProfile = this.profilesList.find(p => p.id === this.selectedProfileId);
                     const profileName = selectedProfile?.username || 'Jugador';
                     this._displaySnackbar(`Misión "${this.selectedMissionForAssignment.title}" asignada a ${profileName}.`);
-                    
+
                     this.closeAssignmentModal();
                     await this._loadData();
                 }
@@ -377,7 +418,7 @@ export class AdminComponent implements OnInit {
                     assigned_to: undefined,
                     status: 'pending'
                 });
-                
+
                 if (result.data) {
                     this._displaySnackbar(`Misión "${mission.title}" desasignada correctamente.`);
                     await this._loadData();
@@ -398,6 +439,85 @@ export class AdminComponent implements OnInit {
     public getAssignedProfileName(profileId: string): string {
         const profile = this.profilesList.find(p => p.id === profileId);
         return profile?.username || 'Usuario desconocido';
+    }
+
+    // User management methods
+    public async deleteUser(user: UserReplica & { profile?: Profile }): Promise<void> {
+        const userName = user.profile?.username || user.email;
+        if (confirm(`¿Estás seguro de que deseas eliminar al usuario ${userName}? Esta acción no se puede deshacer.`)) {
+            try {
+                const result = await this._supabaseService.deleteUser(user.id);
+                if (result.error) {
+                    throw result.error;
+                }
+
+                this.usersList = this.usersList.filter(u => u.id !== user.id);
+                this._displaySnackbar(`Usuario ${userName} eliminado correctamente.`);
+            } catch (error) {
+                console.error('Error deleting user:', error);
+                this._displaySnackbar('Error al eliminar el usuario. Inténtalo de nuevo.');
+            }
+        }
+    }
+
+    public openCreateProfileModal(user: UserReplica & { profile?: Profile }): void {
+        this.selectedUserForProfile = user;
+        this.showUserProfileModal = true;
+    } public closeUserProfileModal(): void {
+        this.showUserProfileModal = false;
+        this.selectedUserForProfile = null;
+    }
+
+    public async createProfileForUser(profileData: Partial<Profile>): Promise<void> {
+        if (!this.selectedUserForProfile) return;
+
+        try {
+            const newProfile = {
+                ...profileData,
+                id: this.selectedUserForProfile.id
+            };
+
+            const result = await this._supabaseService.createProfile(newProfile);
+            if (result.error) {
+                throw result.error;
+            }
+
+            this._displaySnackbar(`Perfil creado correctamente para ${this.selectedUserForProfile.email}.`);
+            this.closeUserProfileModal();
+            await this._loadData();
+        } catch (error) {
+            console.error('Error creating profile:', error);
+            this._displaySnackbar('Error al crear el perfil. Inténtalo de nuevo.');
+        }
+    }
+
+    public formatUserDate(dateString: string): string {
+        if (!dateString) return '';
+
+        const date = new Date(dateString);
+        
+        // The date must be in the format dd-MM-yyyy HH:mm:ss
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const year = date.getFullYear();
+
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const seconds = date.getSeconds().toString().padStart(2, '0');
+
+        return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+    }
+
+    public getUserStatus(user: UserReplica): string {
+        if (user.email_confirmed_at) {
+            return 'Verificado';
+        }
+        return 'Sin verificar';
+    }
+
+    public editUserProfile(user: UserReplica & { profile?: Profile }): void {
+        // TODO: Implement profile editing modal
+        this._displaySnackbar('Funcionalidad de edición de perfil en desarrollo.');
     }
 
     public ngOnDestroy(): void {
