@@ -27,11 +27,11 @@
     }
 }
 
-// Botón de cerrar sesión
 .sign-out-btn {
     background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
     position: relative;
     overflow: hidden;
+    margin-bottom: 4em;
     
     &::before {
         content: '';
