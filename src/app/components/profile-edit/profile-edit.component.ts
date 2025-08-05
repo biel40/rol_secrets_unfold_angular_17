@@ -15,7 +15,6 @@ import { TranslocoModule } from '@jsverse/transloco';
     standalone: true,
     imports: [
         MaterialModule,
-        RouterLink,
         ReactiveFormsModule,
         TranslocoModule
     ]
@@ -31,8 +30,8 @@ export class ProfileEditComponent implements OnInit {
     public user: User | null = null;
     public emailFormControl = new FormControl('', [Validators.required, Validators.email]);
 
-    public classList: string[] = ['Guerrero', 'Arquero', 'Mago', 'Sacerdote', 'Bárbaro', 'Pícaro', 'Monje']
-    public powerList: string[] = ['Pyro', 'Electro', 'Hydro', 'Aero', 'Geo', 'Natura'];
+    public classList: string[] = ['Guerrero', 'Mago', 'Explorador', 'Asesino', 'Paladín', 'Arquero', 'Bárbaro', 'Clérigo', 'Hechicero', 'Monje', 'Bardo', 'Druida', 'Brujo', 'Soldado Arcano', 'Oficinista', 'Capitán Kendo']
+    public powerList: string[] = ['Pyro', 'Hydro', 'Geo', 'Aero', 'Combat', 'Electro'];
     public weaponList: string[] = ['Espada', 'Mandoble', 'Arco', 'Daga', 'Libro de hechizos', 'Puños', 'Bastón'];
     public levels: number[] = [0, 1, 2, 3, 4];
 
@@ -76,7 +75,7 @@ export class ProfileEditComponent implements OnInit {
         this._loaderService.setLoading(false);
     }
 
-    public async updateProfile() : Promise<void> {
+    public async updateProfile(): Promise<void> {
         this._loaderService.setLoading(true);
 
         const username = this.updateProfileForm.value.username as string;
@@ -89,7 +88,7 @@ export class ProfileEditComponent implements OnInit {
             await this._supabaseService.updateProfile({
                 id: this.user?.id,
                 username,
-                clase, 
+                clase,
                 power,
                 level,
                 weapon
@@ -102,20 +101,20 @@ export class ProfileEditComponent implements OnInit {
         }
     }
 
-    public goBack() : void {
+    public goBack(): void {
         this._router.navigate(['profile']);
     }
 
-    ngOnChanges() : void {
+    ngOnChanges(): void {
         if (this.profile) {
             const { username, clase, power, level, weapon } = this.profile;
-      
+
             this.updateProfileForm.patchValue({
-              username,
-              clase,
-              power,
-              level,
-              weapon
+                username,
+                clase,
+                power,
+                level,
+                weapon
             });
         }
 

@@ -30,14 +30,29 @@ export class ProfileEditDialogComponent implements OnInit {
   classes = [
     { value: 'Guerrero', label: 'warrior' },
     { value: 'Mago', label: 'mage' },
-    { value: 'Explorador', label: 'explorer' }
+    { value: 'Explorador', label: 'explorer' },
+    { value: 'Asesino', label: 'assassin' },
+    { value: 'Paladín', label: 'paladin' },
+    { value: 'Arquero', label: 'archer' },
+    { value: 'Bárbaro', label: 'barbarian' },
+    { value: 'Clérigo', label: 'cleric' },
+    { value: 'Hechicero', label: 'sorcerer' },
+    { value: 'Monje', label: 'monk' },
+    { value: 'Bardo', label: 'bard' },
+    { value: 'Druida', label: 'druid' },
+    { value: 'Brujo', label: 'warlock' },
+    { value: 'Soldado Arcano', label: 'arcane-soldier' },
+    { value: 'Oficinista', label: 'clerk' },
+    { value: 'Capitán Kendo', label: 'captain-kendo' }
   ];
 
   powers = [
-    { value: 'Fuego', label: 'fire' },
-    { value: 'Agua', label: 'water' },
-    { value: 'Tierra', label: 'earth' },
-    { value: 'Aire', label: 'air' }
+    { value: 'Pyro', label: 'fire' },
+    { value: 'Hydro', label: 'water' },
+    { value: 'Geo', label: 'earth' },
+    { value: 'Aero', label: 'air' },
+    { value: 'Combat', label: 'combat' },
+    { value: 'Electro', label: 'electro' }
   ];
 
   constructor(

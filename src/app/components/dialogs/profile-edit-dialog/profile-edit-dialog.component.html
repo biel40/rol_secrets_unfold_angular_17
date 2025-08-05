@@ -131,7 +131,7 @@
                             <mat-label>{{ 'power' | transloco }}</mat-label>
                             <mat-select formControlName="power" required>
                                 <mat-option *ngFor="let power of powers" [value]="power.value">
-                                    {{ power.label | transloco }}
+                                    {{ power.value }}
                                 </mat-option>
                             </mat-select>
                             <mat-error *ngIf="profileForm.get('power')?.hasError('required')">
