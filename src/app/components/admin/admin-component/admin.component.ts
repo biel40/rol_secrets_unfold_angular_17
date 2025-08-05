@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NPCDialogComponent } from '../../dialogs/npc-creation-dialog/npc-dialog.component';
 import { MissionDialogComponent } from '../../dialogs/mission-dialog/mission-dialog.component';
+import { ProfileEditDialogComponent } from '../../dialogs/profile-edit-dialog/profile-edit-dialog.component';
 
 @Component({
     selector: 'app-admin',
@@ -65,6 +66,7 @@ export class AdminComponent implements OnInit {
     public searchTermUsers: string = '';
     public showUserProfileModal: boolean = false;
     public selectedUserForProfile: UserReplica | null = null;
+    public isLoadingUsers: boolean = false;
 
     // Computed property for filtered enemies
     public get filteredEnemies(): Enemy[] {
@@ -150,7 +152,10 @@ export class AdminComponent implements OnInit {
 
         // Load users with their profiles
         await this._loadUsers();
-    } private async _loadUsers(): Promise<void> {
+    }
+
+    private async _loadUsers(): Promise<void> {
+        this.isLoadingUsers = true;
         try {
             const usersData = await this._supabaseService.getAllUsers();
             this.usersList = usersData.data || [];
@@ -163,6 +168,8 @@ export class AdminComponent implements OnInit {
         } catch (error) {
             console.error('Error loading users:', error);
             this._displaySnackbar('Error al cargar los usuarios.');
+        } finally {
+            this.isLoadingUsers = false;
         }
     }
 
@@ -446,6 +453,7 @@ export class AdminComponent implements OnInit {
         const userName = user.profile?.username || user.email;
         if (confirm(`¿Estás seguro de que deseas eliminar al usuario ${userName}? Esta acción no se puede deshacer.`)) {
             try {
+                this.isLoadingUsers = true;
                 const result = await this._supabaseService.deleteUser(user.id);
                 if (result.error) {
                     throw result.error;
@@ -456,6 +464,8 @@ export class AdminComponent implements OnInit {
             } catch (error) {
                 console.error('Error deleting user:', error);
                 this._displaySnackbar('Error al eliminar el usuario. Inténtalo de nuevo.');
+            } finally {
+                this.isLoadingUsers = false;
             }
         }
     }
@@ -472,6 +482,7 @@ export class AdminComponent implements OnInit {
         if (!this.selectedUserForProfile) return;
 
         try {
+            this.isLoadingUsers = true;
             const newProfile = {
                 ...profileData,
                 id: this.selectedUserForProfile.id
@@ -488,6 +499,8 @@ export class AdminComponent implements OnInit {
         } catch (error) {
             console.error('Error creating profile:', error);
             this._displaySnackbar('Error al crear el perfil. Inténtalo de nuevo.');
+        } finally {
+            this.isLoadingUsers = false;
         }
     }
 
@@ -495,7 +508,7 @@ export class AdminComponent implements OnInit {
         if (!dateString) return '';
 
         const date = new Date(dateString);
-        
+
         // The date must be in the format dd-MM-yyyy HH:mm:ss
         const day = date.getDate().toString().padStart(2, '0');
         const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -516,8 +529,28 @@ export class AdminComponent implements OnInit {
     }
 
     public editUserProfile(user: UserReplica & { profile?: Profile }): void {
-        // TODO: Implement profile editing modal
-        this._displaySnackbar('Funcionalidad de edición de perfil en desarrollo.');
+        if (!user.profile) {
+            this._displaySnackbar('Este usuario no tiene un perfil creado.');
+            return;
+        }
+
+        const dialogRef = this._dialog.open(ProfileEditDialogComponent, {
+            data: {
+                profile: user.profile
+            },
+            width: '800px',
+            maxWidth: '95vw',
+            maxHeight: '90vh',
+            disableClose: false,
+            autoFocus: false
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this._displaySnackbar(`Perfil de ${user.profile?.username} actualizado correctamente.`);
+                this._loadData(); // Reload data to reflect changes
+            }
+        });
     }
 
     public ngOnDestroy(): void {

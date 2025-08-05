@@ -336,7 +336,12 @@
 
                 <!-- Users Grid -->
                 <div class="users-grid">
-                    @if (filteredUsers && filteredUsers.length > 0) {
+                    @if (isLoadingUsers) {
+                    <div class="loading-users">
+                        <mat-spinner diameter="40"></mat-spinner>
+                        <p>{{ 'loading-users' | transloco }}</p>
+                    </div>
+                    } @else if (filteredUsers && filteredUsers.length > 0) {
                     @for (user of filteredUsers; track user.id) {
                     <div class="user-card">
                         <div class="user-card-header">

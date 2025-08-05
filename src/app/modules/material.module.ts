@@ -8,6 +8,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTableModule } from '@angular/material/table';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatButtonModule } from '@angular/material/button';
 
 
 @NgModule({
@@ -20,7 +22,9 @@ import { MatTableModule } from '@angular/material/table';
     MatDialogModule,
     MatSnackBarModule,
     MatTabsModule,
-    MatTableModule
+    MatTableModule,
+    MatProgressSpinnerModule,
+    MatButtonModule
   ]
 })
 

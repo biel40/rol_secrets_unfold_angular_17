@@ -1,0 +1,314 @@
+<div class="profile-edit-dialog">
+    <!-- Header -->
+    <div class="dialog-header">
+        <div class="header-content">
+            <div class="header-icon">
+                <mat-icon>edit</mat-icon>
+            </div>
+            <div class="header-text">
+                <h2>{{ 'edit-profile' | transloco }}</h2>
+                <p class="header-subtitle">Editar información del personaje</p>
+            </div>
+        </div>
+        <button mat-icon-button (click)="onCancel()" class="close-button">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+    <!-- Main Content -->
+    <mat-dialog-content class="dialog-content">
+        <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
+
+            <!-- Character Preview Card -->
+            <div class="character-preview-section">
+                <div class="character-card">
+                    <div class="character-avatar">
+                        @if (profileForm.get('image_url')?.value) {
+                        <img [src]="profileForm.get('image_url')?.value"
+                            [alt]="profileForm.get('username')?.value || 'Character'" class="avatar-image"
+                            (error)="onImageError($event)">
+                        } @else {
+                        <div class="avatar-placeholder">
+                            <mat-icon>person</mat-icon>
+                        </div>
+                        }
+                        @if (profileForm.get('level')?.value) {
+                        <div class="level-badge">{{ profileForm.get('level')?.value }}</div>
+                        }
+                    </div>
+
+                    <div class="character-summary">
+                        <h3 class="character-name">{{ profileForm.get('username')?.value || 'Nombre del personaje' }}
+                        </h3>
+                        <div class="character-details">
+                            @if (profileForm.get('clase')?.value && profileForm.get('power')?.value) {
+                            <div class="class-power">
+                                <mat-icon>shield</mat-icon>
+                                <span>{{ profileForm.get('clase')?.value }} de {{ profileForm.get('power')?.value
+                                    }}</span>
+                            </div>
+                            }
+                            @if (profileForm.get('weapon')?.value) {
+                            <div class="weapon">
+                                <mat-icon>sports_martial_arts</mat-icon>
+                                <span>{{ profileForm.get('weapon')?.value }}</span>
+                            </div>
+                            }
+                        </div>
+
+                        <div class="stats-summary">
+                            <div class="stat">
+                                <mat-icon>favorite</mat-icon>
+                                <span>{{ profileForm.get('current_hp')?.value || 0 }}/{{
+                                    profileForm.get('total_hp')?.value || 0 }}</span>
+                                <label>HP</label>
+                            </div>
+                            <div class="stat">
+                                <mat-icon>gavel</mat-icon>
+                                <span>{{ profileForm.get('attack')?.value || 0 }}</span>
+                                <label>ATK</label>
+                            </div>
+                            <div class="stat">
+                                <mat-icon>security</mat-icon>
+                                <span>{{ profileForm.get('defense')?.value || 0 }}</span>
+                                <label>DEF</label>
+                            </div>
+                            <div class="stat">
+                                <mat-icon>auto_awesome</mat-icon>
+                                <span>{{ profileForm.get('special_attack')?.value || 0 }}</span>
+                                <label>ESP ATK</label>
+                            </div>
+                            <div class="stat">
+                                <mat-icon>shield_moon</mat-icon>
+                                <span>{{ profileForm.get('special_defense')?.value || 0 }}</span>
+                                <label>ESP DEF</label>
+                            </div>
+                            <div class="stat">
+                                <mat-icon>speed</mat-icon>
+                                <span>{{ profileForm.get('speed')?.value || 0 }}</span>
+                                <label>VEL</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Fields -->
+            <div class="form-sections">
+
+                <!-- Basic Information -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <mat-icon>info</mat-icon>
+                        <h3>{{ 'basic-info' | transloco }}</h3>
+                    </div>
+
+                    <div class="form-grid">
+                        <mat-form-field appearance="fill" class="full-width">
+                            <mat-label>{{ 'username' | transloco }}</mat-label>
+                            <input matInput formControlName="username" required>
+                            <mat-error *ngIf="profileForm.get('username')?.hasError('required')">
+                                {{ 'username-required' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="profileForm.get('username')?.hasError('minlength')">
+                                {{ 'username-min-length' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="fill">
+                            <mat-label>{{ 'class' | transloco }}</mat-label>
+                            <mat-select formControlName="clase" required>
+                                <mat-option *ngFor="let class of classes" [value]="class.value">
+                                    {{ class.label | transloco }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="profileForm.get('clase')?.hasError('required')">
+                                {{ 'class-required' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="fill">
+                            <mat-label>{{ 'power' | transloco }}</mat-label>
+                            <mat-select formControlName="power" required>
+                                <mat-option *ngFor="let power of powers" [value]="power.value">
+                                    {{ power.label | transloco }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="profileForm.get('power')?.hasError('required')">
+                                {{ 'power-required' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="fill">
+                            <mat-label>{{ 'level' | transloco }}</mat-label>
+                            <input matInput type="number" formControlName="level" min="1" max="100" required>
+                            <mat-error *ngIf="profileForm.get('level')?.hasError('required')">
+                                {{ 'level-required' | transloco }}
+                            </mat-error>
+                            <mat-error
+                                *ngIf="profileForm.get('level')?.hasError('min') || profileForm.get('level')?.hasError('max')">
+                                {{ 'level-range' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="fill" class="full-width">
+                            <mat-label>{{ 'weapon' | transloco }}</mat-label>
+                            <input matInput formControlName="weapon">
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <!-- Combat Stats -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <mat-icon>fitness_center</mat-icon>
+                        <h3>{{ 'stats' | transloco }}</h3>
+                    </div>
+
+                    <div class="form-grid stats-grid">
+                        <mat-form-field appearance="fill">
+                            <mat-label>{{ 'total-hp' | transloco }}</mat-label>
+                            <input matInput type="number" formControlName="total_hp" min="1" required
+                                (change)="onTotalHpChange()">
+                            <mat-error *ngIf="profileForm.get('total_hp')?.hasError('required')">
+                                {{ 'total-hp-required' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="profileForm.get('total_hp')?.hasError('min')">
+                                {{ 'total-hp-min' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="fill">
+                            <mat-label>{{ 'current-hp' | transloco }}</mat-label>
+                            <input matInput type="number" formControlName="current_hp" min="0" required>
+                            <mat-error *ngIf="profileForm.get('current_hp')?.hasError('required')">
+                                {{ 'current-hp-required' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="profileForm.get('current_hp')?.hasError('min')">
+                                {{ 'current-hp-min' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="fill">
+                            <mat-label>{{ 'attack' | transloco }}</mat-label>
+                            <input matInput type="number" formControlName="attack" min="1" required>
+                            <mat-error *ngIf="profileForm.get('attack')?.hasError('required')">
+                                {{ 'attack-required' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="profileForm.get('attack')?.hasError('min')">
+                                {{ 'attack-min' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="fill">
+                            <mat-label>{{ 'defense' | transloco }}</mat-label>
+                            <input matInput type="number" formControlName="defense" min="1" required>
+                            <mat-error *ngIf="profileForm.get('defense')?.hasError('required')">
+                                {{ 'defense-required' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="profileForm.get('defense')?.hasError('min')">
+                                {{ 'defense-min' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="fill">
+                            <mat-label>{{ 'special-attack' | transloco }}</mat-label>
+                            <input matInput type="number" formControlName="special_attack" min="1" required>
+                            <mat-error *ngIf="profileForm.get('special_attack')?.hasError('required')">
+                                {{ 'special-attack-required' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="profileForm.get('special_attack')?.hasError('min')">
+                                {{ 'special-attack-min' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="fill">
+                            <mat-label>{{ 'special-defense' | transloco }}</mat-label>
+                            <input matInput type="number" formControlName="special_defense" min="1" required>
+                            <mat-error *ngIf="profileForm.get('special_defense')?.hasError('required')">
+                                {{ 'special-defense-required' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="profileForm.get('special_defense')?.hasError('min')">
+                                {{ 'special-defense-min' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="fill">
+                            <mat-label>{{ 'speed' | transloco }}</mat-label>
+                            <input matInput type="number" formControlName="speed" min="1" required>
+                            <mat-error *ngIf="profileForm.get('speed')?.hasError('required')">
+                                {{ 'speed-required' | transloco }}
+                            </mat-error>
+                            <mat-error *ngIf="profileForm.get('speed')?.hasError('min')">
+                                {{ 'speed-min' | transloco }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <!-- Character Image -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <mat-icon>photo</mat-icon>
+                        <h3>{{ 'image-details' | transloco }}</h3>
+                    </div>
+
+                    <div class="form-grid">
+                        <mat-form-field appearance="fill" class="full-width">
+                            <mat-label>{{ 'image-url' | transloco }}</mat-label>
+                            <input matInput formControlName="image_url" type="url">
+                            <mat-hint>{{ 'image-url-hint' | transloco }}</mat-hint>
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Image Preview -->
+                    <div class="image-preview-container">
+                        @if (profileForm.get('image_url')?.value) {
+                        <div class="image-preview">
+                            <div class="preview-label">
+                                <mat-icon>visibility</mat-icon>
+                                <span>{{ 'image-preview' | transloco }}</span>
+                            </div>
+                            <div class="preview-image-wrapper">
+                                <img [src]="profileForm.get('image_url')?.value"
+                                    [alt]="profileForm.get('username')?.value || 'Character Preview'"
+                                    class="preview-image" (load)="onImageLoad($event)"
+                                    (error)="onImagePreviewError($event)">
+                                <div class="preview-loading" *ngIf="imageLoading">
+                                    <mat-spinner diameter="24"></mat-spinner>
+                                    <span>{{ 'loading-image' | transloco }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        } @else {
+                        <div class="no-preview">
+                            <mat-icon>image_not_supported</mat-icon>
+                            <span>{{ 'no-image' | transloco }}</span>
+                        </div>
+                        }
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </mat-dialog-content>
+
+    <!-- Footer Actions -->
+    <mat-dialog-actions class="dialog-actions">
+        <button mat-button type="button" (click)="onCancel()" [disabled]="isLoading" class="cancel-btn">
+            {{ 'cancel' | transloco }}
+        </button>
+        <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!profileForm.valid || isLoading"
+            class="save-btn" [class.loading]="isLoading">
+            @if (isLoading) {
+            <mat-spinner diameter="18" color="accent"></mat-spinner>
+            <span>Guardando...</span>
+            } @else {
+            <span>
+                <mat-icon>save</mat-icon>
+                {{ 'save-changes' | transloco }}
+            </span>
+            }
+        </button>
+    </mat-dialog-actions>
+</div>

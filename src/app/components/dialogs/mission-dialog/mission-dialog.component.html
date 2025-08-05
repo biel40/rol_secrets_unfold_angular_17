@@ -30,7 +30,7 @@
               <mat-icon matPrefix>title</mat-icon>
               <input matInput formControlName="title" required>
               @if (missionForm.get('title')?.hasError('required')) {
-                <mat-error>{{ 'required-field' | transloco }}</mat-error>
+              <mat-error>{{ 'required-field' | transloco }}</mat-error>
               }
             </mat-form-field>
 
@@ -39,7 +39,7 @@
               <mat-label>{{ 'description' | transloco }}</mat-label>
               <textarea matInput formControlName="description" rows="4" required></textarea>
               @if (missionForm.get('description')?.hasError('required')) {
-                <mat-error>{{ 'required-field' | transloco }}</mat-error>
+              <mat-error>{{ 'required-field' | transloco }}</mat-error>
               }
             </mat-form-field>
           </div>
@@ -58,9 +58,9 @@
                 <mat-icon matPrefix>flag</mat-icon>
                 <mat-select formControlName="status" required>
                   @for (status of statusOptions; track status.value) {
-                    <mat-option [value]="status.value">
-                      {{ status.label | transloco }}
-                    </mat-option>
+                  <mat-option [value]="status.value">
+                    {{ status.label | transloco }}
+                  </mat-option>
                   }
                 </mat-select>
               </mat-form-field>
@@ -70,9 +70,9 @@
                 <mat-icon matPrefix>trending_up</mat-icon>
                 <mat-select formControlName="difficulty" required>
                   @for (difficulty of difficultyOptions; track difficulty.value) {
-                    <mat-option [value]="difficulty.value">
-                      {{ difficulty.label | transloco }}
-                    </mat-option>
+                  <mat-option [value]="difficulty.value">
+                    {{ difficulty.label | transloco }}
+                  </mat-option>
                   }
                 </mat-select>
               </mat-form-field>
@@ -108,19 +108,20 @@
               <mat-select formControlName="assigned_to">
                 <mat-option value="">{{ 'select-player-option' | transloco }}</mat-option>
                 @for (profile of profilesList; track profile.id) {
-                  <mat-option [value]="profile.id!">
-                    {{ profile.username }} ({{ profile.clase }} - Lvl {{ profile.level }})
-                  </mat-option>
+                <mat-option [value]="profile.id!">
+                  {{ profile.username }} ({{ profile.clase }} - Lvl {{ profile.level }})
+                </mat-option>
                 }
               </mat-select>
             </mat-form-field>
 
             <!-- Assignment preview -->
             @if (missionForm.get('assigned_to')?.value) {
-              <div class="assignment-preview">
-                <mat-icon>assignment_ind</mat-icon>
-                <span>{{ 'assigned-to' | transloco }}: {{ getAssignedProfileName(missionForm.get('assigned_to')?.value) }}</span>
-              </div>
+            <div class="assignment-preview">
+              <mat-icon>assignment_ind</mat-icon>
+              <span>{{ 'assigned-to' | transloco }}: {{ getAssignedProfileName(missionForm.get('assigned_to')?.value)
+                }}</span>
+            </div>
             }
           </div>
         </div>
@@ -128,50 +129,50 @@
         <!-- Right column: Mission preview (optional) -->
         <div class="mission-preview">
           @if (missionForm.get('title')?.value) {
-            <div class="preview-card">
-              <div class="preview-header">
-                <h4>{{ missionForm.get('title')?.value }}</h4>
-                <div class="preview-badges">
-                  <span class="difficulty-badge" [attr.data-difficulty]="missionForm.get('difficulty')?.value">
-                    {{ missionForm.get('difficulty')?.value | transloco }}
-                  </span>
-                  <span class="status-badge" [attr.data-status]="missionForm.get('status')?.value">
-                    {{ missionForm.get('status')?.value | transloco }}
-                  </span>
-                </div>
+          <div class="preview-card">
+            <div class="preview-header">
+              <h4>{{ missionForm.get('title')?.value }}</h4>
+              <div class="preview-badges">
+                <span class="difficulty-badge" [attr.data-difficulty]="missionForm.get('difficulty')?.value">
+                  {{ missionForm.get('difficulty')?.value | transloco }}
+                </span>
+                <span class="status-badge" [attr.data-status]="missionForm.get('status')?.value">
+                  {{ missionForm.get('status')?.value | transloco }}
+                </span>
               </div>
-              
-              @if (missionForm.get('description')?.value) {
-                <div class="preview-description">
-                  <p>{{ missionForm.get('description')?.value }}</p>
-                </div>
-              }
+            </div>
 
-              @if (missionForm.get('reward_xp')?.value || missionForm.get('reward_gold')?.value) {
-                <div class="preview-rewards">
-                  <h5>{{ 'rewards' | transloco }}</h5>
-                  <div class="rewards-list">
-                    @if (missionForm.get('reward_xp')?.value) {
-                      <div class="reward-item">
-                        <mat-icon>star</mat-icon>
-                        <span>{{ missionForm.get('reward_xp')?.value }} {{ 'xp' | transloco }}</span>
-                      </div>
-                    }
-                    @if (missionForm.get('reward_gold')?.value) {
-                      <div class="reward-item">
-                        <mat-icon>monetization_on</mat-icon>
-                        <span>{{ missionForm.get('reward_gold')?.value }} {{ 'gold' | transloco }}</span>
-                      </div>
-                    }
-                  </div>
+            @if (missionForm.get('description')?.value) {
+            <div class="preview-description">
+              <p>{{ missionForm.get('description')?.value }}</p>
+            </div>
+            }
+
+            @if (missionForm.get('reward_xp')?.value || missionForm.get('reward_gold')?.value) {
+            <div class="preview-rewards">
+              <h5>{{ 'rewards' | transloco }}</h5>
+              <div class="rewards-list">
+                @if (missionForm.get('reward_xp')?.value) {
+                <div class="reward-item">
+                  <mat-icon>star</mat-icon>
+                  <span>{{ missionForm.get('reward_xp')?.value }} {{ 'xp' | transloco }}</span>
                 </div>
-              }
+                }
+                @if (missionForm.get('reward_gold')?.value) {
+                <div class="reward-item">
+                  <mat-icon>monetization_on</mat-icon>
+                  <span>{{ missionForm.get('reward_gold')?.value }} {{ 'gold' | transloco }}</span>
+                </div>
+                }
+              </div>
             </div>
+            }
+          </div>
           } @else {
-            <div class="preview-placeholder">
-              <mat-icon>assignment</mat-icon>
-              <p>{{ 'mission-preview-hint' | transloco }}</p>
-            </div>
+          <div class="preview-placeholder">
+            <mat-icon>assignment</mat-icon>
+            <p>{{ 'mission-preview-hint' | transloco }}</p>
+          </div>
           }
         </div>
       </div>
@@ -184,14 +185,15 @@
       <mat-icon>cancel</mat-icon>
       {{ 'cancel' | transloco }}
     </button>
-    <button mat-raised-button color="primary" 
-            [disabled]="missionForm.invalid || isSubmitting" 
-            (click)="saveMission()" 
-            class="save-button">
- 
-      @if (!isSubmitting) {
+    <button mat-raised-button color="primary" [disabled]="missionForm.invalid || isSubmitting" (click)="saveMission()"
+      class="save-button">
+      @if (isSubmitting) {
+      <mat-spinner diameter="20"></mat-spinner>
+      } @else {
+      <ng-container>
         <mat-icon>{{ isEditMode ? 'save' : 'add' }}</mat-icon>
         <span>{{ isEditMode ? ('update' | transloco) : ('create' | transloco) }}</span>
+      </ng-container>
       }
 
     </button>
