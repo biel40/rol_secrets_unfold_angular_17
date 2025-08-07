@@ -1,27 +1,183 @@
-# RolSecretsUnfoldAngular17
+# Rol Secrets Unfold - Angular 17
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.0.
+🎮 **Aplicación de gestión de perfiles de rol y aventuras** desarrollada con Angular 17 y tecnologías modernas.
 
-## Development server
+## 📋 Descripción del Proyecto
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Esta aplicación permite a los usuarios crear y gestionar perfiles de personajes de rol, con un sistema completo de estadísticas, habilidades e inventario. Incluye funcionalidades de autenticación, internacionalización y soporte multiplataforma móvil.
 
-## Code scaffolding
+## 🛠️ Stack Tecnológico
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### Frontend
+- **Angular 17.3.0** - Framework principal
+- **Angular Material 17.3.1** - Componentes UI
+- **TailwindCSS 3.4.1** - Framework de estilos
+- **SCSS** - Preprocesador CSS
+- **TypeScript 5.4.2** - Lenguaje de programación
 
-## Build
+### Backend y Base de Datos
+- **Supabase** - Backend as a Service (BaaS)
+- **PostgreSQL** - Base de datos (a través de Supabase)
+- **Autenticación** - Sistema de auth integrado
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+### Herramientas y Librerías
+- **Capacitor 6.x** - Framework híbrido para iOS/Android
+- **Transloco** - Internacionalización (i18n)
+- **RxJS 7.8.0** - Programación reactiva
+- **Angular Tilt** - Efectos 3D en componentes
 
-## Running unit tests
+### Testing
+- **Jasmine & Karma** - Testing unitario
+- **TypeScript** - Tipado estático
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## 🏗️ Arquitectura del Proyecto
 
-## Running end-to-end tests
+```
+src/
+├── app/
+│   ├── components/          # Componentes reutilizables
+│   │   ├── admin/          # Administración
+│   │   ├── auth/           # Autenticación
+│   │   ├── profile/        # Gestión de perfiles
+│   │   ├── habilities/     # Sistema de habilidades
+│   │   └── dialogs/        # Modales y diálogos
+│   ├── services/           # Servicios de la aplicación
+│   │   ├── supabase/       # Cliente Supabase
+│   │   ├── profile/        # Gestión de perfiles
+│   │   ├── user/           # Gestión de usuarios
+│   │   └── loader/         # Estados de carga
+│   └── modules/            # Módulos compartidos
+├── assets/
+│   ├── i18n/              # Archivos de traducciones
+│   └── flags/             # Banderas de idiomas
+└── environments/          # Configuraciones de entorno
+```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+## 🚀 Características Principales
 
-## Further help
+- ✅ **Gestión de Perfiles de Personajes** - Creación y edición completa
+- ✅ **Sistema de Estadísticas** - HP, ataque, defensa, velocidad, etc.
+- ✅ **Inventario Virtual** - Gestión de armas y objetos
+- ✅ **Sistema de Habilidades** - Capacidades especiales configurables
+- ✅ **Autenticación Segura** - Login/registro con Supabase
+- ✅ **Multiidioma** - Soporte para Español e Inglés
+- ✅ **Aplicación Híbrida** - Compatible con iOS y Android
+- ✅ **Responsive Design** - Adaptable a todos los dispositivos
+- ✅ **Efectos Visuales** - Animaciones y efectos 3D
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## 💻 Desarrollo Local
+
+### Prerrequisitos
+- Node.js (versión LTS recomendada)
+- npm o yarn
+- Angular CLI 17.x
+
+### Instalación
+```bash
+# Clonar el repositorio
+git clone <repo-url>
+
+# Navegar al directorio
+cd rol_secrets_unfold_angular_17
+
+# Instalar dependencias
+npm install
+
+# Configurar variables de entorno
+# Copiar las credenciales de Supabase en src/environments/
+```
+
+### Servidor de Desarrollo
+```bash
+npm start
+# o
+ng serve
+```
+Navega a `http://localhost:4200/`. La aplicación se recarga automáticamente cuando cambias los archivos fuente.
+
+### Construcción
+```bash
+npm run build
+# o
+ng build
+```
+Los artefactos de construcción se almacenan en el directorio `dist/`.
+
+## 📱 Desarrollo Móvil
+
+### Configuración de Capacitor
+```bash
+# Construcción para producción
+npm run build
+
+# Sincronizar con plataformas nativas
+npx cap sync
+
+# Ejecutar en iOS
+npx cap run ios
+
+# Ejecutar en Android
+npx cap run android
+```
+
+## 🧪 Testing
+
+```bash
+# Ejecutar tests unitarios
+npm test
+# o
+ng test
+```
+
+## 🌍 Internacionalización
+
+El proyecto soporta múltiples idiomas usando Transloco:
+- **Español (es)** - Idioma por defecto
+- **Inglés (en)** - Idioma alternativo
+
+Los archivos de traducción se encuentran en `src/assets/i18n/`.
+
+## 📊 Base de Datos
+
+### Estructura Principal (Supabase)
+- **profiles** - Perfiles de personajes
+- **habilities** - Habilidades y capacidades
+- **inventories** - Sistema de inventario
+- **users** - Gestión de usuarios
+
+## 🎨 Estilos y UI
+
+- **TailwindCSS** - Utility-first CSS framework
+- **Angular Material** - Componentes Material Design
+- **SCSS** - Variables y mixins personalizados
+- **Responsive Design** - Breakpoints personalizados
+
+## 🔧 Scripts Disponibles
+
+```bash
+npm start          # Servidor de desarrollo
+npm run build      # Construcción para producción
+npm test           # Ejecutar tests unitarios
+```
+
+## 📁 Configuración de Entorno
+
+El proyecto utiliza archivos de entorno para configuraciones:
+- `environment.ts` - Desarrollo
+- `environment.prod.ts` - Producción
+
+## 🤝 Contribución
+
+1. Fork el proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
+
+## 📄 Licencia
+
+Este proyecto está licenciado bajo la Licencia MIT - ver el archivo LICENSE para más detalles.
+
+---
+
+**Desarrollado con ❤️ usando Angular 17 y las mejores prácticas de desarrollo moderno.**
