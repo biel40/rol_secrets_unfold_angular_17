@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { Profile, Enemy, NPC, Mission, SupabaseService, UserReplica, ProfileSummary } from '../../../services/supabase/supabase.service';
+import { Profile, Enemy, NPC, Mission, SupabaseService, UserReplica, ProfileSummary, Hability } from '../../../services/supabase/supabase.service';
 import { UserService } from '../../../services/user/user.service';
 import { RealtimeChannel, User } from '@supabase/supabase-js';
 import { MaterialModule } from '../../../modules/material.module';
@@ -13,6 +13,8 @@ import { CommonModule } from '@angular/common';
 import { NPCDialogComponent } from '../../dialogs/npc-creation-dialog/npc-dialog.component';
 import { MissionDialogComponent } from '../../dialogs/mission-dialog/mission-dialog.component';
 import { ProfileEditDialogComponent } from '../../dialogs/profile-edit-dialog/profile-edit-dialog.component';
+import { HabilityDialogComponent } from '../../dialogs/hability-dialog/hability-dialog.component';
+import { EnemyDialogComponent } from '../../dialogs/enemy-dialog/enemy-dialog.component';
 
 @Component({
     selector: 'app-admin',
@@ -57,7 +59,7 @@ export class AdminComponent implements OnInit {
     public selectedMissionForAssignment: Mission | null = null;
     public selectedProfileId: string = '';
 
-    public currentTab: 'enemies' | 'npcs' | 'quests' | 'users' = 'enemies';
+    public currentTab: 'enemies' | 'npcs' | 'quests' | 'users' | 'habilities' = 'enemies';
     public searchTerm: string = '';
 
     // User management properties
@@ -68,18 +70,49 @@ export class AdminComponent implements OnInit {
     public selectedUserForProfile: UserReplica | null = null;
     public isLoadingUsers: boolean = false;
 
+    // Habilities management properties
+    public habilitiesList: Hability[] = [];
+    public searchTermHabilities: string = '';
+    public selectedPowerFilter: string = '';
+    public isLoadingHabilities: boolean = false;
+
+    // Enemy filters
+    public selectedLevelFilter: string = '';
+    public selectedBossFilter: string = '';
+
     // Computed property for filtered enemies
     public get filteredEnemies(): Enemy[] {
-        if (!this.searchTerm.trim()) {
-            return this.enemiesList;
+        let filteredList = this.enemiesList;
+
+        // Filter by boss type if selected
+        if (this.selectedBossFilter.trim()) {
+            const isBoss = this.selectedBossFilter === 'boss';
+            filteredList = filteredList.filter(enemy => enemy.is_boss === isBoss);
         }
 
-        const term = this.searchTerm.toLowerCase().trim();
-        return this.enemiesList.filter(enemy =>
-            enemy.name.toLowerCase().includes(term) ||
-            (enemy.description && enemy.description.toLowerCase().includes(term)) ||
-            (enemy.level && enemy.level.toString().includes(term))
-        );
+        // Filter by level range if selected
+        if (this.selectedLevelFilter.trim()) {
+            const [minLevel, maxLevel] = this.selectedLevelFilter.split('-').map(Number);
+            filteredList = filteredList.filter(enemy => {
+                if (maxLevel) {
+                    return enemy.level >= minLevel && enemy.level <= maxLevel;
+                } else {
+                    return enemy.level >= minLevel;
+                }
+            });
+        }
+
+        // Filter by search term if provided
+        if (this.searchTerm.trim()) {
+            const term = this.searchTerm.toLowerCase().trim();
+            filteredList = filteredList.filter(enemy =>
+                enemy.name.toLowerCase().includes(term) ||
+                (enemy.description && enemy.description.toLowerCase().includes(term)) ||
+                (enemy.level && enemy.level.toString().includes(term))
+            );
+        }
+
+        return filteredList;
     }
 
     // Computed property for filtered NPCs
@@ -122,6 +155,65 @@ export class AdminComponent implements OnInit {
             (user.user_metadata?.full_name && user.user_metadata.full_name.toLowerCase().includes(term)) ||
             (user.profile?.username && user.profile.username.toLowerCase().includes(term))
         );
+    }
+
+    // Computed property for filtered habilities
+    public get filteredHabilities(): Hability[] {
+        let filteredList = this.habilitiesList;
+
+        // Filter by power type if selected
+        if (this.selectedPowerFilter.trim()) {
+            filteredList = filteredList.filter(hability =>
+                hability.power.toLowerCase() === this.selectedPowerFilter.toLowerCase()
+            );
+        }
+
+        // Filter by search term if provided
+        if (this.searchTermHabilities.trim()) {
+            const term = this.searchTermHabilities.toLowerCase().trim();
+            filteredList = filteredList.filter(hability =>
+                hability.name?.toLowerCase().includes(term) ||
+                hability.description?.toLowerCase().includes(term) ||
+                hability.clase.toLowerCase().includes(term) ||
+                hability.power.toLowerCase().includes(term)
+            );
+        }
+
+        return filteredList;
+    }
+
+    // Get unique power types from habilities
+    public get availablePowerTypes(): string[] {
+        const powerTypes = this.habilitiesList.map(hability => hability.power);
+        return [...new Set(powerTypes)].sort();
+    }
+
+    // Get available level ranges for enemies
+    public get availableLevelRanges(): { value: string, label: string }[] {
+        return [
+            { value: '1-5', label: 'Nivel 1-5' },
+            { value: '6-10', label: 'Nivel 6-10' },
+            { value: '11-20', label: 'Nivel 11-20' },
+            { value: '21-50', label: 'Nivel 21-50' },
+            { value: '51', label: 'Nivel 51+' }
+        ];
+    }
+
+    // Get boss filter options
+    public get bossFilterOptions(): { value: string, label: string }[] {
+        return [
+            { value: 'boss', label: 'Solo Jefes' },
+            { value: 'normal', label: 'Solo Normales' }
+        ];
+    }
+
+    // Get count of active enemy filters
+    public get activeEnemyFiltersCount(): number {
+        let count = 0;
+        if (this.searchTerm.trim()) count++;
+        if (this.selectedLevelFilter.trim()) count++;
+        if (this.selectedBossFilter.trim()) count++;
+        return count;
     }
 
     constructor() { }
@@ -171,6 +263,177 @@ export class AdminComponent implements OnInit {
         } finally {
             this.isLoadingUsers = false;
         }
+    }
+
+    private async loadHabilities(): Promise<void> {
+        this.isLoadingHabilities = true;
+        try {
+            const habilities = await this._supabaseService.getAllHabilities();
+            this.habilitiesList = habilities || [];
+        } catch (error) {
+            console.error('Error loading habilities:', error);
+            this._displaySnackbar('Error al cargar las habilidades.');
+        } finally {
+            this.isLoadingHabilities = false;
+        }
+    }
+
+    public openCreateHabilityDialog(): void {
+        const dialogRef = this._dialog.open(HabilityDialogComponent, {
+            data: {},
+            width: '650px',
+            maxWidth: '95vw',
+            maxHeight: '90vh',
+            disableClose: false,
+            autoFocus: false
+        });
+
+        dialogRef.afterClosed().subscribe(async (result) => {
+            if (result) {
+                try {
+                    const createResult = await this._supabaseService.createHability(result.hability);
+
+                    if (createResult.error) {
+                        console.error('Error creating hability:', createResult.error);
+                        this._displaySnackbar('Error al crear la habilidad.');
+                        return;
+                    }
+
+                    // Associate hability with selected profiles
+                    if (result.associatedProfiles && result.associatedProfiles.length > 0 && createResult.data) {
+                        const associationResult = await this._supabaseService.associateHabilityWithProfiles(
+                            createResult.data.id,
+                            result.associatedProfiles
+                        );
+
+                        if (associationResult.error) {
+                            console.error('Error associating hability with profiles:', associationResult.error);
+                            this._displaySnackbar('Habilidad creada pero error al asociar con perfiles.');
+                        }
+                    }
+
+                    await this.loadHabilities();
+                    this._displaySnackbar('Habilidad creada correctamente.');
+                } catch (error) {
+                    console.error('Error creating hability:', error);
+                    this._displaySnackbar('Error al crear la habilidad.');
+                }
+            }
+        });
+    }
+
+    public async editHability(hability: Hability): Promise<void> {
+        try {
+            // Get currently associated profiles
+            const associatedProfiles = await this._supabaseService.getAssociatedProfiles(hability.id!);
+
+            const dialogRef = this._dialog.open(HabilityDialogComponent, {
+                data: {
+                    hability,
+                    associatedProfiles
+                },
+                width: '650px',
+                maxWidth: '95vw',
+                maxHeight: '90vh',
+                disableClose: false,
+                autoFocus: false
+            });
+
+            dialogRef.afterClosed().subscribe(async (result) => {
+                if (result) {
+                    try {
+                        await this._supabaseService.updateHability(result.hability);
+
+                        // Update profile associations
+                        if (result.hability.id) {
+                            const associationResult = await this._supabaseService.associateHabilityWithProfiles(
+                                result.hability.id,
+                                result.associatedProfiles || []
+                            );
+
+                            if (associationResult.error) {
+                                console.error('Error updating hability associations:', associationResult.error);
+                                this._displaySnackbar('Habilidad actualizada pero error al actualizar asociaciones.');
+                                return;
+                            }
+                        }
+
+                        // Update local list
+                        const index = this.habilitiesList.findIndex(h => h.id === result.hability.id);
+                        if (index !== -1) {
+                            this.habilitiesList[index] = result.hability;
+                        }
+
+                        this._displaySnackbar('Habilidad actualizada correctamente.');
+                    } catch (error) {
+                        console.error('Error updating hability:', error);
+                        this._displaySnackbar('Error al actualizar la habilidad.');
+                    }
+                }
+            });
+        } catch (error) {
+            console.error('Error loading associated profiles:', error);
+            this._displaySnackbar('Error al cargar los perfiles asociados.');
+        }
+    }
+
+    public async deleteHability(hability: Hability): Promise<void> {
+        if (confirm(`¿Estás seguro de que deseas eliminar la habilidad ${hability.name}?`)) {
+            try {
+                const result = await this._supabaseService.deleteHability(hability.id!);
+
+                if (result.error) {
+                    console.error('Error deleting hability:', result.error);
+                    this._displaySnackbar('Error al eliminar la habilidad.');
+                    return;
+                }
+
+                this.habilitiesList = this.habilitiesList.filter(h => h.id !== hability.id);
+                this._displaySnackbar('Habilidad eliminada correctamente.');
+            } catch (error) {
+                console.error('Error deleting hability:', error);
+                this._displaySnackbar('Error al eliminar la habilidad.');
+            }
+        }
+    }
+
+    public clearHabilityFilters(): void {
+        this.searchTermHabilities = '';
+        this.selectedPowerFilter = '';
+    }
+
+    public clearEnemyFilters(): void {
+        this.searchTerm = '';
+        this.selectedLevelFilter = '';
+        this.selectedBossFilter = '';
+    }
+
+    // Get count of active filters
+    public get activeFiltersCount(): number {
+        let count = 0;
+        if (this.searchTermHabilities.trim()) count++;
+        if (this.selectedPowerFilter.trim()) count++;
+        return count;
+    }
+
+    // Get power (icon and color) for habilities
+    public getPowerTheme(powerType: string): { icon: string, color: string, bgColor: string } {
+        const normalizedPowerType = powerType?.trim().toLowerCase();
+
+        const themes: { [key: string]: { icon: string, color: string, bgColor: string } } = {
+            'pyro': { icon: '🔥', color: '#e74c3c', bgColor: 'rgba(231, 76, 60, 0.1)' },
+            'hydro': { icon: '💧', color: '#3498db', bgColor: 'rgba(52, 152, 219, 0.1)' },
+            'geo': { icon: '🪨', color: '#8b4513', bgColor: 'rgba(139, 69, 19, 0.1)' },
+            'electro': { icon: '⚡', color: '#9b59b6', bgColor: 'rgba(155, 89, 182, 0.1)' },
+            'cryo': { icon: '❄️', color: '#74b9ff', bgColor: 'rgba(116, 185, 255, 0.1)' },
+            'natura': { icon: '🌿', color: '#27ae60', bgColor: 'rgba(39, 174, 96, 0.1)' },
+            'aero': { icon: '🌪️', color: '#00cec9', bgColor: 'rgba(0, 206, 201, 0.1)' },
+            'light': { icon: '✨', color: '#f39c12', bgColor: 'rgba(243, 156, 18, 0.1)' },
+            'dark': { icon: '🌑', color: '#2c3e50', bgColor: 'rgba(44, 62, 80, 0.1)' },
+            'universal': { icon: '🌌', color: '#8e44ad', bgColor: 'rgba(142, 68, 173, 0.1)' }
+        };
+
+        return themes[normalizedPowerType] || { icon: '⭐', color: '#95a5a6', bgColor: 'rgba(149, 165, 166, 0.1)' };
     }
 
     public async deleteEnemy(enemy: Enemy): Promise<void> {
@@ -236,8 +499,13 @@ export class AdminComponent implements OnInit {
 
     // New methods for enhanced DM dashboard
     public switchTab(tabName: string): void {
-        if (tabName === 'enemies' || tabName === 'npcs' || tabName === 'quests' || tabName === 'users') {
+        if (tabName === 'enemies' || tabName === 'npcs' || tabName === 'quests' || tabName === 'users' || tabName === 'habilities') {
             this.currentTab = tabName;
+
+            // Load data when switching to habilities tab
+            if (tabName === 'habilities' && this.habilitiesList.length === 0) {
+                this.loadHabilities();
+            }
         }
     }
 
@@ -254,13 +522,71 @@ export class AdminComponent implements OnInit {
     }
 
     public openCreateEnemyDialog(): void {
-        // Temporarily disabled
-        this._displaySnackbar('Funcionalidad de crear enemigo en desarrollo.');
+        const dialogRef = this._dialog.open(EnemyDialogComponent, {
+            data: {},
+            width: '750px',
+            maxWidth: '95vw',
+            maxHeight: '90vh',
+            disableClose: false,
+            autoFocus: false
+        });
+
+        dialogRef.afterClosed().subscribe(async (result) => {
+            if (result) {
+                try {
+                    const createResult = await this._supabaseService.createEnemy(result);
+
+                    if (createResult.error) {
+                        console.error('Error creating enemy:', createResult.error);
+                        this._displaySnackbar('Error al crear el enemigo.');
+                        return;
+                    }
+
+                    // Add to local list
+                    this.enemiesList.push(createResult.data);
+                    this._displaySnackbar('Enemigo creado correctamente.');
+                } catch (error) {
+                    console.error('Error creating enemy:', error);
+                    this._displaySnackbar('Error al crear el enemigo.');
+                }
+            }
+        });
     }
 
     public editEnemy(enemy: Enemy): void {
-        // Temporarily disabled
-        this._displaySnackbar('Funcionalidad de editar enemigo en desarrollo.');
+        const dialogRef = this._dialog.open(EnemyDialogComponent, {
+            data: { enemy },
+            width: '750px',
+            maxWidth: '95vw',
+            maxHeight: '90vh',
+            disableClose: false,
+            autoFocus: false
+        });
+
+        dialogRef.afterClosed().subscribe(async (result) => {
+            if (result) {
+                try {
+                    const updateResult = await this._supabaseService.updateEnemy(result);
+
+                    if (updateResult.error) {
+                        console.error('Error updating enemy:', updateResult.error);
+                        this._displaySnackbar('Error al actualizar el enemigo.');
+                        return;
+                    }
+
+                    // Update local list
+                    const index = this.enemiesList.findIndex(e => e.id === result.id);
+                    if (index !== -1) {
+                        this.enemiesList[index] = updateResult.data;
+                    }
+
+                    this._displaySnackbar('Enemigo actualizado correctamente.');
+                } catch (error) {
+                    console.error('Error updating enemy:', error);
+                    this._displaySnackbar('Error al actualizar el enemigo.');
+                }
+            }
+        });
     }
 
     public async deleteNPC(npc: NPC): Promise<void> {

@@ -357,6 +357,100 @@ $transition-speed: 0.3s;
   gap: 10px;
   align-items: center;
   flex-wrap: wrap;
+
+  // Filter styles for dropdowns
+  .filter-container {
+    .level-filter,
+    .boss-filter {
+      padding: 8px 12px;
+      border: 1px solid rgba($secondary-color, 0.5);
+      border-radius: $border-radius;
+      background: rgba($primary-color, 0.8);
+      color: $text-color;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all $transition-speed ease;
+
+      &:focus {
+        outline: none;
+        border-color: $secondary-color;
+        box-shadow: 0 0 5px rgba($secondary-color, 0.3);
+      }
+
+      &:hover {
+        border-color: $secondary-color;
+      }
+
+      option {
+        background: $primary-color;
+        color: $text-color;
+      }
+    }
+  }
+
+  // Clear filters button
+  .clear-filters-button {
+    padding: 8px 15px;
+    border: 1px solid rgba($danger-color, 0.6);
+    border-radius: $border-radius;
+    background: linear-gradient(135deg, rgba($danger-color, 0.8), rgba($danger-color, 0.6));
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all $transition-speed ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    &:hover:not(:disabled) {
+      background: linear-gradient(135deg, $danger-color, lighten($danger-color, 5%));
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba($danger-color, 0.3);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .filter-count {
+      background: rgba(255, 255, 255, 0.9);
+      color: $danger-color;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-left: 5px;
+    }
+  }
+}
+
+// Filter status info
+.filter-status {
+  background: rgba($secondary-color, 0.1);
+  border: 1px solid rgba($secondary-color, 0.3);
+  border-radius: $border-radius;
+  padding: 10px 15px;
+  margin: 15px 0;
+  text-align: center;
+
+  p {
+    margin: 0;
+    color: $text-color;
+    font-size: 0.9rem;
+
+    strong {
+      color: $secondary-color;
+      font-weight: 600;
+    }
+  }
 }
 
 .library-button {
@@ -1631,5 +1725,382 @@ $transition-speed: 0.3s;
     .form-button {
       width: 100%;
     }
+  }
+}
+
+/* Habilities Management Styles */
+.habilities-management {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.habilities-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  gap: 20px;
+  flex-wrap: wrap;
+
+  .habilities-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: $secondary-color;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  .habilities-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+
+    .filter-container {
+      .power-filter {
+        padding: 8px 12px;
+        border: 1px solid rgba($secondary-color, 0.5);
+        border-radius: $border-radius;
+        background: rgba($primary-color, 0.8);
+        color: $text-color;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all $transition-speed ease;
+
+        &:focus {
+          outline: none;
+          border-color: $secondary-color;
+          box-shadow: 0 0 5px rgba($secondary-color, 0.3);
+        }
+
+        &:hover {
+          border-color: $secondary-color;
+        }
+
+        option {
+          background: $primary-color;
+          color: $text-color;
+        }
+      }
+    }
+
+    .clear-filters-button {
+      padding: 8px 15px;
+      border: 1px solid rgba($danger-color, 0.6);
+      border-radius: $border-radius;
+      background: linear-gradient(135deg, rgba($danger-color, 0.8), rgba($danger-color, 0.6));
+      color: white;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all $transition-speed ease;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+
+      &:hover:not(:disabled) {
+        background: linear-gradient(135deg, $danger-color, lighten($danger-color, 5%));
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba($danger-color, 0.3);
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .filter-count {
+        background: rgba(255, 255, 255, 0.9);
+        color: $danger-color;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 700;
+        margin-left: 5px;
+      }
+    }
+  }
+}
+
+.filter-status {
+  background: rgba($secondary-color, 0.1);
+  border: 1px solid rgba($secondary-color, 0.3);
+  border-radius: $border-radius;
+  padding: 10px 15px;
+  margin-bottom: 20px;
+  color: $secondary-color;
+  font-size: 0.9rem;
+  text-align: center;
+
+  p {
+    margin: 0;
+    
+    strong {
+      color: $accent-color;
+      font-weight: 700;
+    }
+  }
+}
+
+.habilities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.hability-card {
+  background: linear-gradient(135deg, rgba($primary-color, 0.9), rgba($background-color, 0.9));
+  border-radius: $border-radius;
+  padding: 20px;
+  box-shadow: $card-shadow;
+  border: 1px solid rgba($secondary-color, 0.3);
+  transition: all $transition-speed ease;
+  position: relative;
+  overflow: hidden;
+  
+  // Fixed dimensions for consistent sizing
+  height: 400px; // Fixed height
+  display: flex;
+  flex-direction: column;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, $secondary-color, $accent-color);
+  }
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    border-color: $secondary-color;
+  }
+}
+
+.hability-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+
+  .hability-header-main {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .power-icon {
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.3));
+    }
+  }
+
+  .hability-card-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: $accent-color;
+    margin: 0;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  }
+
+  .hability-card-level {
+    background: rgba($secondary-color, 0.8);
+    color: $primary-color;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-shadow: none;
+  }
+}
+
+.hability-card-content {
+  flex: 1; // Take remaining space
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin-bottom: 15px;
+
+  .hability-card-description {
+    color: $text-color;
+    margin-bottom: 15px;
+    line-height: 1.5;
+    font-style: italic;
+    flex: 1; // Take available space
+    overflow-y: auto; // Allow scrolling for long descriptions
+    max-height: 80px; // Limit height to maintain card consistency
+    
+    // Custom scrollbar styling
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: rgba($secondary-color, 0.1);
+      border-radius: 2px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: rgba($secondary-color, 0.5);
+      border-radius: 2px;
+      
+      &:hover {
+        background: rgba($secondary-color, 0.7);
+      }
+    }
+  }
+}
+
+.hability-card-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 15px;
+  flex-shrink: 0; // Don't allow shrinking
+  min-height: 120px; // Consistent height for stats section
+
+  .stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba($secondary-color, 0.2);
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: $secondary-color;
+      font-weight: 500;
+    }
+
+    .stat-value {
+      font-weight: 600;
+      color: $accent-color;
+
+      &.power-value {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-weight: 700;
+        text-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+      }
+    }
+  }
+}
+
+.hability-card-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: auto; // Push to bottom
+  padding-top: 15px; // Space from content above
+  flex-shrink: 0; // Don't allow shrinking
+
+  .hability-action-button {
+    flex: 1;
+    padding: 10px 15px;
+    border: none;
+    border-radius: $border-radius;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all $transition-speed ease;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+
+    &.primary {
+      background: linear-gradient(135deg, $secondary-color, $accent-color);
+      color: $primary-color;
+
+      &:hover {
+        background: linear-gradient(135deg, lighten($secondary-color, 10%), lighten($accent-color, 10%));
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba($secondary-color, 0.3);
+      }
+    }
+
+    &.danger {
+      background: linear-gradient(135deg, $danger-color, darken($danger-color, 10%));
+      color: white;
+
+      &:hover {
+        background: linear-gradient(135deg, lighten($danger-color, 10%), $danger-color);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba($danger-color, 0.3);
+      }
+    }
+  }
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  color: $text-color;
+
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba($secondary-color, 0.3);
+    border-top: 4px solid $secondary-color;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Responsive design for habilities
+@media (max-width: 768px) {
+  .habilities-header {
+    flex-direction: column;
+    align-items: stretch;
+
+    .habilities-actions {
+      flex-direction: column;
+      gap: 10px;
+
+      .filter-container,
+      .search-container {
+        width: 100%;
+
+        .power-filter,
+        .search-input {
+          width: 100%;
+        }
+      }
+
+      .clear-filters-button {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  }
+
+  .habilities-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hability-card-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .hability-card-actions {
+    flex-direction: column;
   }
 }

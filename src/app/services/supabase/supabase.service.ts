@@ -276,6 +276,37 @@ export class SupabaseService {
     }
   }
 
+  // Function to create a new hability
+  public async createHability(hability: Hability): Promise<{ data: any; error: any }> {
+    try {
+      const { data, error } = await this._supabaseClient
+        .from('habilities')
+        .insert(hability)
+        .select('*')
+        .single();
+
+      return { data, error };
+    } catch (error) {
+      console.error('Error creating hability:', error);
+      return { data: null, error };
+    }
+  }
+
+  // Function to delete a hability
+  public async deleteHability(habilityId: string): Promise<{ data: any; error: any }> {
+    try {
+      const { data, error } = await this._supabaseClient
+        .from('habilities')
+        .delete()
+        .eq('id', habilityId);
+
+      return { data, error };
+    } catch (error) {
+      console.error('Error deleting hability:', error);
+      return { data: null, error };
+    }
+  }
+
   public authChanges(callback: (event: AuthChangeEvent, session: Session | null) => void) {
     return this._supabaseClient.auth.onAuthStateChange(callback)
   }
@@ -385,6 +416,39 @@ export class SupabaseService {
       .from('enemies')
       .delete()
       .eq('id', enemyId);
+  }
+
+  // Function to create a new enemy
+  public async createEnemy(enemy: Enemy): Promise<{ data: any; error: any }> {
+    try {
+      const { data, error } = await this._supabaseClient
+        .from('enemies')
+        .insert(enemy)
+        .select('*')
+        .single();
+
+      return { data, error };
+    } catch (error) {
+      console.error('Error creating enemy:', error);
+      return { data: null, error };
+    }
+  }
+
+  // Function to update an enemy
+  public async updateEnemy(enemy: Enemy): Promise<{ data: any; error: any }> {
+    try {
+      const { data, error } = await this._supabaseClient
+        .from('enemies')
+        .update(enemy)
+        .eq('id', enemy.id)
+        .select('*')
+        .single();
+
+      return { data, error };
+    } catch (error) {
+      console.error('Error updating enemy:', error);
+      return { data: null, error };
+    }
   }
 
   // NPC methods for Supabase integration
@@ -582,6 +646,53 @@ export class SupabaseService {
     } catch (error) {
       console.error('Error updating user in replica:', error);
       return { data: null, error };
+    }
+  }
+
+  // Methods for managing hability-profile associations
+  public async associateHabilityWithProfiles(habilityId: string, profileIds: string[]): Promise<{ data: any, error: any }> {
+    try {
+      // Remove existing associations for this hability
+      await this._supabaseClient
+        .from('profile_habilities')
+        .delete()
+        .eq('hability_id', habilityId);
+
+      if (profileIds.length > 0) {
+        // Create new associations
+        const associations = profileIds.map(profileId => ({
+          profile_id: profileId,
+          hability_id: habilityId,
+          current_uses: 0 // Default current uses
+        }));
+
+        const { data, error } = await this._supabaseClient
+          .from('profile_habilities')
+          .insert(associations);
+
+        if (error) throw error;
+        return { data, error: null };
+      }
+
+      return { data: null, error: null };
+    } catch (error) {
+      console.error('Error associating hability with profiles:', error);
+      return { data: null, error };
+    }
+  }
+
+  public async getAssociatedProfiles(habilityId: string): Promise<string[]> {
+    try {
+      const { data, error } = await this._supabaseClient
+        .from('profile_habilities')
+        .select('profile_id')
+        .eq('hability_id', habilityId);
+
+      if (error) throw error;
+      return data ? data.map(item => item.profile_id) : [];
+    } catch (error) {
+      console.error('Error getting associated profiles:', error);
+      return [];
     }
   }
 }

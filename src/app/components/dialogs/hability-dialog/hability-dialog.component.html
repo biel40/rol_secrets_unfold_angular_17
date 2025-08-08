@@ -1,0 +1,130 @@
+<div class="hability-dialog">
+  <div class="dialog-header">
+    <h2>{{ isEditing ? ('edit-hability' | transloco) : ('create-hability' | transloco) }}</h2>
+  </div>
+
+  <form [formGroup]="habilityForm" (ngSubmit)="onSave()" class="hability-form">
+    <div class="form-content">
+      <!-- Name field -->
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>{{ 'hability-name' | transloco }}</mat-label>
+        <input matInput formControlName="name" placeholder="{{ 'hability-name' | transloco }}">
+        <mat-error *ngIf="habilityForm.get('name')?.invalid && habilityForm.get('name')?.touched">
+          {{ getErrorMessage('name') }}
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Description field -->
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>{{ 'hability-description' | transloco }}</mat-label>
+        <textarea matInput formControlName="description" 
+                  placeholder="{{ 'hability-description' | transloco }}"
+                  rows="3"></textarea>
+        <mat-error *ngIf="habilityForm.get('description')?.invalid && habilityForm.get('description')?.touched">
+          {{ getErrorMessage('description') }}
+        </mat-error>
+      </mat-form-field>
+
+            <div class="form-row">
+        <!-- Class field -->
+        <mat-form-field appearance="fill" class="half-width">
+          <mat-label>{{ 'class' | transloco }}</mat-label>
+          <mat-select formControlName="clase">
+            <mat-option *ngFor="let clase of claseOptions" [value]="clase">
+              {{ clase }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="habilityForm.get('clase')?.invalid && habilityForm.get('clase')?.touched">
+            {{ getErrorMessage('clase') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Power field -->
+        <mat-form-field appearance="fill" class="half-width">
+          <mat-label>{{ 'power' | transloco }}</mat-label>
+          <mat-select formControlName="power">
+            <mat-option *ngFor="let power of powerOptions" [value]="power">
+              {{ power }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="habilityForm.get('power')?.invalid && habilityForm.get('power')?.touched">
+            {{ getErrorMessage('power') }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <!-- Level field -->
+        <mat-form-field appearance="fill" class="half-width">
+          <mat-label>{{ 'level' | transloco }}</mat-label>
+          <input matInput type="number" formControlName="level" min="1" max="20">
+          <mat-error *ngIf="habilityForm.get('level')?.invalid && habilityForm.get('level')?.touched">
+            {{ getErrorMessage('level') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Total uses field -->
+        <mat-form-field appearance="fill" class="half-width">
+          <mat-label>{{ 'total-uses' | transloco }}</mat-label>
+          <input matInput type="number" formControlName="total_uses" min="1">
+          <mat-error *ngIf="habilityForm.get('total_uses')?.invalid && habilityForm.get('total_uses')?.touched">
+            {{ getErrorMessage('total_uses') }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <!-- Current uses field -->
+        <mat-form-field appearance="fill" class="half-width">
+          <mat-label>{{ 'current-uses' | transloco }}</mat-label>
+          <input matInput type="number" formControlName="current_uses" min="0">
+          <mat-error *ngIf="habilityForm.get('current_uses')?.invalid && habilityForm.get('current_uses')?.touched">
+            {{ getErrorMessage('current_uses') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Dice field -->
+        <mat-form-field appearance="fill" class="half-width">
+          <mat-label>{{ 'dice' | transloco }}</mat-label>
+          <input matInput formControlName="dice" placeholder="1d6, 2d8, etc.">
+          <mat-error *ngIf="habilityForm.get('dice')?.invalid && habilityForm.get('dice')?.touched">
+            {{ getErrorMessage('dice') }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Scales with field -->
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>{{ 'scales-with' | transloco }}</mat-label>
+        <mat-select formControlName="scales_with">
+          <mat-option *ngFor="let stat of scalesWithOptions" [value]="stat">
+            {{ stat }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="habilityForm.get('scales_with')?.invalid && habilityForm.get('scales_with')?.touched">
+          {{ getErrorMessage('scales_with') }}
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Associated Profiles field -->
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>{{ 'associated-profiles' | transloco }}</mat-label>
+        <mat-select formControlName="associatedProfiles" multiple>
+          <mat-option *ngFor="let profile of availableProfiles" [value]="profile.id">
+            {{ profile.username }} ({{ profile.clase }} - {{ 'level' | transloco }} {{ profile.level }})
+          </mat-option>
+        </mat-select>
+        <mat-hint>{{ 'select-multiple-profiles-hint' | transloco }}</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <div class="dialog-actions">
+      <button type="button" mat-button (click)="onCancel()" class="cancel-button">
+        {{ 'close' | transloco }}
+      </button>
+      <button type="submit" mat-raised-button color="primary" [disabled]="!habilityForm.valid" class="save-button">
+        {{ isEditing ? ('update-profile' | transloco) : ('create-hability' | transloco) }}
+      </button>
+    </div>
+  </form>
+</div>

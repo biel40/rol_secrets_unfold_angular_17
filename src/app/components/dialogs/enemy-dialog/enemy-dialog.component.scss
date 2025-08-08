@@ -1,0 +1,227 @@
+.enemy-dialog {
+  max-width: 700px;
+  width: 100%;
+  background: linear-gradient(135deg, #2c3e50, #1a2530);
+  color: #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.dialog-header {
+  padding: 20px 30px;
+  background: rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+
+  h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #d4af37;
+    text-align: center;
+  }
+}
+
+.enemy-form {
+  padding: 30px;
+
+  .form-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .form-row {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+
+    .half-width {
+      flex: 1;
+    }
+  }
+
+  .full-width {
+    width: 100%;
+  }
+
+  .checkbox-container {
+    padding: 10px 0;
+
+    ::ng-deep {
+      .mat-mdc-checkbox {
+        .mdc-checkbox__background {
+          border-color: rgba(212, 175, 55, 0.6);
+        }
+
+        &.mat-mdc-checkbox-checked {
+          .mdc-checkbox__background {
+            background-color: #d4af37;
+            border-color: #d4af37;
+          }
+        }
+
+        .mdc-form-field {
+          color: #e0e0e0;
+        }
+      }
+    }
+  }
+
+  // Material form field customization
+  ::ng-deep {
+    .mat-mdc-form-field {
+      .mat-mdc-form-field-subscript-wrapper {
+        margin-top: 4px;
+      }
+
+      .mdc-notched-outline__leading,
+      .mdc-notched-outline__notch,
+      .mdc-notched-outline__trailing {
+        border-color: rgba(212, 175, 55, 0.5);
+      }
+
+      &.mat-focused {
+        .mdc-notched-outline__leading,
+        .mdc-notched-outline__notch,
+        .mdc-notched-outline__trailing {
+          border-color: #d4af37;
+        }
+      }
+
+      .mat-mdc-form-field-label,
+      .mdc-floating-label {
+        color: #d4af37;
+      }
+
+      .mat-mdc-input-element {
+        color: #e0e0e0;
+      }
+    }
+  }
+}
+
+.image-preview {
+  margin: 15px 0;
+  text-align: center;
+
+  img {
+    max-width: 200px;
+    max-height: 150px;
+    border-radius: 8px;
+    border: 2px solid rgba(212, 175, 55, 0.3);
+    object-fit: cover;
+  }
+}
+
+.default-images {
+  margin-top: 20px;
+
+  h4 {
+    color: #d4af37;
+    margin-bottom: 15px;
+    font-size: 1rem;
+  }
+
+  .image-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 10px;
+    max-height: 200px;
+    overflow-y: auto;
+
+    .image-option {
+      width: 80px;
+      height: 80px;
+      border: 2px solid rgba(212, 175, 55, 0.3);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      overflow: hidden;
+
+      &:hover {
+        border-color: #d4af37;
+        transform: scale(1.05);
+      }
+
+      &.selected {
+        border-color: #ffeba7;
+        box-shadow: 0 0 10px rgba(255, 235, 167, 0.5);
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+  }
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
+
+  .cancel-button {
+    color: #e0e0e0;
+    border: 1px solid rgba(224, 224, 224, 0.3);
+
+    &:hover {
+      background: rgba(224, 224, 224, 0.1);
+    }
+  }
+
+  .save-button {
+    background: linear-gradient(135deg, #d4af37, #ffeba7);
+    color: #2c3e50;
+    font-weight: 600;
+
+    &:hover:not(:disabled) {
+      background: linear-gradient(135deg, lighten(#d4af37, 10%), lighten(#ffeba7, 10%));
+    }
+
+    &:disabled {
+      background: rgba(128, 128, 128, 0.3);
+      color: rgba(224, 224, 224, 0.5);
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .enemy-dialog {
+    max-width: 95vw;
+    margin: 10px;
+  }
+
+  .enemy-form {
+    padding: 20px;
+
+    .form-row {
+      flex-direction: column;
+      gap: 10px;
+
+      .half-width {
+        width: 100%;
+      }
+    }
+
+    .default-images {
+      .image-grid {
+        grid-template-columns: repeat(4, 1fr);
+        max-height: 150px;
+      }
+    }
+  }
+
+  .dialog-actions {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+    }
+  }
+}
