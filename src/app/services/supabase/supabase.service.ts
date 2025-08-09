@@ -695,4 +695,19 @@ export class SupabaseService {
       return [];
     }
   }
+
+  public async getHabilitiesByProfile(profileId: string): Promise<string[]> {
+    try {
+      const { data, error } = await this._supabaseClient
+        .from('profile_habilities')
+        .select('hability_id')
+        .eq('profile_id', profileId);
+
+      if (error) throw error;
+      return data ? data.map(item => item.hability_id) : [];
+    } catch (error) {
+      console.error('Error getting habilities by profile:', error);
+      return [];
+    }
+  }
 }

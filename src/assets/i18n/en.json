@@ -217,11 +217,16 @@
     "error-updating-hability": "Error updating hability",
     "error-deleting-hability": "Error deleting hability",
     "all-power-types": "All power types",
+    "all-profiles": "All profiles",
     "clear-filters": "Clear filters",
     "showing-filtered-results": "Showing",
     "of": "of",
     "all-levels": "All levels",
     "all-enemy-types": "All types",
     "associated-profiles": "Associated Profiles",
+    "associate-to-profile": "Associate to profile",
+    "associate-hability-to-profiles": "Associate hability to profiles",
+    "select-profiles": "Select profiles",
+    "associate-hability": "Associate hability",
     "select-multiple-profiles-hint": "Select multiple profiles to associate this ability"
 }

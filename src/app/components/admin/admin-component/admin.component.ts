@@ -74,7 +74,14 @@ export class AdminComponent implements OnInit {
     public habilitiesList: Hability[] = [];
     public searchTermHabilities: string = '';
     public selectedPowerFilter: string = '';
+    public selectedProfileFilter: string = '';
     public isLoadingHabilities: boolean = false;
+
+    // Hability association properties
+    public showHabilityAssociationModal: boolean = false;
+    public selectedHabilityForAssociation: Hability | null = null;
+    public selectedProfilesForAssociation: string[] = [];
+    public habilityProfileAssociations: Map<string, string[]> = new Map(); // habilityId -> profileIds[]
 
     // Enemy filters
     public selectedLevelFilter: string = '';
@@ -166,6 +173,15 @@ export class AdminComponent implements OnInit {
             filteredList = filteredList.filter(hability =>
                 hability.power.toLowerCase() === this.selectedPowerFilter.toLowerCase()
             );
+        }
+
+        // Filter by profile if selected
+        if (this.selectedProfileFilter.trim()) {
+            filteredList = filteredList.filter(hability => {
+                if (!hability.id) return false;
+                const associatedProfiles = this.habilityProfileAssociations.get(hability.id) || [];
+                return associatedProfiles.includes(this.selectedProfileFilter);
+            });
         }
 
         // Filter by search term if provided
@@ -270,6 +286,15 @@ export class AdminComponent implements OnInit {
         try {
             const habilities = await this._supabaseService.getAllHabilities();
             this.habilitiesList = habilities || [];
+
+            // Load associations for each hability
+            this.habilityProfileAssociations.clear();
+            for (const hability of this.habilitiesList) {
+                if (hability.id) {
+                    const associatedProfiles = await this._supabaseService.getAssociatedProfiles(hability.id);
+                    this.habilityProfileAssociations.set(hability.id, associatedProfiles);
+                }
+            }
         } catch (error) {
             console.error('Error loading habilities:', error);
             this._displaySnackbar('Error al cargar las habilidades.');
@@ -400,6 +425,7 @@ export class AdminComponent implements OnInit {
     public clearHabilityFilters(): void {
         this.searchTermHabilities = '';
         this.selectedPowerFilter = '';
+        this.selectedProfileFilter = '';
     }
 
     public clearEnemyFilters(): void {
@@ -413,6 +439,7 @@ export class AdminComponent implements OnInit {
         let count = 0;
         if (this.searchTermHabilities.trim()) count++;
         if (this.selectedPowerFilter.trim()) count++;
+        if (this.selectedProfileFilter.trim()) count++;
         return count;
     }
 
@@ -774,6 +801,16 @@ export class AdminComponent implements OnInit {
         return profile?.username || 'Usuario desconocido';
     }
 
+    public getAssociatedProfileNames(habilityId: string | undefined): string[] {
+        if (!habilityId) return [];
+        
+        const associatedProfileIds = this.habilityProfileAssociations.get(habilityId) || [];
+        return associatedProfileIds.map(profileId => {
+            const profile = this.profilesList.find(p => p.id === profileId);
+            return profile?.username || 'Usuario desconocido';
+        });
+    }
+
     // User management methods
     public async deleteUser(user: UserReplica & { profile?: Profile }): Promise<void> {
         const userName = user.profile?.username || user.email;
@@ -877,6 +914,84 @@ export class AdminComponent implements OnInit {
                 this._loadData(); // Reload data to reflect changes
             }
         });
+    }
+
+    // Hability association methods
+    public openAssociateHabilityModal(hability: Hability): void {
+        this.selectedHabilityForAssociation = hability;
+        this.selectedProfilesForAssociation = [];
+        this.showHabilityAssociationModal = true;
+
+        // Load currently associated profiles
+        if (hability.id) {
+            this._supabaseService.getAssociatedProfiles(hability.id).then(profileIds => {
+                this.selectedProfilesForAssociation = profileIds;
+            });
+        }
+    }
+
+    public closeHabilityAssociationModal(): void {
+        this.showHabilityAssociationModal = false;
+        this.selectedHabilityForAssociation = null;
+        this.selectedProfilesForAssociation = [];
+    }
+
+    public toggleProfileSelection(profileId: string, event: any): void {
+        if (event.target.checked) {
+            if (!this.selectedProfilesForAssociation.includes(profileId)) {
+                this.selectedProfilesForAssociation.push(profileId);
+            }
+        } else {
+            this.selectedProfilesForAssociation = this.selectedProfilesForAssociation.filter(id => id !== profileId);
+        }
+    }
+
+    public async associateHabilityToProfiles(): Promise<void> {
+        if (!this.selectedHabilityForAssociation || !this.selectedHabilityForAssociation.id) {
+            this._displaySnackbar('Error: No se pudo identificar la habilidad.');
+            return;
+        }
+
+        try {
+            const result = await this._supabaseService.associateHabilityWithProfiles(
+                this.selectedHabilityForAssociation.id,
+                this.selectedProfilesForAssociation
+            );
+
+            if (result.error) {
+                console.error('Error associating hability:', result.error);
+                this._displaySnackbar('Error al asociar la habilidad con los perfiles.');
+                return;
+            }
+
+            // Update local associations map
+            this.habilityProfileAssociations.set(
+                this.selectedHabilityForAssociation.id,
+                [...this.selectedProfilesForAssociation]
+            );
+
+            const habilityName = this.selectedHabilityForAssociation.name || 'la habilidad';
+            if (this.selectedProfilesForAssociation.length > 0) {
+                this._displaySnackbar(`${habilityName} asociada correctamente con ${this.selectedProfilesForAssociation.length} perfil(es).`);
+            } else {
+                this._displaySnackbar(`Se eliminaron todas las asociaciones de ${habilityName}.`);
+            }
+
+            this.closeHabilityAssociationModal();
+        } catch (error) {
+            console.error('Error associating hability:', error);
+            this._displaySnackbar('Error al asociar la habilidad. Inténtalo de nuevo.');
+        }
+    }
+
+    public async checkIfHabilityAssociatedWithProfile(habilityId: string, profileId: string): Promise<boolean> {
+        try {
+            const associatedProfiles = await this._supabaseService.getAssociatedProfiles(habilityId);
+            return associatedProfiles.includes(profileId);
+        } catch (error) {
+            console.error('Error checking hability association:', error);
+            return false;
+        }
     }
 
     public ngOnDestroy(): void {

@@ -220,11 +220,16 @@
     "error-updating-hability": "Error al actualizar la habilidad",
     "error-deleting-hability": "Error al eliminar la habilidad",
     "all-power-types": "Todos los tipos de poder",
+    "all-profiles": "Todos los perfiles",
     "clear-filters": "Limpiar filtros",
     "showing-filtered-results": "Mostrando",
     "of": "de",
     "all-levels": "Todos los niveles",
     "all-enemy-types": "Todos los tipos",
     "associated-profiles": "Perfiles asociados",
+    "associate-to-profile": "Asociar a perfil",
+    "associate-hability-to-profiles": "Asociar habilidad a perfiles",
+    "select-profiles": "Selecciona perfiles",
+    "associate-hability": "Asociar habilidad",
     "select-multiple-profiles-hint": "Selecciona múltiples perfiles para asociar esta habilidad"
 }

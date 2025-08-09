@@ -14,7 +14,8 @@
                 transloco }}</button>
             <button class="dm-tab" [class.active]="currentTab === 'users'" (click)="switchTab('users')">{{ 'users' |
                 transloco }}</button>
-            <button class="dm-tab" [class.active]="currentTab === 'habilities'" (click)="switchTab('habilities')">{{ 'habilities'
+            <button class="dm-tab" [class.active]="currentTab === 'habilities'" (click)="switchTab('habilities')">{{
+                'habilities'
                 | transloco }}</button>
         </div>
     </div>
@@ -99,11 +100,11 @@
                                 [(ngModel)]="searchTerm">
                         </div>
 
-                        <button class="clear-filters-button" 
-                                (click)="clearEnemyFilters()"
-                                [disabled]="activeEnemyFiltersCount === 0">
+                        <button class="clear-filters-button" (click)="clearEnemyFilters()"
+                            [disabled]="activeEnemyFiltersCount === 0">
                             🗑️ {{ 'clear-filters' | transloco }}
-                            <span *ngIf="activeEnemyFiltersCount > 0" class="filter-count">{{ activeEnemyFiltersCount }}</span>
+                            <span *ngIf="activeEnemyFiltersCount > 0" class="filter-count">{{ activeEnemyFiltersCount
+                                }}</span>
                         </button>
                     </div>
                 </div>
@@ -112,9 +113,9 @@
                 <div class="filter-status" *ngIf="activeEnemyFiltersCount > 0">
                     <p>
                         {{ 'showing-filtered-results' | transloco }}
-                        <strong>{{ filteredEnemies.length }}</strong> 
-                        {{ 'of' | transloco }} 
-                        <strong>{{ enemiesList.length }}</strong> 
+                        <strong>{{ filteredEnemies.length }}</strong>
+                        {{ 'of' | transloco }}
+                        <strong>{{ enemiesList.length }}</strong>
                         {{ 'enemies' | transloco }}
                     </p>
                 </div>
@@ -536,7 +537,7 @@
                             <span class="add-icon">+</span>
                             {{ 'create-hability' | transloco }}
                         </button>
-                        
+
                         <div class="filter-container">
                             <select class="power-filter" [(ngModel)]="selectedPowerFilter">
                                 <option value="">{{ 'all-power-types' | transloco }}</option>
@@ -546,15 +547,22 @@
                             </select>
                         </div>
 
-                        <div class="search-container">
-                            <input type="text" class="search-input" 
-                                   placeholder="{{ 'search-habilities' | transloco }}"
-                                   [(ngModel)]="searchTermHabilities">
+                        <div class="filter-container">
+                            <select class="profile-filter" [(ngModel)]="selectedProfileFilter">
+                                <option value="">{{ 'all-profiles' | transloco }}</option>
+                                <option *ngFor="let profile of profilesList" [value]="profile.id">
+                                    {{ profile.username }}
+                                </option>
+                            </select>
                         </div>
 
-                        <button class="clear-filters-button" 
-                                (click)="clearHabilityFilters()"
-                                [disabled]="!searchTermHabilities && !selectedPowerFilter">
+                        <div class="search-container">
+                            <input type="text" class="search-input" placeholder="{{ 'search-habilities' | transloco }}"
+                                [(ngModel)]="searchTermHabilities">
+                        </div>
+
+                        <button class="clear-filters-button" (click)="clearHabilityFilters()"
+                            [disabled]="!searchTermHabilities && !selectedPowerFilter && !selectedProfileFilter">
                             🗑️ {{ 'clear-filters' | transloco }}
                             <span *ngIf="activeFiltersCount > 0" class="filter-count">{{ activeFiltersCount }}</span>
                         </button>
@@ -565,80 +573,145 @@
                 <div class="filter-status" *ngIf="activeFiltersCount > 0">
                     <p>
                         {{ 'showing-filtered-results' | transloco }}
-                        <strong>{{ filteredHabilities.length }}</strong> 
-                        {{ 'of' | transloco }} 
-                        <strong>{{ habilitiesList.length }}</strong> 
+                        <strong>{{ filteredHabilities.length }}</strong>
+                        {{ 'of' | transloco }}
+                        <strong>{{ habilitiesList.length }}</strong>
                         {{ 'habilities' | transloco }}
                     </p>
                 </div>
 
                 <div class="habilities-grid">
                     @if (isLoadingHabilities) {
-                        <div class="loading-container">
+                    <div class="habilities-loading-overlay">
+                        <div class="loading-content">
                             <div class="loading-spinner"></div>
-                            <p>{{ 'loading' | transloco }}...</p>
+                            <p class="loading-text">{{ 'loading' | transloco }}...</p>
                         </div>
+                    </div>
                     } @else if (habilitiesList && habilitiesList.length > 0) {
-                        @for (hability of filteredHabilities; track $index) {
-                            <div class="hability-card" [style.background]="getPowerTheme(hability.power).bgColor">
-                                <div class="hability-card-header">
-                                    <div class="hability-header-main">
-                                        <span class="power-icon">{{ getPowerTheme(hability.power).icon }}</span>
-                                        <h3 class="hability-card-title">{{ hability.name }}</h3>
-                                    </div>
-                                    <div class="hability-card-level">{{ 'level' | transloco }} {{ hability.level }}</div>
+                    @for (hability of filteredHabilities; track $index) {
+                    <div class="hability-card" [style.background]="getPowerTheme(hability.power).bgColor">
+                        <div class="hability-card-header">
+                            <div class="hability-header-main">
+                                <span class="power-icon">{{ getPowerTheme(hability.power).icon }}</span>
+                                <h3 class="hability-card-title">{{ hability.name }}</h3>
+                            </div>
+                            <div class="hability-card-level">{{ 'level' | transloco }} {{ hability.level }}</div>
+                        </div>
+
+                        <div class="hability-card-content">
+                            <p class="hability-card-description">{{ hability.description }}</p>
+
+                            <div class="hability-card-stats">
+                                <div class="stat-item">
+                                    <span class="stat-label">{{ 'class' | transloco }}:</span>
+                                    <span class="stat-value">{{ hability.clase }}</span>
                                 </div>
-
-                                <div class="hability-card-content">
-                                    <p class="hability-card-description">{{ hability.description }}</p>
-
-                                    <div class="hability-card-stats">
-                                        <div class="stat-item">
-                                            <span class="stat-label">{{ 'class' | transloco }}:</span>
-                                            <span class="stat-value">{{ hability.clase }}</span>
-                                        </div>
-                                        <div class="stat-item">
-                                            <span class="stat-label">{{ 'power' | transloco }}:</span>
-                                            <span class="stat-value power-value" [style.color]="getPowerTheme(hability.power).color">
-                                                {{ getPowerTheme(hability.power).icon }} {{ hability.power }}
-                                            </span>
-                                        </div>
-                                        <div class="stat-item">
-                                            <span class="stat-label">{{ 'total-uses' | transloco }}:</span>
-                                            <span class="stat-value">{{ hability.total_uses }}</span>
-                                        </div>
-                                        <div class="stat-item">
-                                            <span class="stat-label">{{ 'dice' | transloco }}:</span>
-                                            <span class="stat-value">{{ hability.dice }}</span>
-                                        </div>
-                                        <div class="stat-item">
-                                            <span class="stat-label">{{ 'scales-with' | transloco }}:</span>
-                                            <span class="stat-value">{{ hability.scales_with }}</span>
-                                        </div>
-                                    </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">{{ 'power' | transloco }}:</span>
+                                    <span class="stat-value power-value"
+                                        [style.color]="getPowerTheme(hability.power).color">
+                                        {{ getPowerTheme(hability.power).icon }} {{ hability.power }}
+                                    </span>
                                 </div>
-
-                                <div class="hability-card-actions">
-                                    <button class="hability-action-button primary" (click)="editHability(hability)">
-                                        {{ 'edit' | transloco }}
-                                    </button>
-                                    <button class="hability-action-button danger" (click)="deleteHability(hability)">
-                                        {{ 'delete' | transloco }}
-                                    </button>
+                                <div class="stat-item">
+                                    <span class="stat-label">{{ 'total-uses' | transloco }}:</span>
+                                    <span class="stat-value">{{ hability.total_uses }}</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">{{ 'dice' | transloco }}:</span>
+                                    <span class="stat-value">{{ hability.dice }}</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">{{ 'scales-with' | transloco }}:</span>
+                                    <span class="stat-value">{{ hability.scales_with }}</span>
                                 </div>
                             </div>
-                        }
-                    } @else {
-                        <div class="empty-state">
-                            <div class="empty-icon">✨</div>
-                            <h3>{{ 'no-habilities-available' | transloco }}</h3>
-                            <p>{{ 'create-first-hability' | transloco }}</p>
-                            <button class="library-button" (click)="openCreateHabilityDialog()">
-                                <span class="add-icon">+</span>
-                                {{ 'create-hability' | transloco }}
+
+                            <!-- Associated profiles display -->
+                            <div class="associated-profiles" *ngIf="getAssociatedProfileNames(hability.id).length > 0">
+                                <div class="associated-profiles-label">
+                                    <span class="stat-label">{{ 'associated-profiles' | transloco }}:</span>
+                                </div>
+                                <div class="profile-tags">
+                                    <span class="profile-tag"
+                                        *ngFor="let profileName of getAssociatedProfileNames(hability.id)">
+                                        {{ profileName }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="hability-card-actions">
+                            <button class="hability-action-button primary" (click)="editHability(hability)">
+                                {{ 'edit' | transloco }}
+                            </button>
+                            <button class="hability-action-button secondary"
+                                (click)="openAssociateHabilityModal(hability)">
+                                {{ 'associate-to-profile' | transloco }}
+                            </button>
+                            <button class="hability-action-button danger" (click)="deleteHability(hability)">
+                                {{ 'delete' | transloco }}
                             </button>
                         </div>
+                    </div>
                     }
+                    } @else {
+                    <div class="empty-state">
+                        <div class="empty-icon">✨</div>
+                        <h3>{{ 'no-habilities-available' | transloco }}</h3>
+                        <p>{{ 'create-first-hability' | transloco }}</p>
+                        <button class="library-button" (click)="openCreateHabilityDialog()">
+                            <span class="add-icon">+</span>
+                            {{ 'create-hability' | transloco }}
+                        </button>
+                    </div>
+                    }
+                </div>
+
+                <!-- Hability Association Modal -->
+                <div class="hability-form-overlay" *ngIf="showHabilityAssociationModal"
+                    (click)="closeHabilityAssociationModal()">
+                    <div class="association-modal" (click)="$event.stopPropagation()">
+                        <div class="association-modal-header">
+                            <h3>{{ 'associate-hability-to-profiles' | transloco }}</h3>
+                            <button class="close-button" (click)="closeHabilityAssociationModal()">×</button>
+                        </div>
+
+                        <div class="association-modal-content">
+                            @if (selectedHabilityForAssociation) {
+                            <div class="hability-info">
+                                <h4>{{ selectedHabilityForAssociation.name }}</h4>
+                                <p>{{ selectedHabilityForAssociation.description }}</p>
+                            </div>
+                            }
+
+                            <div class="profiles-selector">
+                                <label>{{ 'select-profiles' | transloco }}</label>
+                                <div class="profiles-checkboxes">
+                                    @for (profile of profilesList; track profile.id) {
+                                    <div class="profile-checkbox">
+                                        <input type="checkbox" [id]="'profile-' + profile.id" [value]="profile.id!"
+                                            [checked]="selectedProfilesForAssociation.includes(profile.id!)"
+                                            (change)="toggleProfileSelection(profile.id!, $event)">
+                                        <label [for]="'profile-' + profile.id">{{ profile.username }}</label>
+                                    </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="association-actions">
+                                <button type="button" class="form-button secondary"
+                                    (click)="closeHabilityAssociationModal()">
+                                    {{ 'cancel' | transloco }}
+                                </button>
+                                <button type="button" class="form-button primary"
+                                    (click)="associateHabilityToProfiles()">
+                                    {{ 'associate-hability' | transloco }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </ng-container>
