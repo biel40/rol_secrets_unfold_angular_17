@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
 import { NPCDialogComponent } from '../../dialogs/npc-creation-dialog/npc-dialog.component';
 import { MissionDialogComponent } from '../../dialogs/mission-dialog/mission-dialog.component';
 import { ProfileEditDialogComponent } from '../../dialogs/profile-edit-dialog/profile-edit-dialog.component';
+import { ViewHabilitiesDialogComponent } from '../../dialogs/view-habilities-dialog/view-habilities-dialog.component';
 import { HabilityDialogComponent } from '../../dialogs/hability-dialog/hability-dialog.component';
 import { EnemyDialogComponent } from '../../dialogs/enemy-dialog/enemy-dialog.component';
 
@@ -269,10 +270,13 @@ export class AdminComponent implements OnInit {
             this.usersList = usersData.data || [];
 
             // Associate profiles with users
+            // profiles.id === auth.users.id (direct match)
             for (let user of this.usersList) {
-                const profile = this.allProfiles.find(p => p.id === user.id);
+                // The profile.id should match the auth.users.id directly
+                let profile = this.allProfiles.find(p => p.id === user.id);
                 user.profile = profile || undefined;
             }
+
         } catch (error) {
             console.error('Error loading users:', error);
             this._displaySnackbar('Error al cargar los usuarios.');
@@ -991,6 +995,52 @@ export class AdminComponent implements OnInit {
         } catch (error) {
             console.error('Error checking hability association:', error);
             return false;
+        }
+    }
+
+    // View user habilities in a user-friendly way
+    public async viewUserHabilities(userId: string): Promise<void> {
+        try {
+            // Get profile by user_id
+            const profileResult = await this._supabaseService.getProfileByUserId(userId);
+
+            if (profileResult.error) {
+                console.error('Error getting profile:', profileResult.error);
+                this._displaySnackbar('Error al obtener el perfil del usuario.');
+                return;
+            }
+
+            if (!profileResult.data) {
+                this._displaySnackbar('Este usuario no tiene un perfil creado.');
+                return;
+            }
+
+            const profile = profileResult.data;
+
+            // Get user habilities
+            const habilities = await this._supabaseService.getHabilitiesFromUser(profile);
+
+            // Open dialog to show habilities
+            const dialogRef = this._dialog.open(ViewHabilitiesDialogComponent, {
+                data: {
+                    profile: profile,
+                    habilities: habilities || []
+                },
+                width: '950px',
+                height: '85vh',
+                maxWidth: '95vw',
+                maxHeight: '95vh',
+                disableClose: false,
+                autoFocus: true,
+                restoreFocus: true,
+                hasBackdrop: true,
+                backdropClass: 'custom-backdrop',
+                panelClass: 'custom-dialog-container'
+            });
+
+        } catch (error) {
+            console.error('Error viewing user habilities:', error);
+            this._displaySnackbar('Error al obtener las habilidades del usuario.');
         }
     }
 

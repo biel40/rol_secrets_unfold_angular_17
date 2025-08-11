@@ -11,7 +11,7 @@ import {
 import { environment } from '../../../environments/environment';
 
 export interface Profile {
-  id?: string
+  id?: string  // This is the primary key that matches auth.users.id
   username?: string
   clase: string
   power: string
@@ -166,6 +166,23 @@ export class SupabaseService {
     }
   }
 
+  // Method to get profile by user_id (not profile_id)
+  public async getProfileByUserId(userId: string): Promise<{ data: Profile | null, error: any }> {
+    try {
+      const { data, error } = await this._supabaseClient
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)  // Changed from 'user_id' to 'id'
+        .single();
+
+      if (error) throw error;
+      return { data, error: null };
+    } catch (error) {
+      console.error('Error getting profile by user_id:', error);
+      return { data: null, error };
+    }
+  }
+
   public async getAllHabilities(): Promise<Hability[] | null> {
     const { data: habilities, error } = await this._supabaseClient
       .from('habilities')
@@ -199,7 +216,7 @@ export class SupabaseService {
       .select('*',)
       .eq('profile_id', profile.id);
 
-    if (habilities) {
+    if (habilities && habilities.length > 0) {
       let habilitiesIds: string[] = habilities.map(hability => hability.hability_id);
 
       let { data: userHabilities, error } = await this._supabaseClient
@@ -208,13 +225,17 @@ export class SupabaseService {
         .in("id", habilitiesIds)
         .order("level");
 
-      // First, we will filter the habilities that the user has by the level of the user and the power of the user
-      // and the class of the user
+      // Filter the habilities that the user has by the level of the user and the power of the user
+      // and the class of the user. Allow 'Base' class habilities for any class
       if (userHabilities) {
-        userHabilities = userHabilities.filter(hability => hability.level <= profile.level && hability.power === profile.power && (hability.clase === profile.clase || hability.clase === 'Base'));
-      }
-
-      // We will set the current uses of the hability on the fly from the intermediate table
+        userHabilities = userHabilities.filter(hability => {
+          const levelMatch = hability.level <= profile.level;
+          const powerMatch = hability.power === profile.power;
+          const classMatch = hability.clase === profile.clase || hability.clase === 'Base';
+          
+          return levelMatch && powerMatch && classMatch;
+        });
+      }      // We will set the current uses of the hability on the fly from the intermediate table
       // which are the REAL current uses.
       if (userHabilities) {
         userHabilities.forEach(hability => {
@@ -652,6 +673,15 @@ export class SupabaseService {
   // Methods for managing hability-profile associations
   public async associateHabilityWithProfiles(habilityId: string, profileIds: string[]): Promise<{ data: any, error: any }> {
     try {
+      // First, get the hability data to set correct initial current_uses
+      const { data: habilityData, error: habilityError } = await this._supabaseClient
+        .from('habilities')
+        .select('total_uses')
+        .eq('id', habilityId)
+        .single();
+
+      if (habilityError) throw habilityError;
+
       // Remove existing associations for this hability
       await this._supabaseClient
         .from('profile_habilities')
@@ -659,11 +689,11 @@ export class SupabaseService {
         .eq('hability_id', habilityId);
 
       if (profileIds.length > 0) {
-        // Create new associations
+        // Create new associations with correct initial current_uses
         const associations = profileIds.map(profileId => ({
           profile_id: profileId,
           hability_id: habilityId,
-          current_uses: 0 // Default current uses
+          current_uses: habilityData?.total_uses || 1 // Set to total_uses initially
         }));
 
         const { data, error } = await this._supabaseClient

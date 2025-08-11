@@ -231,5 +231,20 @@
     "associate-hability-to-profiles": "Asociar habilidad a perfiles",
     "select-profiles": "Selecciona perfiles",
     "associate-hability": "Asociar habilidad",
-    "select-multiple-profiles-hint": "Selecciona múltiples perfiles para asociar esta habilidad"
+    "select-multiple-profiles-hint": "Selecciona múltiples perfiles para asociar esta habilidad",
+    "habilities-list": "Lista de habilidades",
+    "habilities-of": "Habilidades de",
+    "character": "Personaje",
+    "no-name": "Sin nombre",
+    "no-class": "Sin clase",
+    "no-power": "Sin poder",
+    "available-habilities": "Habilidades disponibles",
+    "level-with-number": "Nivel",
+    "universal": "Universal",
+    "no-description-available": "Sin descripción disponible",
+    "available-uses": "Usos disponibles",
+    "no-magical-habilities": "Sin habilidades mágicas",
+    "no-habilities-learned": "Este aventurero aún no ha aprendido ninguna habilidad.",
+    "dm-can-assign": "¡El DM puede asignar nuevas habilidades desde el panel de administración!",
+    "understood": "Entendido"
 }

@@ -50,9 +50,17 @@ export class HabilitiesComponent implements OnInit {
     async ngOnChanges() {
         if (this.profile) {
             this.userHabilities = (await this._supabaseService.getHabilitiesFromUser(this.profile));
+        } else {
+            this.userHabilities = [];
         }
 
         this._loaderService.setLoading(false);
+    }
+
+    public async refreshHabilities(): Promise<void> {
+        if (this.profile) {
+            this.userHabilities = await this._supabaseService.getHabilitiesFromUser(this.profile);
+        }
     }
 
     public addUses(hability: Hability) {

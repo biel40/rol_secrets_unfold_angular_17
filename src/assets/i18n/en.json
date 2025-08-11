@@ -228,5 +228,20 @@
     "associate-hability-to-profiles": "Associate hability to profiles",
     "select-profiles": "Select profiles",
     "associate-hability": "Associate hability",
-    "select-multiple-profiles-hint": "Select multiple profiles to associate this ability"
+    "select-multiple-profiles-hint": "Select multiple profiles to associate this ability",
+    "habilities-list": "Abilities List",
+    "habilities-of": "Abilities of",
+    "character": "Character",
+    "no-name": "No name",
+    "no-class": "No class",
+    "no-power": "No power",
+    "available-habilities": "Available Abilities",
+    "level-with-number": "Level",
+    "universal": "Universal",
+    "no-description-available": "No description available",
+    "available-uses": "Available uses",
+    "no-magical-habilities": "No magical abilities",
+    "no-habilities-learned": "This adventurer hasn't learned any abilities yet.",
+    "dm-can-assign": "The DM can assign new abilities from the administration panel!",
+    "understood": "Understood"
 }

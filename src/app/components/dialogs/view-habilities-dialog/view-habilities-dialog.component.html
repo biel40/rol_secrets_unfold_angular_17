@@ -1,0 +1,118 @@
+<div class="modern-habilities-dialog">
+    <div class="dialog-header">
+        <div class="header-content">
+            <div class="header-text">
+                <h2>{{ 'habilities-list' | transloco }}</h2>
+            </div>
+        </div>
+        <button mat-icon-button (click)="onClose()" class="close-btn">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+    <div class="character-card">
+        <div class="character-avatar"
+            [style.backgroundImage]="data.profile.image_url ? 'url(' + data.profile.image_url + ')' : 'none'">
+            <div class="level-badge">{{ data.profile.level || 1 }}</div>
+        </div>
+        <div class="character-info">
+            <h3>{{ data.profile.username || ('no-name' | transloco) }}</h3>
+            <div class="character-class">
+                <span class="class-power" [style.color]="getPowerTheme(data.profile.power || '').color">
+                    {{ getPowerTheme(data.profile.power || '').icon }}
+                    {{ data.profile.clase || ('no-class' | transloco) }}
+                </span>
+                <span class="power-type">{{ data.profile.power || ('no-power' | transloco) }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Habilities Section -->
+    <div class="habilities-container">
+        <div class="section-title">
+            <h3>{{ 'available-habilities' | transloco }}</h3>
+            <span class="count-badge">{{ data.habilities.length || 0 }}</span>
+        </div>
+
+        @if (data.habilities && data.habilities.length > 0) {
+        <div class="habilities-grid">
+            @for (hability of data.habilities; track $index) {
+            <div class="hability-card" [style.--power-color]="getPowerTheme(hability?.power || '').color"
+                [style.--power-bg]="getPowerTheme(hability?.power || '').bgColor">
+
+                <!-- Card Header -->
+                <div class="card-header">
+                    <div class="hability-icon">{{ getPowerTheme(hability?.power || '').icon }}</div>
+                    <div class="hability-meta">
+                        <h4>{{ hability?.name || ('no-name' | transloco) }}</h4>
+                        <span class="level-indicator">{{ 'level-with-number' | transloco }} {{ hability?.level || 1
+                            }}</span>
+                    </div>
+                    <div class="power-badge">{{ hability?.power || ('universal' | transloco) }}</div>
+                </div>
+
+                <!-- Description -->
+                <div class="card-description">
+                    <p>{{ hability?.description || ('no-description-available' | transloco) }}</p>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-icon">⚔️</span>
+                        <div class="stat-info">
+                            <span class="stat-label">{{ 'class' | transloco }}</span>
+                            <span class="stat-value">{{ hability?.clase || ('universal' | transloco) }}</span>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-icon">🎲</span>
+                        <div class="stat-info">
+                            <span class="stat-label">{{ 'dice' | transloco }}</span>
+                            <span class="stat-value">{{ hability?.dice || '1d6' }}</span>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-icon">📈</span>
+                        <div class="stat-info">
+                            <span class="stat-label">{{ 'scales-with' | transloco }}</span>
+                            <span class="stat-value">{{ hability?.scales_with || ('level' | transloco) }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Usage Bar -->
+                <div class="usage-section">
+                    <div class="usage-header">
+                        <span class="usage-label">{{ 'available-uses' | transloco }}</span>
+                        <span class="usage-numbers">{{ hability?.current_uses || 0 }} / {{ hability?.total_uses || 0
+                            }}</span>
+                    </div>
+                    <div class="usage-bar">
+                        <div class="usage-fill" [style.width.%]="getUsagePercentage(hability)"
+                            [style.background-color]="getUsageColor(getUsagePercentage(hability))">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+        } @else {
+        <!-- Empty State -->
+        <div class="empty-state">
+            <div class="empty-icon">🎭</div>
+            <h3>{{ 'no-magical-habilities' | transloco }}</h3>
+            <p>{{ 'no-habilities-learned' | transloco }}<br>
+                {{ 'dm-can-assign' | transloco }}</p>
+        </div>
+        }
+    </div>
+
+    <!-- Footer Actions -->
+    <div class="dialog-footer">
+        <button mat-raised-button color="primary" (click)="onClose()" class="close-button">
+            <mat-icon>check</mat-icon>
+            {{ 'understood' | transloco }}
+        </button>
+    </div>
+</div>

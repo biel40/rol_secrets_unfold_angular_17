@@ -434,6 +434,9 @@
                             <button class="user-action-button primary" (click)="editUserProfile(user)">
                                 {{ 'edit-profile' | transloco }}
                             </button>
+                            <button class="user-action-button view-habilities" (click)="viewUserHabilities(user.id)">
+                                <span class="button-text">Ver Habilidades</span>
+                            </button>
                             } @else {
                             <button class="user-action-button primary" (click)="openCreateProfileModal(user)">
                                 {{ 'create-profile' | transloco }}

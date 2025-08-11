@@ -49,7 +49,7 @@ button {
 }
 
 .snack-bar-success {
-    background-color: #4CAF50;
+    background-color: #4caf50;
     color: #fff;
 }
 
@@ -62,20 +62,20 @@ button {
         height: auto !important;
         overflow: auto !important;
     }
-    
+
     .mat-mdc-dialog-surface {
         border-radius: 15px !important;
         overflow: visible !important;
         display: flex !important;
         flex-direction: column !important;
     }
-    
+
     .mdc-dialog__content {
         overflow-y: auto !important;
         padding: 0 !important;
         margin: 0 !important;
     }
-    
+
     .mat-dialog-content {
         max-height: none !important;
         overflow-y: auto !important;
@@ -90,14 +90,14 @@ button {
     min-height: 100vh !important;
     padding: 20px !important;
     box-sizing: border-box !important;
-    
+
     .mat-mdc-dialog-container {
         background: transparent !important;
         box-shadow: none !important;
         border-radius: 20px !important;
         overflow: visible !important;
         margin: auto !important;
-        
+
         .mdc-dialog__surface {
             background: transparent !important;
             border-radius: 20px !important;
@@ -105,11 +105,11 @@ button {
             margin: auto !important;
         }
     }
-    
+
     @media (max-width: 768px) {
         padding: 15px !important;
     }
-    
+
     @media (max-width: 480px) {
         padding: 10px !important;
         align-items: flex-start !important;
@@ -122,3 +122,26 @@ button {
     background: rgba(0, 0, 0, 0.8) !important;
 }
 
+// Estilos para el modal de habilidades
+.custom-backdrop {
+    background: rgba(0, 0, 0, 0.85) !important;
+    backdrop-filter: blur(4px);
+}
+
+.custom-dialog-container {
+    .mdc-dialog__surface {
+        background: transparent !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        overflow: visible !important;
+    }
+}
+
+// Mejoras de accesibilidad para modales
+.cdk-overlay-container {
+    .cdk-overlay-pane {
+        &[aria-modal="true"] {
+            outline: none;
+        }
+    }
+}
