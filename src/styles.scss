@@ -137,6 +137,24 @@ button {
     }
 }
 
+// Estilos específicos para el diálogo de enemigo
+.enemy-dialog-panel {
+    .mdc-dialog__surface {
+        background: transparent !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        overflow: visible !important;
+        padding: 0 !important;
+    }
+
+    .mat-mdc-dialog-container {
+        padding: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+    }
+}
+
 // Mejoras de accesibilidad para modales
 .cdk-overlay-container {
     .cdk-overlay-pane {

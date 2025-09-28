@@ -555,11 +555,13 @@ export class AdminComponent implements OnInit {
     public openCreateEnemyDialog(): void {
         const dialogRef = this._dialog.open(EnemyDialogComponent, {
             data: {},
-            width: '750px',
-            maxWidth: '95vw',
-            maxHeight: '90vh',
+            width: 'min(90vw, 900px)', // Responsive width
+            minWidth: '320px', // Mínimo para móviles
+            maxWidth: '900px', // Máximo para desktop  
+            maxHeight: '95vh',
             disableClose: false,
-            autoFocus: false
+            autoFocus: false,
+            panelClass: 'enemy-dialog-panel'
         });
 
         dialogRef.afterClosed().subscribe(async (result) => {
@@ -587,11 +589,13 @@ export class AdminComponent implements OnInit {
     public editEnemy(enemy: Enemy): void {
         const dialogRef = this._dialog.open(EnemyDialogComponent, {
             data: { enemy },
-            width: '750px',
-            maxWidth: '95vw',
-            maxHeight: '90vh',
+            width: 'min(90vw, 900px)', // Responsive width
+            minWidth: '320px', // Mínimo para móviles
+            maxWidth: '900px', // Máximo para desktop
+            maxHeight: '95vh',
             disableClose: false,
-            autoFocus: false
+            autoFocus: false,
+            panelClass: 'enemy-dialog-panel'
         });
 
         dialogRef.afterClosed().subscribe(async (result) => {

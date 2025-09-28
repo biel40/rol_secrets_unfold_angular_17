@@ -36,7 +36,6 @@ export class EnemyDialogComponent {
       level: [this.data?.enemy?.level || 1, [Validators.required, Validators.min(1), Validators.max(100)]],
       total_hp: [this.data?.enemy?.total_hp || 100, [Validators.required, Validators.min(1)]],
       current_hp: [this.data?.enemy?.current_hp || this.data?.enemy?.total_hp || 100, [Validators.required, Validators.min(0)]],
-      defense: [this.data?.enemy?.defense || 5, [Validators.required, Validators.min(0)]],
       is_boss: [this.data?.enemy?.is_boss || false],
       image_url: [this.data?.enemy?.image_url || '', [Validators.required]]
     });
@@ -87,19 +86,6 @@ export class EnemyDialogComponent {
     }
     
     return '';
-  }
-
-  // Predefined image URLs for enemies
-  public defaultEnemyImages = [
-    'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400',
-    'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400',
-    'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400',
-    'https://images.unsplash.com/photo-1607734834519-d8576ae60ea1?w=400',
-    'https://images.unsplash.com/photo-1605379399642-870262d3d051?w=400'
-  ];
-
-  public selectDefaultImage(imageUrl: string): void {
-    this.enemyForm.get('image_url')?.setValue(imageUrl);
   }
 
   // Handle image load error
