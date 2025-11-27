@@ -3,13 +3,11 @@ import { Profile, SupabaseService } from '../../services/supabase/supabase.servi
 import { User } from '@supabase/supabase-js';
 import { UserService } from '../../services/user/user.service';
 import { LoaderService } from '../../services/loader/loader.service';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MaterialModule } from '../../modules/material.module';
-import { ProfileInfoComponent } from '../profile-info/profile-info.component';
 import { ProfileStatsComponent } from '../profile-stats/profile-stats.component';
 import { HabilitiesComponent } from '../habilities/habilities.component';
-import { LocaleChangerComponent } from '../locale-changer/locale-changer.component';
 import { TranslocoModule } from '@jsverse/transloco';
 import { CardComponent } from '../card/card.component';
 import { ProfileInventoryComponent } from '../profile-inventory/profile-inventory.component';
@@ -21,13 +19,10 @@ import { ProfileInventoryComponent } from '../profile-inventory/profile-inventor
     standalone: true,
     imports: [
         MaterialModule,
-        ProfileInfoComponent,
         ProfileStatsComponent,
         ProfileInventoryComponent,
         HabilitiesComponent,
         TranslocoModule,
-        LocaleChangerComponent,
-        RouterLink,
         CardComponent
     ]
 })
@@ -54,7 +49,7 @@ export class ProfileComponent implements OnInit {
 
         if (this._user) {
             let profile = (await this._supabaseService.getProfileInfo(this._user.id)).data;
-            
+
             if (profile) {
                 this.profile = profile;
             } else {

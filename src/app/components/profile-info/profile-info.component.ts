@@ -4,7 +4,7 @@ import { Profile, SupabaseService } from '../../services/supabase/supabase.servi
 import { UserService } from '../../services/user/user.service';
 import { LoaderService } from '../../services/loader/loader.service';
 import { User } from '@supabase/supabase-js';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslocoModule } from '@jsverse/transloco';
 import { NgTiltModule } from '@geometricpanda/angular-tilt';
@@ -16,7 +16,6 @@ import { NgTiltModule } from '@geometricpanda/angular-tilt';
     standalone: true,
     imports: [
         MaterialModule,
-        RouterLink,
         TranslocoModule,
         NgTiltModule
     ]
