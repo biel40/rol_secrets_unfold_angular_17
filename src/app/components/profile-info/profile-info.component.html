@@ -1,21 +1,55 @@
-<div class="card-front">
-    <div class="card-front__level"><span class="text-black">{{ profile?.level }}</span></div>
-    <h2 class="card-front__title">{{ profile?.username }}</h2>
-    <div class="card-front__image">
-        <img class="image" [src]="profile?.image_url" alt="Character">
+<div class="profile-card">
+    <!-- Badge de nivel -->
+    <div class="level-badge">
+        <span class="level-number">{{ profile?.level }}</span>
+        <span class="level-label">LVL</span>
     </div>
-    <ul class="card-front__info">
-        <li>
-            <div>Poder</div>
-            <div>{{ profile?.power }} {{ elementEmoji }} </div>
-        </li>
-        <li>
-            <div>Clase</div>
-            <div>{{ profile?.clase }} {{ classEmoji }}</div>
-        </li>
-        <li>
-            <div>Arma</div>
-            <div>{{ profile?.weapon }} {{ weaponEmoji }} </div>
-        </li>
-    </ul>
+
+    <!-- Nombre del personaje -->
+    <h2 class="character-name">{{ profile?.username }}</h2>
+
+    <!-- Imagen del personaje -->
+    <div class="character-image-container">
+        <div class="image-frame">
+            <img class="character-image" [src]="profile?.image_url" alt="Character" loading="lazy">
+            <div class="image-overlay"></div>
+        </div>
+        <div class="image-glow"></div>
+    </div>
+
+    <!-- Información del personaje -->
+    <div class="character-stats">
+        <div class="stat-item">
+            <div class="stat-label">
+                <span class="stat-icon">⚡</span>
+                <span>Poder</span>
+            </div>
+            <div class="stat-value">
+                <span>{{ profile?.power }}</span>
+                <span class="stat-emoji">{{ elementEmoji }}</span>
+            </div>
+        </div>
+
+        <div class="stat-item">
+            <div class="stat-label">
+                <span class="stat-icon">🎭</span>
+                <span>Clase</span>
+            </div>
+            <div class="stat-value">
+                <span>{{ profile?.clase }}</span>
+                <span class="stat-emoji">{{ classEmoji }}</span>
+            </div>
+        </div>
+
+        <div class="stat-item">
+            <div class="stat-label">
+                <span class="stat-icon">⚔️</span>
+                <span>Arma</span>
+            </div>
+            <div class="stat-value">
+                <span>{{ profile?.weapon }}</span>
+                <span class="stat-emoji">{{ weaponEmoji }}</span>
+            </div>
+        </div>
+    </div>
 </div>

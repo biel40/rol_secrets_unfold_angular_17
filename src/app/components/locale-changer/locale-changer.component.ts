@@ -2,8 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { AvailableLangs, LangDefinition, TranslocoService } from '@jsverse/transloco';
-import { TranslocoModule } from '@ngneat/transloco';
+import { AvailableLangs, LangDefinition, TranslocoService, TranslocoModule } from '@jsverse/transloco';
 import { Subscription, take } from 'rxjs';
 import { MaterialModule } from '../../modules/material.module';
 

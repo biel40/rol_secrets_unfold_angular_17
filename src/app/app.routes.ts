@@ -8,9 +8,11 @@ import { AdminComponent } from './components/admin/admin-component/admin.compone
 
 export const routes: Routes = [
   { path: '', component: AuthComponent },
+  { path: 'sign-in', redirectTo: '', pathMatch: 'full' },
   { path: 'admin', component: AdminComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'profile-edit', component: ProfileEditComponent },
   { path: 'new-profile', component: NewProfileComponent },
-  { path: 'profile-stats-edit', component: ProfileStatsEditComponent }
+  { path: 'profile-stats-edit', component: ProfileStatsEditComponent },
+  { path: '**', redirectTo: '' }
 ];

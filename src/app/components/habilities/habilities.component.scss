@@ -58,20 +58,20 @@ li:hover {
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(255, 215, 0, 0.05);
   border: 2px solid #d4af37;
   min-width: 300px;
-  max-width: 380px;
+  max-width: 450px;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
   
   @media (max-width: $mobile-breakpoint) {
     min-width: unset;
-    max-width: 80%;
-    width: 80%;
+    max-width: 95%;
+    width: 95%;
     margin: 0 auto;
-    font-size: 0.7em;
+    font-size: 0.8em;
     border-radius: 6px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 0 5px rgba(255, 215, 0, 0.05);
-    transform: scale(0.85);
+    transform: scale(1);
     border-width: 1px;
   }
 }

@@ -1,50 +1,181 @@
+// ============================================
+// CARD COMPONENT - Elegant RPG Card Design
+// ============================================
+
+$primary-color: #1e40af;
+$primary-light: #3b82f6;
+$accent-color: #8b5cf6;
+$bg-darkest: #0f172a;
+$card-bg: rgba(30, 41, 59, 0.95);
+$glass-border: rgba(255, 255, 255, 0.06);
+
 :host {
-    height: 90%;
-    width: 95%;
-    max-width: 400px;
-    perspective: 600px;
+    display: block;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    perspective: 1000px;
 }
 
 .card-wrapper {
-    height: auto;
-    width: auto;
+    width: 100%;
+    padding: 1rem;
+    margin-top: 2rem;
 }
 
 .card {
-    margin-top: 4em;
-    height: 100%;
+    position: relative;
     width: 100%;
-    border: 2px solid #ffffff80;
-    padding: 20px 20px;
-    border-radius: 4px;
-    background: var(--black);
-    box-shadow: 0 0 10px #ffffff40;
-    transition: transform 1s ease-in-out;
-    transform-style: preserve-3d;
-    backface-visibility: hidden;
+    background: $card-bg;
+    border-radius: 24px;
+    padding: 1.5rem;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    overflow: visible;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 
+        0 4px 30px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    z-index: 1;
+    
+    // Borde animado
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        padding: 1px;
+        background: linear-gradient(
+            135deg,
+            rgba($primary-color, 0.5) 0%,
+            rgba($accent-color, 0.3) 50%,
+            rgba($primary-light, 0.5) 100%
+        );
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, 
+                      linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        opacity: 0.4;
+        transition: opacity 0.3s ease;
+    }
+    
+    &:hover {
+        transform: translateY(-8px) rotateX(2deg);
+        box-shadow: 
+            0 30px 60px -15px rgba(0, 0, 0, 0.6),
+            0 0 50px rgba($primary-color, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        
+        &::before {
+            opacity: 0.7;
+        }
+        
+        .card-glow {
+            opacity: 0.3;
+        }
+        
+        .card-shine {
+            transform: translateX(100%) skewX(-15deg);
+        }
+    }
 }
 
-.card::after {
-    content: "";
+.card-effects-container {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: -1;
+}
+
+// Efecto de brillo de fondo
+.card-glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+        from 180deg at 50% 50%,
+        transparent 0deg,
+        rgba($primary-color, 0.1) 60deg,
+        transparent 120deg,
+        rgba($accent-color, 0.1) 180deg,
+        transparent 240deg,
+        rgba($primary-light, 0.1) 300deg,
+        transparent 360deg
+    );
+    opacity: 0.15;
+    animation: rotate-glow 10s linear infinite;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+// Efecto shine al hover
+.card-shine {
     position: absolute;
     top: 0;
-    left: 0;
-    z-index: -1;
+    left: -100%;
+    width: 50%;
     height: 100%;
-    width: 100%;
-    box-shadow: 0 0 2px 8px rgb(199, 199, 199);
-    border-radius: 4px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent
+    );
+    transform: skewX(-15deg);
+    transition: transform 0.6s ease;
+    pointer-events: none;
 }
 
-.card--back {
-    transform: rotateY(360deg);
-}
-
-.card.is-flipped {
-    transform: rotateY(180deg);
+// Borde decorativo interior
+.card-border {
+    position: absolute;
+    inset: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 16px;
+    pointer-events: none;
 }
 
 .card__content {
-    height: 100%;
+    position: relative;
+    z-index: 1;
     width: 100%;
+}
+
+// Animación de rotación del glow
+@keyframes rotate-glow {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+// ============================================
+// RESPONSIVE
+// ============================================
+@media (min-width: 640px) {
+    .card-wrapper {
+        padding: 2rem;
+    }
+    
+    .card {
+        padding: 2rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .card-wrapper {
+        padding: 0.5rem;
+    }
+    
+    .card {
+        padding: 1rem;
+        border-radius: 16px;
+    }
 }

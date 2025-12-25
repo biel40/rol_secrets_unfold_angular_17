@@ -15,6 +15,10 @@ export const appConfig: ApplicationConfig = {
           // Remove this option if your application doesn't support changing language in runtime.
           reRenderOnLangChange: true,
           prodMode: !isDevMode(),
+          missingHandler: {
+            allowEmpty: true,
+            useFallbackTranslation: true
+          }
         },
         loader: TranslocoHttpLoader
       })]

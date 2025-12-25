@@ -1,32 +1,68 @@
 @if (profile) {
-<div class="flex flex-col items-center justify-start w-full h-full mt-10">
-    <mat-tab-group class="justify-start w-4/5">
-        <mat-tab label="{{ 'profile' | transloco}}">
-            <app-card></app-card>
-        </mat-tab>
-        <mat-tab class="w-full" label="{{ 'stats' | transloco}}">
-            <app-profile-stats [profile]="profile"></app-profile-stats>
-        </mat-tab>
-        <mat-tab label="{{ 'inventory' | transloco}}">
-            <app-profile-inventory [profile]="profile"></app-profile-inventory>
-        </mat-tab>
-        <mat-tab label="{{ 'habilities' | transloco}}">
-            <app-habilities [profile]="profile"></app-habilities>
-        </mat-tab>
-    </mat-tab-group>
+<div class="profile-container">
+    <!-- Header con info rápida del personaje -->
+    <div class="profile-header">
+        <div class="header-glow"></div>
+        <div class="header-content">
+            <div class="avatar-mini" [style.backgroundImage]="'url(' + profile.image_url + ')'"></div>
+            <div class="header-info">
+                <h1 class="hero-name">{{ profile.username }}</h1>
+                <span class="hero-level">Nivel {{ profile.level }}</span>
+            </div>
+        </div>
+    </div>
 
-    <div class="mt-6">
-        <button (click)="signOut()"
-            class="sign-out-btn bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-in-out border border-red-500 hover:border-red-400">
-            <span class="flex items-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
-                    </path>
-                </svg>
-                {{ 'signOut' | transloco }}
-            </span>
+    <!-- Navegación mejorada con tabs -->
+    <nav class="tab-navigation">
+        <div class="tab-container">
+            @for (tab of tabs; track tab.id) {
+                <button 
+                    class="tab-item" 
+                    [class.active]="activeTab === tab.id"
+                    (click)="setActiveTab(tab.id)">
+                    <span class="tab-icon">{{ tab.icon }}</span>
+                    <span class="tab-label">{{ tab.label | transloco }}</span>
+                    <span class="tab-indicator"></span>
+                </button>
+            }
+        </div>
+    </nav>
+
+    <!-- Contenido dinámico con animaciones -->
+    <main class="tab-content" [@tabAnimation]="activeTab">
+        @switch (activeTab) {
+            @case ('profile') {
+                <div class="content-panel fade-in">
+                    <app-card></app-card>
+                </div>
+            }
+            @case ('stats') {
+                <div class="content-panel fade-in">
+                    <app-profile-stats [profile]="profile"></app-profile-stats>
+                </div>
+            }
+            @case ('inventory') {
+                <div class="content-panel fade-in">
+                    <app-profile-inventory [profile]="profile"></app-profile-inventory>
+                </div>
+            }
+            @case ('habilities') {
+                <div class="content-panel fade-in">
+                    <app-habilities [profile]="profile"></app-habilities>
+                </div>
+            }
+        }
+    </main>
+
+    <!-- Botón de cerrar sesión flotante -->
+    <div class="floating-actions">
+        <button (click)="signOut()" class="sign-out-btn">
+            <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
+                </path>
+            </svg>
+            <span>{{ 'signOut' | transloco }}</span>
         </button>
     </div>
 </div>

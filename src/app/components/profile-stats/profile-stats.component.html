@@ -7,7 +7,6 @@
         
         <div class="character-info">
             <div class="character-avatar">
-                <!-- Character avatar or silhouette -->
                 <div class="avatar-placeholder">
                     @if (profile && profile.image_url) {
                         <img [src]="profile.image_url" alt="Character" class="character-image">
@@ -15,21 +14,27 @@
                         <div class="avatar-icon">👤</div>
                     }
                 </div>
-                <div class="character-level">Lvl {{ profile?.level || '1' }}</div>
+                <div class="character-level">LVL {{ profile?.level || '1' }}</div>
             </div>
             
             <div class="character-vitals">
                 <div class="hp-bar">
-                    <div class="stat-label">❤️ HP</div>
-                    <div class="stat-value">{{ profile?.current_hp || 0 }}/{{ profile?.total_hp || 0 }}</div>
+                    <div class="stat-label">
+                        <span>❤️</span>
+                        <span>Puntos de Vida</span>
+                    </div>
+                    <div class="stat-value">{{ profile?.current_hp || 0 }} / {{ profile?.total_hp || 0 }}</div>
                     <div class="progress-bar-container">
                         <div class="progress-bar hp" [style.width.%]="profile && profile.current_hp && profile.total_hp ? (profile.current_hp / profile.total_hp) * 100 : 0"></div>
                     </div>
                 </div>
                 
                 <div class="weapon-info">
-                    <div class="weapon-label">⚔️ Weapon</div>
-                    <div class="weapon-value">{{ profile?.weapon || 'None' }}</div>
+                    <div class="weapon-label">
+                        <span>⚔️</span>
+                        <span>Arma Equipada</span>
+                    </div>
+                    <div class="weapon-value">{{ profile?.weapon || 'Ninguna' }}</div>
                 </div>
             </div>
         </div>
@@ -47,6 +52,5 @@
                 }
             }
         </div>
-    
     </div>
 </div>

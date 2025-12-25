@@ -37,8 +37,6 @@ export class HabilitiesComponent implements OnInit {
     constructor(public dialog: MatDialog) { }
 
     async ngOnInit(): Promise<void> {
-        this._loaderService.setLoading(true);
-
         this.user = await this._userService.getUser();
 
         if (!this.user) {
@@ -53,8 +51,6 @@ export class HabilitiesComponent implements OnInit {
         } else {
             this.userHabilities = [];
         }
-
-        this._loaderService.setLoading(false);
     }
 
     public async refreshHabilities(): Promise<void> {

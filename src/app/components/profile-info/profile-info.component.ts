@@ -43,12 +43,10 @@ export class ProfileInfoComponent implements OnInit {
     }
 
     async ngOnInit(): Promise<void> {
-        this._loaderService.setLoading(true);
-        
         if (!this._user) {
             alert('Credenciales inválidas. Por favor, inicie sesión nuevamente.');
             this._router.navigate(['']);
-        } else {
+        } else if (!this.profile) {
             this.profile = (await this._supabaseService.getProfileInfo(this._user.id)).data;
 
             // Default profile image
@@ -61,9 +59,7 @@ export class ProfileInfoComponent implements OnInit {
 
     public ngOnChanges() : void {
         this.setElementEmojis();
-        this._loaderService.setLoading(false);
     }
-
 
     public setElementEmojis() : void {
         if (this.profile?.power.toUpperCase() == 'PYRO') {

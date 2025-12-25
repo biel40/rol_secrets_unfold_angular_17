@@ -43,8 +43,6 @@ export class ProfileStatsComponent implements OnInit {
     }
 
     async ngOnInit(): Promise<void> {
-        this._loaderService.setLoading(true);
-        
         if (!this._user) {
             alert('Credenciales inválidas. Por favor, inicie sesión nuevamente.');
             this._router.navigate(['']);

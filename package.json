@@ -26,7 +26,6 @@
     "@capacitor/ios": "^6.1.2",
     "@geometricpanda/angular-tilt": "^0.4.0",
     "@jsverse/transloco": "^7.3.0",
-    "@ngneat/transloco": "^6.0.4",
     "@supabase/supabase-js": "^2.39.8",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",

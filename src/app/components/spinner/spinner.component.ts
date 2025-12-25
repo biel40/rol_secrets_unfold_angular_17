@@ -1,4 +1,4 @@
-import { Component, inject, ViewEncapsulation } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { LoaderService } from '../../services/loader/loader.service';
 
 
@@ -9,12 +9,13 @@ import { LoaderService } from '../../services/loader/loader.service';
   standalone: true,
   imports : [
     
-  ],
-  encapsulation: ViewEncapsulation.ShadowDom
+  ]
 })
 export class SpinnerComponent {
 
-  public loaderService = inject(LoaderService);
+  private _loaderService = inject(LoaderService);
+  
+  public isLoading = computed(() => this._loaderService.loading());
 
   constructor() {
 

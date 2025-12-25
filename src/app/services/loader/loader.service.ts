@@ -1,19 +1,22 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoaderService {
 
-  private loading: boolean = false;
+  private _loading = signal<boolean>(false);
+  
+  // Expose as readonly signal
+  public readonly loading = this._loading.asReadonly();
 
   constructor() { }
 
   setLoading(loading: boolean) {
-    this.loading = loading;
+    this._loading.set(loading);
   }
 
   getLoading(): boolean {
-    return this.loading;
+    return this._loading();
   }
 }

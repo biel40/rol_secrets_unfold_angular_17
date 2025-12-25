@@ -130,7 +130,20 @@ export class SupabaseService {
   public _session: AuthSession | null = null;
 
   constructor() {
-    this._supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey)
+    this._supabaseClient = createClient(environment.supabaseUrl, environment.supabaseKey, {
+      auth: {
+        persistSession: true,
+        storageKey: 'rol-secrets-unfold-auth-v2',
+        storage: localStorage,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+        flowType: 'implicit',
+        debug: false
+      },
+      global: {
+        headers: { 'x-my-custom-header': 'rol-secrets-unfold' }
+      }
+    })
   }
 
   public async getSession() {
@@ -232,7 +245,7 @@ export class SupabaseService {
           const levelMatch = hability.level <= profile.level;
           const powerMatch = hability.power === profile.power;
           const classMatch = hability.clase === profile.clase || hability.clase === 'Base';
-          
+
           return levelMatch && powerMatch && classMatch;
         });
       }      // We will set the current uses of the hability on the fly from the intermediate table

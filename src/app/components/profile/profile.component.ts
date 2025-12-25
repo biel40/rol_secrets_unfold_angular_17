@@ -11,6 +11,14 @@ import { HabilitiesComponent } from '../habilities/habilities.component';
 import { TranslocoModule } from '@jsverse/transloco';
 import { CardComponent } from '../card/card.component';
 import { ProfileInventoryComponent } from '../profile-inventory/profile-inventory.component';
+import { trigger, transition, style, animate, query, group } from '@angular/animations';
+import { CommonModule } from '@angular/common';
+
+interface Tab {
+    id: string;
+    label: string;
+    icon: string;
+}
 
 @Component({
     selector: 'app-profile',
@@ -18,12 +26,21 @@ import { ProfileInventoryComponent } from '../profile-inventory/profile-inventor
     styleUrls: ['./profile.component.scss'],
     standalone: true,
     imports: [
+        CommonModule,
         MaterialModule,
         ProfileStatsComponent,
         ProfileInventoryComponent,
         HabilitiesComponent,
         TranslocoModule,
         CardComponent
+    ],
+    animations: [
+        trigger('tabAnimation', [
+            transition('* <=> *', [
+                style({ opacity: 0, transform: 'translateY(10px)' }),
+                animate('300ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+            ])
+        ])
     ]
 })
 export class ProfileComponent implements OnInit {
@@ -37,6 +54,15 @@ export class ProfileComponent implements OnInit {
     private _user: User | null = null;
 
     public errorConfirmEmail: boolean = false;
+    
+    // Sistema de tabs personalizado
+    public activeTab: string = 'profile';
+    public tabs: Tab[] = [
+        { id: 'profile', label: 'profile', icon: '👤' },
+        { id: 'stats', label: 'stats', icon: '📊' },
+        { id: 'inventory', label: 'inventory', icon: '🎒' },
+        { id: 'habilities', label: 'habilities', icon: '✨' }
+    ];
 
     constructor(
         private _snackBar: MatSnackBar
@@ -44,29 +70,39 @@ export class ProfileComponent implements OnInit {
         this._user = this._userService.getUser();
     }
 
+    public setActiveTab(tabId: string): void {
+        this.activeTab = tabId;
+    }
+
     async ngOnInit(): Promise<void> {
         this._loaderService.setLoading(true);
 
-        if (this._user) {
-            let profile = (await this._supabaseService.getProfileInfo(this._user.id)).data;
+        try {
+            if (this._user) {
+                let profile = (await this._supabaseService.getProfileInfo(this._user.id)).data;
 
-            if (profile) {
-                this.profile = profile;
+                if (profile) {
+                    this.profile = profile;
+                } else {
+                    this._displaySnackbar('No se ha podido cargar el perfil. Por favor, vuelve a iniciar sesión.');
+                    this._router.navigate(['']);
+                }
+
+                if (this._user.email && !this._user.email_confirmed_at) {
+                    this.errorConfirmEmail = true;
+                    this._displaySnackbar('Por favor, confirma tu correo electrónico para poder acceder a todas las funcionalidades de la aplicación.');
+                }
             } else {
                 this._displaySnackbar('No se ha podido cargar el perfil. Por favor, vuelve a iniciar sesión.');
                 this._router.navigate(['']);
             }
-
-            if (this._user.email && !this._user.email_confirmed_at) {
-                this.errorConfirmEmail = true;
-                this._displaySnackbar('Por favor, confirma tu correo electrónico para poder acceder a todas las funcionalidades de la aplicación.');
-            }
-        } else {
-            this._displaySnackbar('No se ha podido cargar el perfil. Por favor, vuelve a iniciar sesión.');
+        } catch (error) {
+            console.error('Error loading profile:', error);
+            this._displaySnackbar('Error al cargar el perfil. Por favor, vuelve a iniciar sesión.');
             this._router.navigate(['']);
+        } finally {
+            this._loaderService.setLoading(false);
         }
-
-        this._loaderService.setLoading(false);
     }
 
 

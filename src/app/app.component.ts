@@ -44,9 +44,13 @@ export class AppComponent implements OnInit {
   }
 
   public async ngOnInit() {
-    await this._supabaseService.getSession().then((session) => {
+    try {
+      const session = await this._supabaseService.getSession();
       this.session = session;
-    });
+    } catch (error) {
+      console.error('Error getting session:', error);
+      this.session = null;
+    }
     
     this._supabaseService.authChanges((_, session) => (this.session = session));
     this._loadData();
