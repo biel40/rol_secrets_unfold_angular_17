@@ -34,6 +34,7 @@ export interface ProfileSummary {
   username?: string
   clase: string
   level: number
+  image_url?: string
 }
 
 export interface Hability {
@@ -579,7 +580,7 @@ export class SupabaseService {
   public async getAllProfiles(): Promise<{ data: ProfileSummary[] | null, error: any }> {
     return await this._supabaseClient
       .from('profiles')
-      .select('id, username, clase, level')
+      .select('id, username, clase, level, image_url')
       .order('username', { ascending: true });
   }
 

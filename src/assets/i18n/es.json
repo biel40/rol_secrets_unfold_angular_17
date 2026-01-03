@@ -201,6 +201,7 @@
     "speed-min": "La velocidad debe ser mayor a 0",
     "save-changes": "Guardar Cambios",
     "loading-users": "Cargando usuarios...",
+    "loading-habilities": "Invocando habilidades...",
     "habilities-management": "Gestión de habilidades",
     "hability-library": "Biblioteca de habilidades",
     "search-habilities": "Buscar habilidades...",
@@ -249,5 +250,12 @@
     "no-magical-habilities": "Sin habilidades mágicas",
     "no-habilities-learned": "Este aventurero aún no ha aprendido ninguna habilidad.",
     "dm-can-assign": "¡El DM puede asignar nuevas habilidades desde el panel de administración!",
-    "understood": "Entendido"
+    "understood": "Entendido",
+    "search-profiles": "Buscar perfiles...",
+    "select-all": "Seleccionar todos",
+    "deselect-all": "Deseleccionar todos",
+    "profiles-selected": "perfiles seleccionados",
+    "unsaved-changes": "Cambios sin guardar",
+    "no-profiles-found": "No se encontraron perfiles",
+    "saving": "Guardando..."
 }

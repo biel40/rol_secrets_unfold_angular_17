@@ -198,6 +198,7 @@
     "speed-min": "Speed must be greater than 0",
     "save-changes": "Save Changes",
     "loading-users": "Loading users...",
+    "loading-habilities": "Summoning habilities...",
     "habilities-management": "Habilities Management",
     "hability-library": "Hability Library",
     "search-habilities": "Search habilities...",
@@ -246,5 +247,12 @@
     "no-magical-habilities": "No magical abilities",
     "no-habilities-learned": "This adventurer hasn't learned any abilities yet.",
     "dm-can-assign": "The DM can assign new abilities from the administration panel!",
-    "understood": "Understood"
+    "understood": "Understood",
+    "search-profiles": "Search profiles...",
+    "select-all": "Select all",
+    "deselect-all": "Deselect all",
+    "profiles-selected": "profiles selected",
+    "unsaved-changes": "Unsaved changes",
+    "no-profiles-found": "No profiles found",
+    "saving": "Saving..."
 }

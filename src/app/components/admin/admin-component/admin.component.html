@@ -8,8 +8,6 @@
         <div class="dm-tabs">
             <button class="dm-tab" [class.active]="currentTab === 'enemies'" (click)="switchTab('enemies')">{{ 'enemies'
                 | transloco }}</button>
-            <button class="dm-tab" [class.active]="currentTab === 'quests'" (click)="switchTab('quests')">{{ 'quests' |
-                transloco }}</button>
             <button class="dm-tab" [class.active]="currentTab === 'users'" (click)="switchTab('users')">{{ 'users' |
                 transloco }}</button>
             <button class="dm-tab" [class.active]="currentTab === 'habilities'" (click)="switchTab('habilities')">{{
@@ -19,7 +17,6 @@
     </div>
 
     <div class="dm-content">
-        <!-- Enemies Section - only visible when enemies tab is active -->
         <ng-container *ngIf="currentTab === 'enemies'">
             <div class="battle-panel">
                 <div class="battle-header">
@@ -533,34 +530,39 @@
             <div class="habilities-management">
                 <div class="habilities-header">
                     <h2 class="habilities-title">{{ 'hability-library' | transloco }}</h2>
-                    <div class="habilities-actions">
-                        <button class="library-button" (click)="openCreateHabilityDialog()">
-                            <span class="add-icon">+</span>
-                            {{ 'create-hability' | transloco }}
-                        </button>
+                    <button class="library-button" (click)="openCreateHabilityDialog()">
+                        <span class="add-icon">+</span>
+                        {{ 'create-hability' | transloco }}
+                    </button>
+                </div>
 
-                        <div class="filter-container">
-                            <select class="power-filter" [(ngModel)]="selectedPowerFilter">
-                                <option value="">{{ 'all-power-types' | transloco }}</option>
-                                <option *ngFor="let powerType of availablePowerTypes" [value]="powerType">
+                <div class="habilities-toolbar">
+                    <mat-form-field appearance="outline" class="search-field dense-form-field">
+                        <mat-label>{{ 'search-habilities' | transloco }}</mat-label>
+                        <input matInput type="text" [(ngModel)]="searchTermHabilities">
+                        <mat-icon matSuffix>search</mat-icon>
+                    </mat-form-field>
+
+                    <div class="filters-group">
+                        <mat-form-field appearance="outline" class="filter-field dense-form-field">
+                            <mat-label>{{ 'power-type' | transloco }}</mat-label>
+                            <mat-select [(ngModel)]="selectedPowerFilter">
+                                <mat-option value="">{{ 'all-power-types' | transloco }}</mat-option>
+                                <mat-option *ngFor="let powerType of availablePowerTypes" [value]="powerType">
                                     {{ powerType }}
-                                </option>
-                            </select>
-                        </div>
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
 
-                        <div class="filter-container">
-                            <select class="profile-filter" [(ngModel)]="selectedProfileFilter">
-                                <option value="">{{ 'all-profiles' | transloco }}</option>
-                                <option *ngFor="let profile of profilesList" [value]="profile.id">
+                        <mat-form-field appearance="outline" class="filter-field dense-form-field">
+                            <mat-label>{{ 'profile' | transloco }}</mat-label>
+                            <mat-select [(ngModel)]="selectedProfileFilter">
+                                <mat-option value="">{{ 'all-profiles' | transloco }}</mat-option>
+                                <mat-option *ngFor="let profile of profilesList" [value]="profile.id">
                                     {{ profile.username }}
-                                </option>
-                            </select>
-                        </div>
-
-                        <div class="search-container">
-                            <input type="text" class="search-input" placeholder="{{ 'search-habilities' | transloco }}"
-                                [(ngModel)]="searchTermHabilities">
-                        </div>
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
 
                         <button class="clear-filters-button" (click)="clearHabilityFilters()"
                             [disabled]="!searchTermHabilities && !selectedPowerFilter && !selectedProfileFilter">
@@ -585,8 +587,10 @@
                     @if (isLoadingHabilities) {
                     <div class="habilities-loading-overlay">
                         <div class="loading-content">
-                            <div class="loading-spinner"></div>
-                            <p class="loading-text">{{ 'loading' | transloco }}...</p>
+                            <div class="loading-spinner">
+                                <div class="center-glow"></div>
+                            </div>
+                            <p class="loading-text">{{ 'loading-habilities' | transloco }}</p>
                         </div>
                     </div>
                     } @else if (habilitiesList && habilitiesList.length > 0) {
@@ -668,51 +672,6 @@
                         </button>
                     </div>
                     }
-                </div>
-
-                <!-- Hability Association Modal -->
-                <div class="hability-form-overlay" *ngIf="showHabilityAssociationModal"
-                    (click)="closeHabilityAssociationModal()">
-                    <div class="association-modal" (click)="$event.stopPropagation()">
-                        <div class="association-modal-header">
-                            <h3>{{ 'associate-hability-to-profiles' | transloco }}</h3>
-                            <button class="close-button" (click)="closeHabilityAssociationModal()">×</button>
-                        </div>
-
-                        <div class="association-modal-content">
-                            @if (selectedHabilityForAssociation) {
-                            <div class="hability-info">
-                                <h4>{{ selectedHabilityForAssociation.name }}</h4>
-                                <p>{{ selectedHabilityForAssociation.description }}</p>
-                            </div>
-                            }
-
-                            <div class="profiles-selector">
-                                <label>{{ 'select-profiles' | transloco }}</label>
-                                <div class="profiles-checkboxes">
-                                    @for (profile of profilesList; track profile.id) {
-                                    <div class="profile-checkbox">
-                                        <input type="checkbox" [id]="'profile-' + profile.id" [value]="profile.id!"
-                                            [checked]="selectedProfilesForAssociation.includes(profile.id!)"
-                                            (change)="toggleProfileSelection(profile.id!, $event)">
-                                        <label [for]="'profile-' + profile.id">{{ profile.username }}</label>
-                                    </div>
-                                    }
-                                </div>
-                            </div>
-
-                            <div class="association-actions">
-                                <button type="button" class="form-button secondary"
-                                    (click)="closeHabilityAssociationModal()">
-                                    {{ 'cancel' | transloco }}
-                                </button>
-                                <button type="button" class="form-button primary"
-                                    (click)="associateHabilityToProfiles()">
-                                    {{ 'associate-hability' | transloco }}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </ng-container>

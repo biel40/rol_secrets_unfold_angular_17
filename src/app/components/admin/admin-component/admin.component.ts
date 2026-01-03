@@ -16,6 +16,7 @@ import { ProfileEditDialogComponent } from '../../dialogs/profile-edit-dialog/pr
 import { ViewHabilitiesDialogComponent } from '../../dialogs/view-habilities-dialog/view-habilities-dialog.component';
 import { HabilityDialogComponent } from '../../dialogs/hability-dialog/hability-dialog.component';
 import { EnemyDialogComponent } from '../../dialogs/enemy-dialog/enemy-dialog.component';
+import { HabilityAssociationDialogComponent, HabilityAssociationDialogResult } from '../../dialogs/hability-association-dialog/hability-association-dialog.component';
 
 @Component({
     selector: 'app-admin',
@@ -78,10 +79,7 @@ export class AdminComponent implements OnInit {
     public selectedProfileFilter: string = '';
     public isLoadingHabilities: boolean = false;
 
-    // Hability association properties
-    public showHabilityAssociationModal: boolean = false;
-    public selectedHabilityForAssociation: Hability | null = null;
-    public selectedProfilesForAssociation: string[] = [];
+    // Hability association - now handled via dialog
     public habilityProfileAssociations: Map<string, string[]> = new Map(); // habilityId -> profileIds[]
 
     // Enemy filters
@@ -926,70 +924,52 @@ export class AdminComponent implements OnInit {
 
     // Hability association methods
     public openAssociateHabilityModal(hability: Hability): void {
-        this.selectedHabilityForAssociation = hability;
-        this.selectedProfilesForAssociation = [];
-        this.showHabilityAssociationModal = true;
+        // Load current associations before opening dialog
+        const loadAssociations = hability.id 
+            ? this._supabaseService.getAssociatedProfiles(hability.id)
+            : Promise.resolve([]);
 
-        // Load currently associated profiles
-        if (hability.id) {
-            this._supabaseService.getAssociatedProfiles(hability.id).then(profileIds => {
-                this.selectedProfilesForAssociation = profileIds;
+        loadAssociations.then(currentAssociations => {
+            const dialogRef = this._dialog.open(HabilityAssociationDialogComponent, {
+                data: {
+                    hability: hability,
+                    profiles: this.profilesList,
+                    currentAssociations: currentAssociations
+                },
+                width: '600px',
+                maxWidth: '95vw',
+                maxHeight: '90vh',
+                panelClass: 'hability-association-dialog-panel',
+                disableClose: false,
+                autoFocus: false
             });
-        }
+
+            dialogRef.afterClosed().subscribe((result: HabilityAssociationDialogResult | undefined) => {
+                if (result) {
+                    // Update local associations map
+                    this.habilityProfileAssociations.set(result.habilityId, result.selectedProfiles);
+
+                    const habilityName = hability.name || 'la habilidad';
+                    if (result.selectedProfiles.length > 0) {
+                        this._displaySnackbar(`${habilityName} asociada correctamente con ${result.selectedProfiles.length} perfil(es).`);
+                    } else {
+                        this._displaySnackbar(`Se eliminaron todas las asociaciones de ${habilityName}.`);
+                    }
+                }
+            });
+        });
     }
 
     public closeHabilityAssociationModal(): void {
-        this.showHabilityAssociationModal = false;
-        this.selectedHabilityForAssociation = null;
-        this.selectedProfilesForAssociation = [];
+        // No longer needed - handled by dialog
     }
 
     public toggleProfileSelection(profileId: string, event: any): void {
-        if (event.target.checked) {
-            if (!this.selectedProfilesForAssociation.includes(profileId)) {
-                this.selectedProfilesForAssociation.push(profileId);
-            }
-        } else {
-            this.selectedProfilesForAssociation = this.selectedProfilesForAssociation.filter(id => id !== profileId);
-        }
+        // No longer needed - handled by dialog
     }
 
     public async associateHabilityToProfiles(): Promise<void> {
-        if (!this.selectedHabilityForAssociation || !this.selectedHabilityForAssociation.id) {
-            this._displaySnackbar('Error: No se pudo identificar la habilidad.');
-            return;
-        }
-
-        try {
-            const result = await this._supabaseService.associateHabilityWithProfiles(
-                this.selectedHabilityForAssociation.id,
-                this.selectedProfilesForAssociation
-            );
-
-            if (result.error) {
-                console.error('Error associating hability:', result.error);
-                this._displaySnackbar('Error al asociar la habilidad con los perfiles.');
-                return;
-            }
-
-            // Update local associations map
-            this.habilityProfileAssociations.set(
-                this.selectedHabilityForAssociation.id,
-                [...this.selectedProfilesForAssociation]
-            );
-
-            const habilityName = this.selectedHabilityForAssociation.name || 'la habilidad';
-            if (this.selectedProfilesForAssociation.length > 0) {
-                this._displaySnackbar(`${habilityName} asociada correctamente con ${this.selectedProfilesForAssociation.length} perfil(es).`);
-            } else {
-                this._displaySnackbar(`Se eliminaron todas las asociaciones de ${habilityName}.`);
-            }
-
-            this.closeHabilityAssociationModal();
-        } catch (error) {
-            console.error('Error associating hability:', error);
-            this._displaySnackbar('Error al asociar la habilidad. Inténtalo de nuevo.');
-        }
+        // No longer needed - handled by dialog
     }
 
     public async checkIfHabilityAssociatedWithProfile(habilityId: string, profileId: string): Promise<boolean> {

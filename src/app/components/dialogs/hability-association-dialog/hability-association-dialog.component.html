@@ -1,0 +1,128 @@
+<div class="association-dialog">
+    <!-- Header con información de la habilidad -->
+    <div class="dialog-header" [style.background]="powerTheme.gradient">
+        <div class="header-content">
+            <div class="hability-badge">
+                <span class="power-icon">{{ powerTheme.icon }}</span>
+            </div>
+            <div class="hability-info">
+                <h2 class="hability-name">{{ hability.name }}</h2>
+                <div class="hability-meta">
+                    <span class="meta-item">
+                        <mat-icon>auto_awesome</mat-icon>
+                        {{ hability.power }}
+                    </span>
+                    <span class="meta-item">
+                        <mat-icon>trending_up</mat-icon>
+                        {{ 'level' | transloco }} {{ hability.level }}
+                    </span>
+                    <span class="meta-item">
+                        <mat-icon>category</mat-icon>
+                        {{ hability.clase }}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <button mat-icon-button class="close-btn" (click)="onCancel()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+    <!-- Descripción de la habilidad -->
+    <div class="hability-description">
+        <p>{{ hability.description }}</p>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="dialog-content">
+        <!-- Barra de herramientas -->
+        <div class="toolbar">
+            <div class="search-box">
+                <mat-icon class="search-icon">search</mat-icon>
+                <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()"
+                    [placeholder]="'search-profiles' | transloco" class="search-input">
+                @if (searchTerm) {
+                <button mat-icon-button class="clear-search" (click)="clearSearch()">
+                    <mat-icon>close</mat-icon>
+                </button>
+                }
+            </div>
+
+            <div class="bulk-actions">
+                <button mat-stroked-button class="action-btn" (click)="selectAll()">
+                    <mat-icon>select_all</mat-icon>
+                    {{ 'select-all' | transloco }}
+                </button>
+                <button mat-stroked-button class="action-btn" (click)="deselectAll()">
+                    <mat-icon>deselect</mat-icon>
+                    {{ 'deselect-all' | transloco }}
+                </button>
+            </div>
+        </div>
+
+        <!-- Contador de selección -->
+        <div class="selection-counter">
+            <mat-icon [class.has-selection]="selectedCount > 0">group</mat-icon>
+            <span>
+                <strong>{{ selectedCount }}</strong> {{ 'profiles-selected' | transloco }}
+            </span>
+            @if (hasChanges) {
+            <span class="changes-indicator">
+                <mat-icon>edit</mat-icon>
+                {{ 'unsaved-changes' | transloco }}
+            </span>
+            }
+        </div>
+
+        <!-- Lista de perfiles -->
+        <div class="profiles-list">
+            @if (visibleProfiles.length === 0) {
+            <div class="empty-state">
+                <mat-icon>search_off</mat-icon>
+                <p>{{ 'no-profiles-found' | transloco }}</p>
+            </div>
+            } @else {
+            @for (profile of visibleProfiles; track profile.id) {
+            <div class="profile-item" [class.selected]="profile.selected" (click)="toggleProfile(profile)">
+                <div class="profile-avatar" 
+                    [style.background]="profile.image_url ? 'url(' + profile.image_url + ') center/cover no-repeat' : (profile.selected ? powerTheme.gradient : '')">
+                    @if (!profile.image_url) {
+                        <span class="avatar-initials">{{ getProfileInitials(profile.username) }}</span>
+                    }
+                </div>
+                <div class="profile-details">
+                    <span class="profile-name">{{ profile.username }}</span>
+                    @if (profile.clase) {
+                    <span class="profile-meta">
+                        <span>{{ profile.clase }}</span>
+                        <span class="level-tag">Lvl {{ profile.level }}</span>
+                    </span>
+                    }
+                </div>
+                <div class="checkbox-container">
+                    <mat-checkbox [checked]="profile.selected" (change)="toggleProfile(profile)"
+                        (click)="$event.stopPropagation()"></mat-checkbox>
+                </div>
+            </div>
+            }
+            }
+        </div>
+    </div>
+
+    <div class="dialog-footer">
+        <button mat-stroked-button class="cancel-btn" (click)="onCancel()">
+            {{ 'cancel' | transloco }}
+        </button>
+        <button mat-flat-button class="save-btn" [disabled]="isSaving" [style.background]="powerTheme.gradient"
+            (click)="onSave()">
+            @if (isSaving) {
+            <mat-spinner diameter="18"></mat-spinner>
+            <span>{{ 'saving' | transloco }}</span>
+            } @else {
+                <ng-container>
+                    <span>{{ 'associate-hability' | transloco }}</span>
+                </ng-container>
+            }
+        </button>
+    </div>
+</div>

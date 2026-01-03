@@ -1,12 +1,12 @@
 <div class="profile-card">
-    <!-- Badge de nivel -->
-    <div class="level-badge">
-        <span class="level-number">{{ profile?.level }}</span>
-        <span class="level-label">LVL</span>
+    <!-- Header con badge y nombre -->
+    <div class="card-header">
+        <div class="level-badge">
+            <span class="level-number">{{ profile?.level }}</span>
+            <span class="level-label">LVL</span>
+        </div>
+        <h2 class="character-name">{{ profile?.username }}</h2>
     </div>
-
-    <!-- Nombre del personaje -->
-    <h2 class="character-name">{{ profile?.username }}</h2>
 
     <!-- Imagen del personaje -->
     <div class="character-image-container">

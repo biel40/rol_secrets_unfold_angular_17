@@ -1,0 +1,568 @@
+// ============================================
+// HABILITY ASSOCIATION DIALOG - Modern UI
+// ============================================
+
+$primary-gold: #d4af37;
+$gold-light: #ffeba7;
+$bg-dark: #1a2530;
+$bg-darker: #0f1922;
+$bg-card: #2c3e50;
+$text-primary: #e0e0e0;
+$text-secondary: rgba(224, 224, 224, 0.7);
+$border-subtle: rgba(212, 175, 55, 0.2);
+$border-active: rgba(212, 175, 55, 0.5);
+
+.association-dialog {
+    display: flex;
+    flex-direction: column;
+    max-height: 85vh;
+    background: $bg-dark;
+    border-radius: 16px;
+    overflow: hidden;
+    min-width: 480px;
+    max-width: 600px;
+}
+
+// ============================================
+// HEADER
+// ============================================
+.dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 24px;
+    position: relative;
+    
+    .header-content {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+    }
+    
+    .hability-badge {
+        width: 56px;
+        height: 56px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(10px);
+        
+        .power-icon {
+            font-size: 28px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+    }
+    
+    .hability-info {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .hability-name {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: white;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    
+    .hability-meta {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.15);
+            padding: 4px 10px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+            
+            mat-icon {
+                font-size: 16px;
+                width: 16px;
+                height: 16px;
+            }
+        }
+    }
+    
+    .close-btn {
+        color: white;
+        background: rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+        
+        &:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+    }
+}
+
+// ============================================
+// DESCRIPCIÓN
+// ============================================
+.hability-description {
+    padding: 24px 24px 16px;
+    border-bottom: 1px solid $border-subtle;
+    
+    p {
+        margin: 0;
+        color: $text-secondary;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        font-style: italic;
+    }
+}
+
+// ============================================
+// CONTENIDO
+// ============================================
+.dialog-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 24px;
+    overflow: hidden;
+}
+
+// ============================================
+// TOOLBAR
+// ============================================
+.toolbar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.search-box {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    align-items: center;
+    background: $bg-darker;
+    border: 1px solid $border-subtle;
+    border-radius: 12px;
+    padding: 0 12px;
+    transition: all 0.3s ease;
+    
+    &:focus-within {
+        border-color: $primary-gold;
+        box-shadow: 0 0 0 3px rgba($primary-gold, 0.1);
+    }
+    
+    .search-icon {
+        color: $text-secondary;
+        margin-right: 8px;
+    }
+    
+    .search-input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        outline: none;
+        color: $text-primary;
+        font-size: 0.95rem;
+        padding: 12px 0;
+        
+        &::placeholder {
+            color: $text-secondary;
+        }
+    }
+    
+    .clear-search {
+        color: $text-secondary;
+        
+        &:hover {
+            color: $text-primary;
+        }
+    }
+}
+
+.bulk-actions {
+    display: flex;
+    gap: 8px;
+    
+    .action-btn {
+        color: $text-secondary;
+        border-color: $border-subtle;
+        font-size: 0.8rem;
+        
+        mat-icon {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+            margin-right: 4px;
+        }
+        
+        &:hover {
+            border-color: $primary-gold;
+            color: $primary-gold;
+            background: rgba($primary-gold, 0.1);
+        }
+    }
+}
+
+// ============================================
+// CONTADOR DE SELECCIÓN
+// ============================================
+.selection-counter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: rgba($primary-gold, 0.1);
+    border: 1px solid $border-subtle;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+    color: $text-secondary;
+    
+    mat-icon {
+        color: $text-secondary;
+        transition: color 0.3s ease;
+        
+        &.has-selection {
+            color: $primary-gold;
+        }
+    }
+    
+    strong {
+        color: $gold-light;
+        font-weight: 700;
+    }
+    
+    .changes-indicator {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        color: #f39c12;
+        font-size: 0.8rem;
+        
+        mat-icon {
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+            color: inherit;
+        }
+    }
+}
+
+// ============================================
+// LISTA DE PERFILES
+// ============================================
+.profiles-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-right: 4px;
+    
+    // Custom scrollbar
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    &::-webkit-scrollbar-track {
+        background: rgba($primary-gold, 0.05);
+        border-radius: 3px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        background: rgba($primary-gold, 0.3);
+        border-radius: 3px;
+        
+        &:hover {
+            background: rgba($primary-gold, 0.5);
+        }
+    }
+}
+
+.profile-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    background: $bg-darker;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    
+    &:hover {
+        background: lighten($bg-darker, 3%);
+        border-color: $border-subtle;
+        transform: translateX(4px);
+    }
+    
+    &.selected {
+        background: rgba($primary-gold, 0.1);
+        border-color: $border-active;
+        
+        .profile-avatar {
+            box-shadow: 0 0 0 2px $primary-gold;
+        }
+        
+        .profile-name {
+            color: $gold-light;
+        }
+    }
+}
+
+.profile-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, $bg-card, darken($bg-card, 5%));
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+    
+    .avatar-initials {
+        font-size: 1rem;
+        font-weight: 700;
+        color: $text-primary;
+        text-transform: uppercase;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+}
+
+.profile-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.profile-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: $text-primary;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.3s ease;
+}
+
+.profile-meta {
+    display: flex;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: $text-secondary;
+    
+    .power-tag,
+    .level-tag {
+        background: rgba($primary-gold, 0.15);
+        color: $primary-gold;
+        padding: 2px 8px;
+        border-radius: 10px;
+    }
+}
+
+.checkbox-container {
+    flex-shrink: 0;
+    
+    ::ng-deep .mat-mdc-checkbox {
+        --mdc-checkbox-selected-checkmark-color: #{$bg-dark};
+        --mdc-checkbox-selected-focus-icon-color: #{$primary-gold};
+        --mdc-checkbox-selected-hover-icon-color: #{$gold-light};
+        --mdc-checkbox-selected-icon-color: #{$primary-gold};
+        --mdc-checkbox-selected-pressed-icon-color: #{$primary-gold};
+        --mdc-checkbox-unselected-focus-icon-color: #{$text-secondary};
+        --mdc-checkbox-unselected-hover-icon-color: #{$primary-gold};
+        --mdc-checkbox-unselected-icon-color: #{$text-secondary};
+    }
+}
+
+// ============================================
+// EMPTY STATE
+// ============================================
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+    color: $text-secondary;
+    
+    mat-icon {
+        font-size: 48px;
+        width: 48px;
+        height: 48px;
+        margin-bottom: 16px;
+        opacity: 0.5;
+    }
+    
+    p {
+        margin: 0;
+        font-size: 0.95rem;
+    }
+}
+
+// ============================================
+// FOOTER
+// ============================================
+.dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 20px 24px;
+    border-top: 1px solid $border-subtle;
+    background: $bg-darker;
+}
+
+.cancel-btn {
+    color: $text-secondary;
+    border-color: $border-subtle;
+    padding: 0 24px;
+    height: 44px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    transition: all 0.3s ease;
+    
+    &:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: $primary-gold;
+        color: $primary-gold;
+    }
+    
+    &:active {
+        background: rgba(255, 255, 255, 0.12);
+    }
+}
+
+.save-btn {
+    color: white !important;
+    padding: 0 24px !important;
+    font-weight: 700;
+    font-size: 0.9rem;
+    height: 44px;
+    min-width: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    letter-spacing: 0.5px;
+    border-radius: 4px;
+    
+    &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        filter: brightness(1.15);
+    }
+    
+    &:active:not(:disabled) {
+        transform: translateY(0);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    }
+    
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+    
+    mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin: 0; // Ensure no default margins
+    }
+    
+    span {
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+        text-transform: uppercase;
+        line-height: 1;
+        margin-top: 1px; // Optical alignment
+    }
+    
+    mat-spinner {
+        flex-shrink: 0;
+        
+        ::ng-deep circle {
+            stroke: white !important;
+        }
+    }
+}
+
+// ============================================
+// RESPONSIVE
+// ============================================
+@media (max-width: 600px) {
+    .association-dialog {
+        min-width: unset;
+        width: 100%;
+        max-height: 100vh;
+        border-radius: 0;
+    }
+    
+    .dialog-header {
+        padding: 16px;
+        
+        .hability-badge {
+            width: 48px;
+            height: 48px;
+            
+            .power-icon {
+                font-size: 24px;
+            }
+        }
+        
+        .hability-name {
+            font-size: 1.25rem;
+        }
+        
+        .hability-meta {
+            gap: 8px;
+            
+            .meta-item {
+                font-size: 0.75rem;
+                padding: 3px 8px;
+            }
+        }
+    }
+    
+    .toolbar {
+        flex-direction: column;
+    }
+    
+    .bulk-actions {
+        justify-content: space-between;
+        
+        .action-btn {
+            flex: 1;
+        }
+    }
+    
+    .dialog-footer {
+        flex-direction: column-reverse;
+        
+        button {
+            width: 100%;
+        }
+    }
+}
