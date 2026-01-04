@@ -170,7 +170,7 @@ export class SupabaseService {
         .from('profiles')
         .select(`id, username, clase, power, level, weapon, current_hp, total_hp, attack, defense, special_attack, special_defense, speed, current_experience, image_url`)
         .eq('id', userId)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
       return { data, error: null };
@@ -187,7 +187,7 @@ export class SupabaseService {
         .from('profiles')
         .select('*')
         .eq('id', userId)  // Changed from 'user_id' to 'id'
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
       return { data, error: null };
@@ -753,5 +753,55 @@ export class SupabaseService {
       console.error('Error getting habilities by profile:', error);
       return [];
     }
+  }
+
+  /**
+   * Obtiene todas las asociaciones de habilidades con perfiles en una sola consulta.
+   * Optimizado para evitar múltiples llamadas a la BD.
+   * @returns Map con habilityId como clave y array de profileIds como valor
+   */
+  public async getAllHabilityAssociations(): Promise<Map<string, string[]>> {
+    const associationsMap = new Map<string, string[]>();
+
+    try {
+      const { data, error } = await this._supabaseClient
+        .from('profile_habilities')
+        .select('hability_id, profile_id');
+
+      if (error) throw error;
+
+      if (data) {
+        for (const item of data) {
+          const existing = associationsMap.get(item.hability_id) || [];
+          existing.push(item.profile_id);
+          associationsMap.set(item.hability_id, existing);
+        }
+      }
+
+      return associationsMap;
+    } catch (error) {
+      console.error('Error getting all hability associations:', error);
+      return associationsMap;
+    }
+  }
+
+  /**
+   * Obtiene todas las habilidades con sus asociaciones en una sola operación.
+   * Combina getAllHabilities y getAllHabilityAssociations para máxima eficiencia.
+   */
+  public async getAllHabilitiesWithAssociations(): Promise<{
+    habilities: Hability[];
+    associations: Map<string, string[]>;
+  }> {
+    // Ejecutar ambas consultas en paralelo
+    const [habilities, associations] = await Promise.all([
+      this.getAllHabilities(),
+      this.getAllHabilityAssociations()
+    ]);
+
+    return {
+      habilities: habilities || [],
+      associations
+    };
   }
 }

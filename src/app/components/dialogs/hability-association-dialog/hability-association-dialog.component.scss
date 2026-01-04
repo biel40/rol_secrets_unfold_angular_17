@@ -1,3 +1,5 @@
+@use "sass:color";
+
 // ============================================
 // HABILITY ASSOCIATION DIALOG - Modern UI
 // ============================================
@@ -299,7 +301,7 @@ $border-active: rgba(212, 175, 55, 0.5);
     transition: all 0.25s ease;
     
     &:hover {
-        background: lighten($bg-darker, 3%);
+        background: color.adjust($bg-darker, $lightness: 3%);
         border-color: $border-subtle;
         transform: translateX(4px);
     }
@@ -322,7 +324,7 @@ $border-active: rgba(212, 175, 55, 0.5);
     width: 44px;
     height: 44px;
     border-radius: 12px;
-    background: linear-gradient(135deg, $bg-card, darken($bg-card, 5%));
+    background: linear-gradient(135deg, $bg-card, color.adjust($bg-card, $lightness: -5%));
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

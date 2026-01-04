@@ -224,6 +224,7 @@
     "error-updating-hability": "Error al actualizar la habilidad",
     "error-deleting-hability": "Error al eliminar la habilidad",
     "all-power-types": "Todos los tipos de poder",
+    "power-type": "Tipo de poder",
     "all-profiles": "Todos los perfiles",
     "clear-filters": "Limpiar filtros",
     "showing-filtered-results": "Mostrando",

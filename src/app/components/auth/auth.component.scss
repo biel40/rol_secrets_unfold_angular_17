@@ -1,31 +1,41 @@
-// Variables con paleta de colores coherente con la App (estilo RPG/Fantasy)
-$primary-color: #2c3e50;
-$secondary-color: #1a2530;
-$accent-color: #d4af37;
-$accent-hover: #ffcb05;
-$text-color: rgba(255, 255, 255, 0.87);
-$background-dark: #242424;
-$background-card: rgba(44, 62, 80, 0.95);
-$error-color: #ef4444;
-$action-blue: #1e40af;
-$action-blue-hover: #2563eb;
-$card-shadow:
-    0 12px 24px rgba(0, 0, 0, 0.3),
-    inset 0 0 20px rgba(212, 175, 55, 0.05);
-$border-radius: 16px;
+@use "sass:color";
+
+// ============================================
+// VARIABLES - Nueva paleta moderna RPG/Fantasy
+// ============================================
+$primary-color: #1a1f35;
+$secondary-color: #252b48;
+$tertiary-color: #2d3561;
+$accent-color: #f0a500;
+$accent-hover: #ffc107;
+$accent-soft: rgba(240, 165, 0, 0.15);
+$text-color: #f5f5f7;
+$text-muted: rgba(245, 245, 247, 0.65);
+$background-dark: #0d1117;
+$error-color: #ff6b6b;
+$success-color: #4ade80;
+$action-primary: #6366f1;
+$action-primary-hover: #818cf8;
+$card-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(240, 165, 0, 0.08);
+$border-radius: 20px;
+$border-radius-sm: 12px;
 $transition-speed: 0.3s;
 
+// ============================================
+// CONTENEDOR PRINCIPAL
+// ============================================
 .auth-container {
     min-height: 100vh;
-    background: linear-gradient(
-        135deg,
-        $background-dark 0%,
-        rgba($secondary-color, 0.95) 40%,
-        rgba($primary-color, 0.9) 70%,
-        $background-dark 100%
-    );
+    min-height: 100dvh; // Dynamic viewport height para móviles
+    width: 100%;
+    padding: 1rem;
+    box-sizing: border-box;
+    background: radial-gradient(ellipse at top, $secondary-color 0%, $background-dark 60%),
+        radial-gradient(ellipse at bottom right, rgba($tertiary-color, 0.4) 0%, transparent 50%);
     position: relative;
+    overflow-x: hidden;
 
+    // Patrón decorativo sutil
     &::before {
         content: "";
         position: absolute;
@@ -33,118 +43,207 @@ $transition-speed: 0.3s;
         left: 0;
         right: 0;
         bottom: 0;
-        background: url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%23d4af37" fill-opacity="0.03"><polygon points="36 34 6 34 6 4 36 4"/></g></g></svg>');
-        opacity: 0.4;
+        background-image: radial-gradient(rgba($accent-color, 0.03) 1px, transparent 1px);
+        background-size: 40px 40px;
         pointer-events: none;
     }
-}
 
-.auth-header {
-    margin-bottom: 2rem;
-    position: relative;
-
-    .auth-title {
-        color: #ffffff;
-        font-weight: 300;
-        letter-spacing: 2px;
-        margin-bottom: 2.5rem !important;
-        position: relative;
-        display: inline-block;
-        text-align: center;
-        font-size: 2.4rem;
-
-        .title-accent {
-            color: $accent-color;
-            font-weight: 600;
-            letter-spacing: 1px;
-
-            // Línea decorativa minimalista
-            &::after {
-                content: "";
-                position: absolute;
-                bottom: -12px;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 60px;
-                height: 2px;
-                background: $accent-color;
-                border-radius: 2px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            font-size: 2rem !important;
-            margin-bottom: 2rem !important;
-            letter-spacing: 1.5px;
-        }
-
-        @media (max-width: 480px) {
-            font-size: 1.6rem !important;
-            margin-bottom: 1.5rem !important;
-            letter-spacing: 1px;
-        }
-    }
-}
-
-.auth-form {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    width: 100%;
-    max-width: 450px;
-    margin: 0 auto;
-    text-align: center;
-    min-height: 50vh;
-    align-items: center;
-    justify-content: space-between;
-    padding: 40px 30px;
-    background: linear-gradient(to bottom, $primary-color, $secondary-color);
-    border-radius: $border-radius;
-    border: 2px solid $accent-color;
-    box-shadow: $card-shadow;
-    backdrop-filter: blur(10px);
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-
-    // Línea decorativa superior dorada (estilo RPG)
-    &::before {
+    // Gradiente superior decorativo
+    &::after {
         content: "";
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
-        height: 3px;
-        background: linear-gradient(90deg, transparent, $accent-color, transparent);
-        border-radius: inherit;
+        height: 200px;
+        background: linear-gradient(to bottom, rgba($accent-color, 0.05), transparent);
         pointer-events: none;
     }
 
-    animation: float 6s ease-in-out infinite;
-
-    @media (max-width: 768px) {
-        max-width: 90%;
-        padding: 30px 20px;
-        min-height: 45vh;
+    @media (max-width: 480px) {
+        padding: 0.75rem;
     }
 }
 
-.form-field-container {
+// ============================================
+// HEADER
+// ============================================
+.auth-header {
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 1;
     width: 100%;
-    margin: 8px 0;
+    text-align: center;
+
+    .title-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.375rem;
+    }
+
+    .auth-title {
+        color: $text-color;
+        font-weight: 300;
+        letter-spacing: 2px;
+        margin-bottom: 0 !important;
+        margin-top: 0 !important;
+        position: relative;
+        display: inline-block;
+        text-align: center;
+        font-size: clamp(1.25rem, 5vw, 2rem);
+        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+
+        .title-accent {
+            color: $accent-color;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-shadow: 0 0 30px rgba($accent-color, 0.4);
+        }
+
+        @media (max-width: 480px) {
+            font-size: 1.35rem;
+            letter-spacing: 1px;
+
+            .title-accent {
+                letter-spacing: 0.5px;
+            }
+        }
+    }
+
+    .auth-subtitle {
+        color: $text-muted;
+        font-size: clamp(0.75rem, 2.5vw, 0.875rem);
+        font-weight: 400;
+        letter-spacing: 1px;
+        margin: 0;
+        position: relative;
+        padding-bottom: 0.5rem;
+
+        &::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, $accent-color, transparent);
+            border-radius: 2px;
+        }
+
+        @media (max-width: 480px) {
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            padding-bottom: 0.375rem;
+
+            &::after {
+                width: 35px;
+                height: 1.5px;
+            }
+        }
+    }
+
+    @media (max-width: 480px) {
+        margin-bottom: 0.75rem;
+    }
 }
 
+// ============================================
+// FORMULARIO PRINCIPAL
+// ============================================
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto;
+    text-align: center;
+    min-height: auto;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1.5rem 1.25rem;
+    background: linear-gradient(165deg, rgba($secondary-color, 0.95) 0%, rgba($primary-color, 0.98) 100%);
+    border-radius: $border-radius;
+    border: 1px solid rgba($accent-color, 0.25);
+    box-shadow: $card-shadow;
+    backdrop-filter: blur(20px);
+    position: relative;
+    z-index: 1;
+
+    // Línea decorativa superior
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 25%;
+        right: 25%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, $accent-color, transparent);
+        border-radius: 0 0 4px 4px;
+    }
+
+    // Efecto glow sutil
+    &::after {
+        content: "";
+        position: absolute;
+        inset: -1px;
+        border-radius: $border-radius;
+        background: linear-gradient(135deg, rgba($accent-color, 0.1), transparent, rgba($action-primary, 0.05));
+        z-index: -1;
+        opacity: 0;
+        transition: opacity $transition-speed ease;
+    }
+
+    &:hover::after {
+        opacity: 1;
+    }
+
+    // Responsive
+    @media (max-width: 768px) {
+        max-width: 340px;
+        padding: 1.25rem 1rem;
+        border-radius: 16px;
+    }
+
+    @media (max-width: 480px) {
+        max-width: calc(100% - 1rem);
+        padding: 1rem 0.75rem;
+        gap: 0.375rem;
+        border-radius: 12px;
+    }
+}
+
+// ============================================
+// CONTENEDOR DE CAMPOS
+// ============================================
+.form-field-container {
+    width: 100%;
+    margin: 0.1875rem 0;
+    padding: 0;
+    box-sizing: border-box;
+
+    @media (max-width: 480px) {
+        margin: 0.125rem 0;
+    }
+}
+
+// ============================================
+// BOTONES
+// ============================================
 .primary-button,
 .secondary-button {
     border-radius: 8px;
-    height: 48px;
-    font-size: 14px;
+    height: 42px;
+    font-size: 0.8rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1px;
-    padding: 0 35px;
-    margin: 8px 0;
-    min-width: 200px;
+    padding: 0 1.5rem;
+    margin: 0.25rem 0;
+    width: 100%;
+    max-width: 100%;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -153,26 +252,30 @@ $transition-speed: 0.3s;
     cursor: pointer;
     position: relative;
     overflow: hidden;
-    transition: all $transition-speed ease;
+    transition: all $transition-speed cubic-bezier(0.4, 0, 0.2, 1);
     font-family: inherit;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 
     @media (max-width: 768px) {
-        min-width: 180px;
-        height: 44px;
-        font-size: 13px;
+        height: 40px;
+        font-size: 0.75rem;
+        letter-spacing: 0.75px;
     }
 
     @media (max-width: 480px) {
-        min-width: 160px;
-        height: 42px;
-        margin: 6px 0;
+        height: 38px;
+        font-size: 0.7rem;
+        padding: 0 1rem;
+        margin: 0.1875rem 0;
+        border-radius: 6px;
     }
 }
 
 .primary-button {
-    background: linear-gradient(135deg, $action-blue 0%, darken($action-blue, 10%) 100%);
+    background: linear-gradient(135deg, $action-primary 0%, color.adjust($action-primary, $lightness: -8%) 100%);
     color: white;
-    box-shadow: 0 8px 24px rgba($action-blue, 0.4);
+    box-shadow: 0 8px 30px rgba($action-primary, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 
     &::before {
         content: "";
@@ -181,31 +284,33 @@ $transition-speed: 0.3s;
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        transition: left 0.5s;
-    }
-
-    &:hover::before {
-        left: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+        transition: left 0.6s ease;
     }
 
     &:hover {
-        background: linear-gradient(135deg, $action-blue-hover 0%, $action-blue 100%);
-        box-shadow: 0 12px 32px rgba($action-blue, 0.5);
+        background: linear-gradient(135deg, $action-primary-hover 0%, $action-primary 100%);
+        box-shadow: 0 12px 40px rgba($action-primary, 0.45);
         transform: translateY(-2px);
+
+        &::before {
+            left: 100%;
+        }
     }
 
-    &:active,
-    &:focus {
-        background: linear-gradient(135deg, darken($action-blue, 5%) 0%, darken($action-blue, 15%) 100%);
-        box-shadow: 0 6px 16px rgba($action-blue, 0.6);
+    &:active {
         transform: translateY(0);
-        outline: none;
+        box-shadow: 0 4px 20px rgba($action-primary, 0.5);
+    }
+
+    &:focus-visible {
+        outline: 2px solid $action-primary-hover;
+        outline-offset: 2px;
     }
 
     &:disabled {
-        background: rgba(108, 117, 125, 0.3) !important;
-        color: rgba($text-color, 0.5) !important;
+        background: rgba(100, 100, 120, 0.3) !important;
+        color: rgba($text-color, 0.4) !important;
         cursor: not-allowed;
         transform: none !important;
         box-shadow: none !important;
@@ -215,71 +320,91 @@ $transition-speed: 0.3s;
 .secondary-button {
     background: transparent;
     color: $accent-color;
-    border: 2px solid $accent-color;
-    box-shadow: 0 4px 16px rgba($accent-color, 0.2);
+    border: 2px solid rgba($accent-color, 0.6);
+    box-shadow: 0 4px 20px rgba($accent-color, 0.15);
 
     &:hover {
-        background: rgba($accent-color, 0.1);
+        background: $accent-soft;
         color: $accent-hover;
-        box-shadow:
-            0 8px 24px rgba($accent-color, 0.3),
-            0 0 15px rgba($accent-color, 0.2);
-        transform: translateY(-2px);
         border-color: $accent-hover;
+        box-shadow: 0 8px 30px rgba($accent-color, 0.25), 0 0 20px rgba($accent-color, 0.1);
+        transform: translateY(-2px);
     }
 
-    &:active,
-    &:focus {
-        background: rgba($accent-color, 0.2);
-        color: $accent-color;
-        box-shadow: 0 4px 12px rgba($accent-color, 0.4);
+    &:active {
         transform: translateY(0);
-        outline: none;
+        background: rgba($accent-color, 0.2);
     }
 
-    // Estados disabled
+    &:focus-visible {
+        outline: 2px solid $accent-color;
+        outline-offset: 2px;
+    }
+
     &:disabled {
         background: transparent !important;
-        color: rgba($text-color, 0.5) !important;
+        color: rgba($text-color, 0.4) !important;
         cursor: not-allowed;
         transform: none !important;
         box-shadow: none !important;
-        border-color: rgba(108, 117, 125, 0.3) !important;
+        border-color: rgba(100, 100, 120, 0.3) !important;
     }
 }
 
-// Contenedor de acciones del formulario
+// ============================================
+// ACCIONES DEL FORMULARIO
+// ============================================
 .form-actions {
     width: 100%;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 8px;
-    margin-top: 20px;
+    gap: 0;
+    margin-top: 0.5rem;
+    padding: 0;
+
+    @media (max-width: 480px) {
+        margin-top: 0.375rem;
+    }
 }
 
-// Mensaje de error con paleta coherente
+// ============================================
+// MENSAJE DE ERROR
+// ============================================
 .error-message {
-    background: linear-gradient(135deg, rgba($error-color, 0.1) 0%, rgba($error-color, 0.05) 100%);
-    border: 1px solid rgba($error-color, 0.4);
+    background: linear-gradient(135deg, rgba($error-color, 0.12) 0%, rgba($error-color, 0.06) 100%);
+    border: 1px solid rgba($error-color, 0.35);
     border-left: 4px solid $error-color;
-    color: lighten($error-color, 15%);
-    padding: 16px 20px;
-    margin: 20px 0;
-    border-radius: 12px;
-    font-size: 14px;
+    color: color.adjust($error-color, $lightness: 10%);
+    padding: 1rem 1.25rem;
+    margin: 1.25rem 1rem;
+    border-radius: $border-radius-sm;
+    font-size: 0.875rem;
     font-weight: 500;
+    line-height: 1.5;
     animation: fade-in-up 0.4s ease forwards;
     opacity: 0;
     backdrop-filter: blur(10px);
-    box-shadow: 0 4px 16px rgba($error-color, 0.2);
+    box-shadow: 0 4px 20px rgba($error-color, 0.15);
+    max-width: 420px;
+    width: calc(100% - 2rem);
 
     &::before {
         content: "⚠️";
-        margin-right: 8px;
-        font-size: 16px;
+        margin-right: 0.5rem;
+        font-size: 1rem;
+    }
+
+    @media (max-width: 480px) {
+        padding: 0.875rem 1rem;
+        margin: 1rem 0.5rem;
+        font-size: 0.8125rem;
     }
 }
 
-// Estilos para los campos de input (compatibilidad con Angular Material)
+// ============================================
+// CAMPOS DE INPUT NATIVOS
+// ============================================
 .input-field {
     font: inherit;
     background: transparent;
@@ -292,125 +417,235 @@ $transition-speed: 0.3s;
     max-width: 100%;
     vertical-align: bottom;
     text-align: inherit;
-    box-sizing: content-box;
+    box-sizing: border-box;
+    font-size: 1rem; // Previene zoom en iOS
+
+    @media (max-width: 480px) {
+        font-size: 16px; // Mínimo para evitar zoom en iOS
+    }
 }
 
-// Mejorar los campos de formulario de Angular Material con paleta RPG
+// ============================================
+// ANGULAR MATERIAL FORM FIELDS - RESPONSIVE
+// ============================================
 ::ng-deep {
     .mat-mdc-form-field {
         width: 100%;
-        margin: 12px 0;
+        margin: 0.125rem 0;
 
         .mat-mdc-text-field-wrapper {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
             transition: all $transition-speed ease;
-            border: 1px solid rgba($accent-color, 0.3);
+            border: 1px solid rgba($accent-color, 0.2);
+            padding: 0 0.75rem;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
 
             &:hover {
-                background: rgba(0, 0, 0, 0.3);
-                border-color: rgba($accent-color, 0.5);
+                background: rgba(0, 0, 0, 0.4);
+                border-color: rgba($accent-color, 0.4);
+            }
+
+            @media (max-width: 480px) {
+                padding: 0 0.5rem;
+                border-radius: 6px;
+                min-height: 42px;
             }
         }
 
+        // Estado focus
         &.mat-focused {
             .mat-mdc-text-field-wrapper {
                 border-color: $accent-color;
-                box-shadow:
-                    0 0 0 2px rgba($accent-color, 0.2),
-                    0 0 15px rgba($accent-color, 0.15);
-                background: rgba(0, 0, 0, 0.35);
+                box-shadow: 0 0 0 2px rgba($accent-color, 0.1), 0 0 10px rgba($accent-color, 0.06);
+                background: rgba(0, 0, 0, 0.45);
             }
 
             .mat-mdc-floating-label {
                 color: $accent-color !important;
+                opacity: 1 !important;
             }
         }
 
+        // Labels - siempre visible arriba
         .mat-mdc-floating-label {
-            color: rgba($text-color, 0.7) !important;
+            color: $text-muted !important;
             font-weight: 500;
-
+            font-size: 0.8rem;
+            
+            // Forzar que siempre esté arriba
             &.mdc-floating-label--float-above {
                 color: $accent-color !important;
                 font-weight: 600;
             }
-        }
 
-        .mat-mdc-input-element {
-            color: $text-color !important;
-            font-weight: 500;
-
-            &::placeholder {
-                color: rgba($text-color, 0.5) !important;
+            @media (max-width: 480px) {
+                font-size: 0.75rem;
             }
         }
 
-        .mat-mdc-form-field-error {
-            color: lighten($error-color, 20%) !important;
+        // Input element - centrado vertical
+        .mat-mdc-input-element {
+            color: $text-color !important;
             font-weight: 500;
-            margin-top: 4px;
+            font-size: 0.9rem;
+            caret-color: $accent-color;
+            padding: 0 !important;
+            margin: 0 !important;
+            display: flex;
+            align-items: center;
+
+            &::placeholder {
+                color: rgba($text-color, 0.4) !important;
+                font-weight: 400;
+            }
+
+            @media (max-width: 480px) {
+                font-size: 16px; // Mínimo para evitar zoom en iOS
+            }
         }
 
+        // Errores
+        .mat-mdc-form-field-error {
+            color: color.adjust($error-color, $lightness: 15%) !important;
+            font-weight: 500;
+            font-size: 0.65rem;
+            margin-top: 2px;
+            line-height: 1.2;
+
+            @media (max-width: 480px) {
+                font-size: 0.6rem;
+            }
+        }
+
+        // Iconos - perfectamente centrados
         .mat-mdc-form-field-icon-prefix,
         .mat-mdc-form-field-icon-suffix {
             color: $accent-color;
+            opacity: 0.7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            margin-right: 0.5rem;
+            height: auto;
+            
+            .mat-icon {
+                font-size: 20px;
+                width: 20px;
+                height: 20px;
+                line-height: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                @media (max-width: 480px) {
+                    font-size: 18px;
+                    width: 18px;
+                    height: 18px;
+                }
+            }
+        }
+
+        // Subscript wrapper (errores y hints)
+        .mat-mdc-form-field-subscript-wrapper {
+            padding: 0 0.25rem;
+        }
+
+        // Infix container - centrado perfecto sin padding extra
+        .mat-mdc-form-field-infix {
+            padding: 0.5rem 0;
+            min-height: unset;
+            border: none;
+            display: flex;
+            align-items: center;
+            width: 100%;
+
+            @media (max-width: 480px) {
+                padding: 0.375rem 0;
+            }
+        }
+
+        // Flex container interno - centrado
+        .mat-mdc-form-field-flex {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    // Mejoras para mat-form-field custom-field - Sin label flotante
+    .custom-field {
+        margin: 0 !important;
+
+        .mdc-notched-outline {
+            display: none;
+        }
+
+        .mdc-line-ripple {
+            display: none;
+        }
+
+        // Ocultar el label completamente ya que usamos placeholder
+        .mat-mdc-floating-label {
+            display: none !important;
+        }
+
+        // Sin padding extra del label
+        .mat-mdc-form-field-infix {
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
         }
     }
 }
 
+// ============================================
+// TEXTO SEPARADOR
+// ============================================
 .separator-text {
-    color: rgba($text-color, 0.8);
+    color: $text-muted;
     font-weight: 500;
-    font-size: 16px;
-    margin: 16px 0 !important;
+    font-size: 0.7rem;
+    margin: 0.375rem 0 !important;
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 150px;
 
     &::before,
     &::after {
         content: "";
-        position: absolute;
-        top: 50%;
-        width: 40px;
+        flex: 1;
         height: 1px;
-        background: linear-gradient(90deg, transparent, rgba($accent-color, 0.5), transparent);
-    }
-
-    &::before {
-        left: -50px;
-    }
-
-    &::after {
-        right: -50px;
-    }
-
-    @media (max-width: 768px) {
-        &::before,
-        &::after {
-            width: 30px;
-        }
-
-        &::before {
-            left: -35px;
-        }
-
-        &::after {
-            right: -35px;
-        }
+        background: linear-gradient(90deg, transparent, rgba($accent-color, 0.25), transparent);
+        max-width: 40px;
     }
 
     @media (max-width: 480px) {
+        font-size: 0.65rem;
+        margin: 0.25rem 0 !important;
+        gap: 0.375rem;
+
         &::before,
         &::after {
-            display: none;
+            max-width: 30px;
         }
     }
 }
 
+// ============================================
+// ANIMACIONES
+// ============================================
 @keyframes fade-in-up {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(15px);
     }
     to {
         opacity: 1;
@@ -418,41 +653,63 @@ $transition-speed: 0.3s;
     }
 }
 
-@keyframes float {
-    0%,
-    100% {
-        transform: translateY(0px);
-    }
-    50% {
-        transform: translateY(-8px);
-    }
-}
-
-@keyframes subtle-pulse {
-    0%,
-    100% {
-        box-shadow:
-            0 12px 24px rgba(0, 0, 0, 0.3),
-            inset 0 0 20px rgba(212, 175, 55, 0.05);
-    }
-    50% {
-        box-shadow:
-            0 15px 30px rgba(0, 0, 0, 0.4),
-            0 0 15px rgba(212, 175, 55, 0.15);
+// ============================================
+// UTILIDADES RESPONSIVE ADICIONALES
+// ============================================
+// Safe area para dispositivos con notch
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+    .auth-container {
+        padding-bottom: calc(1rem + env(safe-area-inset-bottom));
     }
 }
 
-// Responsive design
-@media (max-width: 768px) {
+// Mejora de accesibilidad - reducir movimiento
+@media (prefers-reduced-motion: reduce) {
+    .auth-form,
+    .primary-button,
+    .secondary-button {
+        transition: none;
+    }
+
+    .error-message {
+        animation: none;
+        opacity: 1;
+    }
+}
+
+// Landscape mode en móviles
+@media (max-height: 500px) and (orientation: landscape) {
+    .auth-container {
+        min-height: auto;
+        padding: 1rem;
+    }
+
+    .auth-header {
+        margin-bottom: 0.75rem;
+
+        .auth-title {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem !important;
+        }
+    }
+
     .auth-form {
-        padding: 25px 20px;
-        margin: 10px;
+        padding: 1rem;
+        min-height: auto;
+        gap: 0.25rem;
     }
-}
 
-@media (max-width: 480px) {
-    .auth-form {
-        padding: 20px 15px;
-        min-height: 40vh;
+    .form-field-container {
+        margin: 0.25rem 0;
+    }
+
+    ::ng-deep .mat-mdc-form-field {
+        margin: 0.25rem 0;
+
+        .mat-mdc-form-field-infix {
+            min-height: 44px;
+            padding-top: 0.75rem;
+            padding-bottom: 0.25rem;
+        }
     }
 }

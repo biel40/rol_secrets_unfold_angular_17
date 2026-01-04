@@ -79,6 +79,20 @@ export class AdminComponent implements OnInit {
     public selectedProfileFilter: string = '';
     public isLoadingHabilities: boolean = false;
 
+    // Static filter options (avoid creating new arrays in getters)
+    public availablePowerTypes: string[] = [];
+    public readonly availableLevelRanges: { value: string, label: string }[] = [
+        { value: '1-5', label: 'Nivel 1-5' },
+        { value: '6-10', label: 'Nivel 6-10' },
+        { value: '11-20', label: 'Nivel 11-20' },
+        { value: '21-50', label: 'Nivel 21-50' },
+        { value: '51', label: 'Nivel 51+' }
+    ];
+    public readonly bossFilterOptions: { value: string, label: string }[] = [
+        { value: 'boss', label: 'Solo Jefes' },
+        { value: 'normal', label: 'Solo Normales' }
+    ];
+
     // Hability association - now handled via dialog
     public habilityProfileAssociations: Map<string, string[]> = new Map(); // habilityId -> profileIds[]
 
@@ -197,29 +211,10 @@ export class AdminComponent implements OnInit {
         return filteredList;
     }
 
-    // Get unique power types from habilities
-    public get availablePowerTypes(): string[] {
+    // Method to update available power types from habilities list
+    private _updateAvailablePowerTypes(): void {
         const powerTypes = this.habilitiesList.map(hability => hability.power);
-        return [...new Set(powerTypes)].sort();
-    }
-
-    // Get available level ranges for enemies
-    public get availableLevelRanges(): { value: string, label: string }[] {
-        return [
-            { value: '1-5', label: 'Nivel 1-5' },
-            { value: '6-10', label: 'Nivel 6-10' },
-            { value: '11-20', label: 'Nivel 11-20' },
-            { value: '21-50', label: 'Nivel 21-50' },
-            { value: '51', label: 'Nivel 51+' }
-        ];
-    }
-
-    // Get boss filter options
-    public get bossFilterOptions(): { value: string, label: string }[] {
-        return [
-            { value: 'boss', label: 'Solo Jefes' },
-            { value: 'normal', label: 'Solo Normales' }
-        ];
+        this.availablePowerTypes = [...new Set(powerTypes)].sort();
     }
 
     // Get count of active enemy filters
@@ -286,17 +281,11 @@ export class AdminComponent implements OnInit {
     private async loadHabilities(): Promise<void> {
         this.isLoadingHabilities = true;
         try {
-            const habilities = await this._supabaseService.getAllHabilities();
-            this.habilitiesList = habilities || [];
-
-            // Load associations for each hability
-            this.habilityProfileAssociations.clear();
-            for (const hability of this.habilitiesList) {
-                if (hability.id) {
-                    const associatedProfiles = await this._supabaseService.getAssociatedProfiles(hability.id);
-                    this.habilityProfileAssociations.set(hability.id, associatedProfiles);
-                }
-            }
+            // Optimizado: cargar habilidades y asociaciones en una sola operación
+            const { habilities, associations } = await this._supabaseService.getAllHabilitiesWithAssociations();
+            this.habilitiesList = habilities;
+            this.habilityProfileAssociations = associations;
+            this._updateAvailablePowerTypes();
         } catch (error) {
             console.error('Error loading habilities:', error);
             this._displaySnackbar('Error al cargar las habilidades.');
@@ -416,6 +405,7 @@ export class AdminComponent implements OnInit {
                 }
 
                 this.habilitiesList = this.habilitiesList.filter(h => h.id !== hability.id);
+                this._updateAvailablePowerTypes();
                 this._displaySnackbar('Habilidad eliminada correctamente.');
             } catch (error) {
                 console.error('Error deleting hability:', error);
@@ -809,7 +799,7 @@ export class AdminComponent implements OnInit {
 
     public getAssociatedProfileNames(habilityId: string | undefined): string[] {
         if (!habilityId) return [];
-        
+
         const associatedProfileIds = this.habilityProfileAssociations.get(habilityId) || [];
         return associatedProfileIds.map(profileId => {
             const profile = this.profilesList.find(p => p.id === profileId);
@@ -925,7 +915,7 @@ export class AdminComponent implements OnInit {
     // Hability association methods
     public openAssociateHabilityModal(hability: Hability): void {
         // Load current associations before opening dialog
-        const loadAssociations = hability.id 
+        const loadAssociations = hability.id
             ? this._supabaseService.getAssociatedProfiles(hability.id)
             : Promise.resolve([]);
 

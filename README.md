@@ -1,6 +1,6 @@
-# Rol Secrets Unfold - Angular 17
+# Rol Secrets Unfold - Angular 21
 
-🎮 **Aplicación de gestión de perfiles de rol y aventuras** desarrollada con Angular 17 y tecnologías modernas.
+🎮 **Aplicación de gestión de perfiles de rol y aventuras** desarrollada con Angular 21 y tecnologías modernas.
 
 ## 📋 Descripción del Proyecto
 
@@ -9,11 +9,11 @@ Esta aplicación permite a los usuarios crear y gestionar perfiles de personajes
 ## 🛠️ Stack Tecnológico
 
 ### Frontend
-- **Angular 17.3.0** - Framework principal
-- **Angular Material 17.3.1** - Componentes UI
+- **Angular 21.0.6** - Framework principal
+- **Angular Material 21.0.5** - Componentes UI
 - **TailwindCSS 3.4.1** - Framework de estilos
 - **SCSS** - Preprocesador CSS
-- **TypeScript 5.4.2** - Lenguaje de programación
+- **TypeScript 5.9.3** - Lenguaje de programación
 
 ### Backend y Base de Datos
 - **Supabase** - Backend as a Service (BaaS)
@@ -70,7 +70,7 @@ src/
 ### Prerrequisitos
 - Node.js (versión LTS recomendada)
 - npm o yarn
-- Angular CLI 17.x
+- Angular CLI 21.x
 
 ### Instalación
 ```bash
@@ -180,4 +180,4 @@ Este proyecto está licenciado bajo la Licencia MIT - ver el archivo LICENSE par
 
 ---
 
-**Desarrollado con ❤️ usando Angular 17 y las mejores prácticas de desarrollo moderno.**
+**Desarrollado con ❤️ usando Angular 21 y las mejores prácticas de desarrollo moderno.**

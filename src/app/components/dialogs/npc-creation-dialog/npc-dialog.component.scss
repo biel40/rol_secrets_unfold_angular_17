@@ -1,3 +1,5 @@
+@use "sass:color";
+
 // Variables (siguiendo el patrón de la aplicación)
 $primary-color: #2c3e50;
 $secondary-color: #d4af37;
@@ -625,7 +627,7 @@ mat-dialog-actions {
   
   .save-button {
     min-width: 140px;
-    background: linear-gradient(to right, $secondary-color, darken($secondary-color, 10%));
+    background: linear-gradient(to right, $secondary-color, color.adjust($secondary-color, $lightness: -10%));
     color: $primary-color;
     display: flex;
     align-items: center;

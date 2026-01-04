@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { LoaderService } from '../../services/loader/loader.service';
 
 
@@ -7,17 +7,11 @@ import { LoaderService } from '../../services/loader/loader.service';
   templateUrl: './spinner.component.html',
   styleUrls: ['./spinner.component.scss'],
   standalone: true,
-  imports : [
-    
-  ]
+  imports: [],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SpinnerComponent {
 
-  private _loaderService = inject(LoaderService);
-  
-  public isLoading = computed(() => this._loaderService.loading());
+  protected loaderService = inject(LoaderService);
 
-  constructor() {
-
-  }
 }

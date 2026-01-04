@@ -1,3 +1,5 @@
+@use "sass:color";
+
 .hability-dialog {
   background: linear-gradient(135deg, #2c3e50, #1a2530);
   border: 1px solid rgba(212, 175, 55, 0.3);
@@ -145,7 +147,7 @@
     min-width: 120px;
 
     &:hover:not(:disabled) {
-      background: linear-gradient(135deg, lighten(#d4af37, 10%), lighten(#ffeba7, 10%));
+      background: linear-gradient(135deg, color.adjust(#d4af37, $lightness: 10%), color.adjust(#ffeba7, $lightness: 10%));
     }
 
     &:disabled {
