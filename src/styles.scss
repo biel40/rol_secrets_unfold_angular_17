@@ -212,3 +212,75 @@ button {
         }
     }
 }
+
+// ============================================
+// CUSTOM SNACKBAR STYLES
+// ============================================
+.custom-snackbar {
+    // Usamos un fondo ligeramente más claro que el fondo de la app para que destaque (Elevation pattern)
+    --mdc-snackbar-container-color: #1e293b; 
+    --mdc-snackbar-supporting-text-color: #ffffff;
+    --mat-snack-bar-button-color: var(--gold-color);
+    
+    .mdc-snackbar__surface {
+        background-color: #1e293b !important; // Color sólido para evitar transparencias que afecten legibilidad
+        border: 1px solid rgba(255, 255, 255, 0.15); // Borde más definido
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-radius: 12px !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7) !important; // Sombra más fuerte
+        padding: 8px 12px !important;
+    }
+
+    .mdc-snackbar__label {
+        color: #ffffff !important; // Forzar blanco puro
+        font-weight: 500;
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+    
+    // Asegurar compatibilidad con estructura interna de Angular Material
+    .mat-mdc-snack-bar-label {
+        color: #ffffff !important;
+    }
+
+    .mat-mdc-snack-bar-actions {
+        .mat-mdc-snack-bar-action {
+            color: var(--gold-color) !important;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+    }
+}
+
+.error-snackbar {
+    .mdc-snackbar__surface {
+        background-color: #2f1515 !important; // Fondo rojizo oscuro
+        border: 1px solid rgba(239, 68, 68, 0.4) !important; // Borde rojo
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(220, 38, 38, 0.1) !important;
+    }
+
+    .mat-mdc-snack-bar-actions {
+        .mat-mdc-snack-bar-action {
+            color: #fca5a5 !important; // Botón rojo claro
+        }
+    }
+}
+
+// Mobile adjustments for Snackbar
+@media (max-width: 600px) {
+    .cdk-global-overlay-wrapper {
+        justify-content: center !important;
+    }
+    
+    .custom-snackbar {
+        margin-bottom: 32px !important;
+        max-width: 92vw !important;
+        width: 92vw !important;
+        
+        .mdc-snackbar__surface {
+            width: 100% !important;
+            min-width: 100% !important; 
+        }
+    }
+}

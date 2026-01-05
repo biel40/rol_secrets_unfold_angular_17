@@ -198,6 +198,7 @@
     "speed-min": "Speed must be greater than 0",
     "save-changes": "Save Changes",
     "loading-users": "Loading users...",
+    "loading-enemies": "Loading enemies...",
     "loading-habilities": "Summoning habilities...",
     "habilities-management": "Habilities Management",
     "hability-library": "Hability Library",

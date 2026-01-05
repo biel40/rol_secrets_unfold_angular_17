@@ -1,0 +1,168 @@
+<div class="habilities-management">
+    <div class="habilities-header">
+        <h2 class="habilities-title">{{ 'hability-library' | transloco }}</h2>
+        <button class="library-button" (click)="openCreateHabilityDialog()">
+            <span class="add-icon">+</span>
+            {{ 'create-hability' | transloco }}
+        </button>
+    </div>
+
+    <!-- Toolbar with filters -->
+    <div class="habilities-toolbar">
+        <mat-form-field appearance="outline" class="search-field dense-form-field">
+            <mat-label>{{ 'search-habilities' | transloco }}</mat-label>
+            <input matInput 
+                   type="text" 
+                   [ngModel]="state.habilitySearchTerm()"
+                   (ngModelChange)="state.habilitySearchTerm.set($event)">
+            <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <div class="filters-group">
+            <!-- Power Type Filter -->
+            <mat-form-field appearance="outline" class="filter-field dense-form-field">
+                <mat-label>{{ 'power-type' | transloco }}</mat-label>
+                <mat-select [ngModel]="state.habilityPowerFilter()"
+                            (ngModelChange)="state.habilityPowerFilter.set($event)">
+                    <mat-option value="">{{ 'all-power-types' | transloco }}</mat-option>
+                    @for (powerType of state.availablePowerTypes(); track powerType) {
+                        <mat-option [value]="powerType">{{ powerType }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+
+            <!-- Profile Filter -->
+            <mat-form-field appearance="outline" class="filter-field dense-form-field">
+                <mat-label>{{ 'profile' | transloco }}</mat-label>
+                <mat-select [ngModel]="state.habilityProfileFilter()"
+                            (ngModelChange)="state.habilityProfileFilter.set($event)">
+                    <mat-option value="">{{ 'all-profiles' | transloco }}</mat-option>
+                    @for (profile of state.profiles(); track profile.id) {
+                        <mat-option [value]="profile.id">{{ profile.username }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+
+            <!-- Clear Filters -->
+            <button class="clear-filters-button" 
+                    (click)="clearFilters()"
+                    [disabled]="state.activeHabilityFiltersCount() === 0">
+                🗑️ {{ 'clear-filters' | transloco }}
+                @if (state.activeHabilityFiltersCount() > 0) {
+                    <span class="filter-count">{{ state.activeHabilityFiltersCount() }}</span>
+                }
+            </button>
+        </div>
+    </div>
+
+    <!-- Filter Status -->
+    @if (state.activeHabilityFiltersCount() > 0) {
+        <div class="filter-status">
+            <p>
+                {{ 'showing-filtered-results' | transloco }}
+                <strong>{{ state.filteredHabilities().length }}</strong>
+                {{ 'of' | transloco }}
+                <strong>{{ state.habilities().length }}</strong>
+                {{ 'habilities' | transloco }}
+            </p>
+        </div>
+    }
+
+    <!-- Habilities Grid -->
+    <div class="habilities-grid">
+        @if (state.habilitiesLoading()) {
+            <div class="habilities-loading-overlay">
+                <div class="loading-content">
+                    <div class="loading-spinner">
+                        <div class="center-glow"></div>
+                    </div>
+                    <p class="loading-text">{{ 'loading-habilities' | transloco }}</p>
+                </div>
+            </div>
+        } @else if (state.habilities().length > 0) {
+            @for (hability of state.filteredHabilities(); track hability.id) {
+                <div class="hability-card" 
+                     [style.background]="state.getPowerTheme(hability.power).bgColor">
+                    
+                    <div class="hability-card-header">
+                        <div class="hability-header-main">
+                            <span class="power-icon">{{ state.getPowerTheme(hability.power).icon }}</span>
+                            <h3 class="hability-card-title">{{ hability.name }}</h3>
+                        </div>
+                        <div class="hability-card-level">{{ 'level' | transloco }} {{ hability.level }}</div>
+                    </div>
+
+                    <div class="hability-card-content">
+                        <p class="hability-card-description">{{ hability.description }}</p>
+
+                        <div class="hability-card-stats">
+                            <div class="stat-item">
+                                <span class="stat-label">{{ 'class' | transloco }}:</span>
+                                <span class="stat-value">{{ hability.clase }}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">{{ 'power' | transloco }}:</span>
+                                <span class="stat-value power-value"
+                                      [style.color]="state.getPowerTheme(hability.power).color">
+                                    {{ state.getPowerTheme(hability.power).icon }} {{ hability.power }}
+                                </span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">{{ 'total-uses' | transloco }}:</span>
+                                <span class="stat-value">{{ hability.total_uses }}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">{{ 'dice' | transloco }}:</span>
+                                <span class="stat-value">{{ hability.dice }}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">{{ 'scales-with' | transloco }}:</span>
+                                <span class="stat-value">{{ hability.scales_with }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Associated Profiles -->
+                        @if (state.getAssociatedProfileNames(hability.id).length > 0) {
+                            <div class="associated-profiles">
+                                <div class="associated-profiles-label">
+                                    <span class="stat-label">{{ 'associated-profiles' | transloco }}:</span>
+                                </div>
+                                <div class="profile-tags">
+                                    @for (profileName of state.getAssociatedProfileNames(hability.id); track profileName) {
+                                        <span class="profile-tag">{{ profileName }}</span>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="hability-card-actions">
+                        <button class="hability-action-button primary" (click)="editHability(hability)">
+                            <mat-icon>edit</mat-icon>
+                            {{ 'edit' | transloco }}
+                        </button>
+                        <button class="hability-action-button secondary" 
+                                (click)="openAssociateModal(hability)">
+                            <mat-icon>link</mat-icon>
+                            {{ 'associate-to-profile' | transloco }}
+                        </button>
+                        <button class="hability-action-button danger" (click)="deleteHability(hability)">
+                            <mat-icon>delete</mat-icon>
+                            {{ 'delete' | transloco }}
+                        </button>
+                    </div>
+                </div>
+            }
+        } @else {
+            <div class="empty-state">
+                <div class="empty-icon">✨</div>
+                <h3>{{ 'no-habilities-available' | transloco }}</h3>
+                <p>{{ 'create-first-hability' | transloco }}</p>
+                <button class="library-button" (click)="openCreateHabilityDialog()">
+                    <span class="add-icon">+</span>
+                    {{ 'create-hability' | transloco }}
+                </button>
+            </div>
+        }
+    </div>
+</div>

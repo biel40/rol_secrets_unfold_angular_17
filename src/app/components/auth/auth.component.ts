@@ -72,7 +72,7 @@ export class AuthComponent implements OnInit, OnDestroy {
         });
 
         if (!userIsInDb) {
-          this._displaySnackbar('No se ha podido cargar el perfil. Por favor, vuelve a iniciar sesión.');
+          this._displaySnackbar('No se ha podido cargar el perfil. Por favor, vuelve a iniciar sesión.', true);
           this._router.navigate(['']);
           return;
         }
@@ -101,7 +101,7 @@ export class AuthComponent implements OnInit, OnDestroy {
         const user = await this._supabaseService.signIn(email, password);
 
         if (user.error && user.error.message == "Invalid login credentials") {
-          this._displaySnackbar("Email or password incorrect. Please try again.");
+          this._displaySnackbar("El email o la contraseña son incorrectos. Verifica tus credenciales e inténtalo de nuevo.", true);
         } else {
           this.user = user.data.user;
           this._userService.setUser(this.user);
@@ -118,7 +118,7 @@ export class AuthComponent implements OnInit, OnDestroy {
     } catch (error) {
       if (error instanceof Error) {
         console.error('Error: ', error);
-        this._displaySnackbar(error.message);
+        this._displaySnackbar(error.message, true);
       }
     }
   }
@@ -134,9 +134,11 @@ export class AuthComponent implements OnInit, OnDestroy {
       this._supabaseService.signUp(email, password).then((response: any) => {
         if (response.error) {
           if (response.error.message == "Email rate limit exceeded") {
-            this._displaySnackbar("Email rate limit exceeded. Please try again later.");
+            this._displaySnackbar("Has excedido el límite de intentos de registro. Por favor, espera unos minutos antes de intentarlo de nuevo.", true);
+          } else if (response.error.message == "User already registered") {
+            this._displaySnackbar("Este email ya está registrado. Intenta iniciar sesión o usa otro email.", true);
           } else {
-            this._displaySnackbar("An error has occurred. Please try again.");
+            this._displaySnackbar("Ha ocurrido un error al crear la cuenta. Por favor, inténtalo de nuevo.", true);
           }
         } else {
           this.user = response.data.user;
@@ -146,7 +148,7 @@ export class AuthComponent implements OnInit, OnDestroy {
         }
       });
     } else {
-      this._displaySnackbar("Email and password are required.");
+      this._displaySnackbar("El email y la contraseña son obligatorios para crear una cuenta.", true);
     }
   }
 
@@ -166,7 +168,7 @@ export class AuthComponent implements OnInit, OnDestroy {
       await this._supabaseService.insertProfile(mockProfile).then((response: any) => {
         if (response.error) {
           console.error('Ha ocurrido un error inesperado. Por favor, inténtelo de nuevo.');
-          this._displaySnackbar('Ha ocurrido un error inesperado. Por favor, inténtelo de nuevo.');
+          this._displaySnackbar('Ha ocurrido un error inesperado. Por favor, inténtelo de nuevo.', true);
         } else {
           console.log('Profile for user created successfully!!');
         }
@@ -174,9 +176,12 @@ export class AuthComponent implements OnInit, OnDestroy {
     }
   }
 
-  private _displaySnackbar(message: string): void {
+  private _displaySnackbar(message: string, isError: boolean = false): void {
     this._snackBar.open(message, 'Cerrar', {
       duration: 4000,
+      panelClass: isError ? ['custom-snackbar', 'error-snackbar'] : ['custom-snackbar'],
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom'
     });
   }
 

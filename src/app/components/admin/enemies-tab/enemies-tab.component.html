@@ -1,0 +1,175 @@
+<!-- Battle Preparation Panel -->
+<div class="battle-panel">
+    <div class="battle-header">
+        <h2 class="battle-title">{{ 'battle-preparation' | transloco }}</h2>
+        <div class="battle-actions">
+            <button class="battle-button" 
+                    [disabled]="!state.hasBattleEnemies()"
+                    (click)="startBattle()">
+                <span class="battle-icon">⚔️</span>
+                {{ 'begin-battle' | transloco }}
+            </button>
+            <button class="battle-button secondary" 
+                    [disabled]="!state.hasBattleEnemies()"
+                    (click)="clearBattle()">
+                {{ 'clear-all' | transloco }}
+            </button>
+        </div>
+    </div>
+
+    <div class="battle-enemies">
+        @if (state.hasBattleEnemies()) {
+            <div class="selected-enemies-list">
+                @for (enemy of state.battleList(); track enemy.id) {
+                    <div class="selected-enemy-item">
+                        <div class="enemy-avatar" [style.backgroundImage]="'url(' + enemy.image_url + ')'">
+                            <div class="enemy-level">{{ enemy.level }}</div>
+                        </div>
+                        <div class="enemy-details">
+                            <div class="enemy-name">{{ enemy.name }}</div>
+                            <div class="enemy-stats">HP: {{ enemy.current_hp }}</div>
+                        </div>
+                        <button class="remove-enemy" (click)="removeFromBattle(enemy)">
+                            <span>×</span>
+                        </button>
+                    </div>
+                }
+            </div>
+        } @else {
+            <div class="empty-battle-list">
+                <div class="empty-icon">🛡️</div>
+                <p>{{ 'no-enemies-selected' | transloco }}</p>
+                <p class="empty-hint">{{ 'select-enemies-below' | transloco }}</p>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Enemy Library Section -->
+<div class="enemies-library">
+    <div class="library-header">
+        <h2 class="library-title">{{ 'enemy-library' | transloco }}</h2>
+        <div class="library-actions">
+            <button class="library-button" (click)="openCreateEnemyDialog()">
+                <span class="add-icon">+</span>
+                {{ 'create-enemy' | transloco }}
+            </button>
+
+            <!-- Level Filter -->
+            <div class="filter-container">
+                <select class="level-filter" [ngModel]="state.enemyLevelFilter()" 
+                        (ngModelChange)="state.enemyLevelFilter.set($event)">
+                    <option value="">{{ 'all-levels' | transloco }}</option>
+                    @for (levelRange of state.levelRanges; track levelRange.value) {
+                        <option [value]="levelRange.value">{{ levelRange.label }}</option>
+                    }
+                </select>
+            </div>
+
+            <!-- Boss Filter -->
+            <div class="filter-container">
+                <select class="boss-filter" [ngModel]="state.enemyBossFilter()" 
+                        (ngModelChange)="state.enemyBossFilter.set($event)">
+                    <option value="">{{ 'all-enemy-types' | transloco }}</option>
+                    @for (option of state.bossFilterOptions; track option.value) {
+                        <option [value]="option.value">{{ option.label }}</option>
+                    }
+                </select>
+            </div>
+
+            <!-- Search -->
+            <div class="search-container">
+                <input type="text" 
+                       class="search-input" 
+                       [placeholder]="'search-enemies' | transloco"
+                       [ngModel]="state.enemySearchTerm()"
+                       (ngModelChange)="state.enemySearchTerm.set($event)">
+            </div>
+
+            <!-- Clear Filters -->
+            <button class="clear-filters-button" 
+                    (click)="clearFilters()"
+                    [disabled]="state.activeEnemyFiltersCount() === 0">
+                🗑️ {{ 'clear-filters' | transloco }}
+                @if (state.activeEnemyFiltersCount() > 0) {
+                    <span class="filter-count">{{ state.activeEnemyFiltersCount() }}</span>
+                }
+            </button>
+        </div>
+    </div>
+
+    <!-- Filter Status -->
+    @if (state.activeEnemyFiltersCount() > 0) {
+        <div class="filter-status">
+            <p>
+                {{ 'showing-filtered-results' | transloco }}
+                <strong>{{ state.filteredEnemies().length }}</strong>
+                {{ 'of' | transloco }}
+                <strong>{{ state.enemies().length }}</strong>
+                {{ 'enemies' | transloco }}
+            </p>
+        </div>
+    }
+
+    <!-- Enemies Grid -->
+    <div class="enemies-grid">
+        @if (state.enemiesLoading()) {
+            <div class="loading-enemies">
+                <mat-spinner diameter="50"></mat-spinner>
+                <p>{{ 'loading-enemies' | transloco }}...</p>
+            </div>
+        } @else if (state.enemies().length > 0) {
+            @for (enemy of state.filteredEnemies(); track enemy.id) {
+                <div class="enemy-card">
+                    <div class="enemy-card-header">
+                        <h3 class="enemy-card-title">{{ enemy.name }}</h3>
+                        <div class="enemy-card-level">{{ 'level' | transloco }} {{ enemy.level }}</div>
+                    </div>
+
+                    <div class="enemy-card-image" [style.backgroundImage]="'url(' + enemy.image_url + ')'">
+                        <div class="enemy-card-overlay"></div>
+                    </div>
+
+                    <div class="enemy-card-content">
+                        <p class="enemy-card-description">{{ enemy.description }}</p>
+
+                        <div class="enemy-card-stats">
+                            <div class="stat-item">
+                                <span class="stat-icon">❤️</span>
+                                <span class="stat-value">{{ enemy.total_hp || 100 }}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-icon">⚔️</span>
+                                <span class="stat-value">10</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-icon">🛡️</span>
+                                <span class="stat-value">{{ enemy.defense || 5 }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="enemy-card-actions">
+                        <button class="enemy-action-button primary" (click)="addToBattle(enemy)">
+                            {{ 'add-to-battle' | transloco }}
+                        </button>
+                        <button class="enemy-action-button" (click)="editEnemy(enemy)">
+                            {{ 'edit' | transloco }}
+                        </button>
+                        <button class="enemy-action-button danger" (click)="deleteEnemy(enemy)">
+                            {{ 'delete' | transloco }}
+                        </button>
+                    </div>
+                </div>
+            }
+        } @else {
+            <div class="empty-enemies-list">
+                <div class="empty-icon">🐉</div>
+                <p>{{ 'no-enemies-available' | transloco }}</p>
+                <button class="create-first-enemy" (click)="openCreateEnemyDialog()">
+                    {{ 'create-first-enemy' | transloco }}
+                </button>
+            </div>
+        }
+    </div>
+</div>

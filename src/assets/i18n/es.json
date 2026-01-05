@@ -201,6 +201,7 @@
     "speed-min": "La velocidad debe ser mayor a 0",
     "save-changes": "Guardar Cambios",
     "loading-users": "Cargando usuarios...",
+    "loading-enemies": "Cargando enemigos...",
     "loading-habilities": "Invocando habilidades...",
     "habilities-management": "Gestión de habilidades",
     "hability-library": "Biblioteca de habilidades",

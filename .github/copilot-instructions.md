@@ -1,7 +1,7 @@
 # Copilot Instructions - Rol Secrets Unfold
 
 ## Project Overview
-**Rol Secrets Unfold** es una aplicación RPG híbrida de gestión de personajes desarrollada en **Angular 17** con backend **Supabase**. Soporta web, iOS y Android mediante Capacitor. Es una aplicación que combina:
+**Rol Secrets Unfold** es una aplicación RPG híbrida de gestión de personajes desarrollada en **Angular 21** con backend **Supabase**. Soporta web, iOS y Android mediante Capacitor. Es una aplicación que combina:
 
 - 🎮 Sistema de gestión de personajes RPG
 - ⚔️ Sistema de combate en tiempo real
@@ -12,10 +12,10 @@
 ## Architecture Overview
 
 ### Tech Stack
-- **Frontend**: Angular 17 (Standalone Components)
+- **Frontend**: Angular 21 (Standalone Components + Signals)
 - **Backend**: Supabase (PostgreSQL + Auth + Realtime)
 - **Mobile**: Capacitor (iOS/Android)
-- **UI Framework**: Angular Material 17 + TailwindCSS
+- **UI Framework**: Angular Material + TailwindCSS
 - **i18n**: Transloco
 - **Build Tool**: Angular CLI
 
@@ -24,13 +24,18 @@
 src/
 ├── app/
 │   ├── components/           # All Angular components
-│   │   ├── admin/            # Admin/DM dashboard
+│   │   ├── admin/            # Admin/DM dashboard (modularizado)
+│   │   │   ├── admin-component/    # Componente orquestador
+│   │   │   ├── enemies-tab/        # Gestión de enemigos
+│   │   │   ├── users-tab/          # Gestión de usuarios
+│   │   │   └── habilities-tab/     # Gestión de habilidades
 │   │   ├── auth/             # Authentication flows
 │   │   ├── dialogs/          # Material Dialog components
 │   │   ├── profile/          # Player profile views
 │   │   └── ...
 │   ├── services/             # Business logic & data
 │   │   ├── supabase/         # Supabase integration (PRIMARY)
+│   │   ├── admin/            # Admin state service (Signals)
 │   │   ├── user/             # User auth state
 │   │   ├── profile/          # Current RPG profile
 │   │   └── loader/           # Loading spinners
@@ -1027,21 +1032,328 @@ chore: tareas de mantenimiento
    {{ getDisplayText() }}
    ```
 
+5. **Control Flow & Content Projection**
+   When using `@if` or `@else` inside components with content projection (like `mat-button`), ensure the block has a single root node.
+
+   **❌ Incorrect (Causes ngtsc -998011):**
+   ```html
+   <button mat-button>
+       @if (loading) {
+           <mat-spinner></mat-spinner>
+       } @else {
+           <mat-icon>save</mat-icon>  <!-- Multiple root nodes in @else -->
+           <span>Save</span>
+       }
+   </button>
+   ```
+
+   **✅ Correct:**
+   ```html
+   <button mat-button>
+       @if (loading) {
+           <mat-spinner></mat-spinner>
+       } @else {
+           <ng-container>             <!-- Wrap in ng-container -->
+               <mat-icon>save</mat-icon>
+               <span>Save</span>
+           </ng-container>
+       }
+   </button>
+   ```
+
+6. **Comentarios Redundantes**
+   ```typescript
+   // ❌ Comentarios obvios que repiten el código
+   // Incrementa el contador
+   this.counter++;
+   
+   // ❌ Separadores decorativos excesivos
+   // ═══════════════════════════════════════
+   // SECTION NAME
+   // ═══════════════════════════════════════
+   
+   // ❌ JSDoc para métodos internos autoexplicativos
+   /** Carga los datos */
+   private _loadData(): void { }
+   
+   // ✅ Comentario útil que explica el "por qué"
+   // Usamos timeout para evitar race condition con el modal
+   setTimeout(() => this.focusInput(), 100);
+   ```
+
+---
+
+## Guía de Comentarios (Self-Documenting Code)
+
+### Filosofía
+El código debe ser **autoexplicativo**. Usa comentarios solo cuando aporten valor real.
+
+### ✅ Cuándo SÍ comentar:
+- **Por qué** se hace algo (no obvio del código)
+- Workarounds o hacks temporales con explicación
+- TODOs con contexto específico
+- Decisiones de arquitectura importantes
+
+```typescript
+// Retrasamos 100ms porque el modal necesita tiempo para inicializar el DOM
+setTimeout(() => this.inputRef.nativeElement.focus(), 100);
+
+// TODO: Migrar a RxJS cuando se implemente el sistema de cache
+```
+
+### ❌ Cuándo NO comentar:
+- **Qué** hace el código (ya lo dice el código)
+- Separadores decorativos con líneas `═══` o `---`
+- JSDoc para métodos con nombres descriptivos
+- Comentarios obvios o redundantes
+
+```typescript
+// ❌ MAL - El nombre ya lo dice todo
+/** Elimina el enemigo */
+public async deleteEnemy(enemy: Enemy): Promise<void> { }
+
+// ✅ BIEN - Sin comentario, código autoexplicativo
+public async deleteEnemy(enemy: Enemy): Promise<void> { }
+```
+
+### Nombres Descriptivos > Comentarios
+```typescript
+// ❌ Con comentario innecesario
+const d = 30; // días del mes
+
+// ✅ Con nombre descriptivo
+const daysInMonth = 30;
+```
+
+---
+
+## Angular Signals & Modern Patterns (Angular 17+)
+
+### 1. Angular Signals para Estado Reactivo
+A partir de Angular 17+, usamos **Signals** para estado reactivo en lugar de BehaviorSubjects:
+
+```typescript
+import { signal, computed, effect } from '@angular/core';
+
+// ✅ Signal básico
+public readonly enemies = signal<Enemy[]>([]);
+public readonly isLoading = signal<boolean>(false);
+
+// ✅ Computed (derivado de signals)
+public readonly filteredEnemies = computed(() => {
+    const term = this.searchTerm().toLowerCase();
+    return this.enemies().filter(e => e.name.toLowerCase().includes(term));
+});
+
+// ✅ Actualizar signal
+this.enemies.set(newEnemies);           // Reemplazar valor
+this.enemies.update(list => [...list, newEnemy]); // Actualizar basado en valor actual
+
+// ✅ Leer signal en template
+{{ enemies().length }}
+@for (enemy of filteredEnemies(); track enemy.id) { ... }
+
+// ✅ Effect para side effects
+effect(() => {
+    console.log('Enemies changed:', this.enemies().length);
+});
+```
+
+### 2. Outputs Modernos (Angular 17+)
+Usa `output()` en lugar de `@Output()`:
+
+```typescript
+import { output } from '@angular/core';
+
+// ✅ Moderno (Angular 17+)
+public readonly battleStarted = output<Enemy[]>();
+
+// Emitir evento
+this.battleStarted.emit(enemies);
+
+// ❌ Evitar (legacy)
+@Output() battleStarted = new EventEmitter<Enemy[]>();
+```
+
+### 3. Control Flow Moderno (@if, @for, @switch)
+Angular 17+ introduce nueva sintaxis de control flow:
+
+```html
+<!-- ✅ Moderno -->
+@if (isLoading()) {
+    <mat-spinner></mat-spinner>
+} @else if (enemies().length > 0) {
+    @for (enemy of enemies(); track enemy.id) {
+        <enemy-card [enemy]="enemy"></enemy-card>
+    }
+} @else {
+    <p>No hay enemigos</p>
+}
+
+<!-- ❌ Evitar (legacy) -->
+<ng-container *ngIf="isLoading; else content">
+    <mat-spinner></mat-spinner>
+</ng-container>
+```
+
+---
+
+## Component Decomposition Pattern
+
+### Patrón de Descomposición de Componentes
+Para componentes grandes (>300 líneas), aplicamos el patrón **Smart/Dumb Components**:
+
+#### Estructura del Admin Dashboard:
+```
+src/app/components/admin/
+├── admin-component/              # Componente orquestador (Smart)
+│   ├── admin.component.ts       # ~100 líneas
+│   ├── admin.component.html
+│   └── admin.component.scss
+├── enemies-tab/                  # Sub-componente (Feature)
+│   ├── enemies-tab.component.ts
+│   ├── enemies-tab.component.html
+│   └── enemies-tab.component.scss
+├── users-tab/                    # Sub-componente (Feature)
+│   └── ...
+├── habilities-tab/               # Sub-componente (Feature)
+│   └── ...
+```
+
+#### Principios de Descomposición:
+1. **Componente Orquestador** (Smart): Maneja navegación, carga inicial, auth
+2. **Componentes de Feature** (Tab): Lógica específica de dominio
+3. **Componentes Presentacionales** (Dumb): Solo UI, reciben datos via @Input
+
+```typescript
+// Componente Orquestador (Smart)
+@Component({
+    selector: 'app-admin',
+    imports: [EnemiesTabComponent, UsersTabComponent, HabilitiesTabComponent]
+})
+export class AdminComponent {
+    public readonly currentTab = signal<'enemies' | 'users' | 'habilities'>('enemies');
+    
+    public switchTab(tab: string): void {
+        this.currentTab.set(tab);
+    }
+}
+
+// Componente de Feature
+@Component({
+    selector: 'app-enemies-tab',
+})
+export class EnemiesTabComponent {
+    public readonly state = inject(AdminStateService);
+    public readonly battleStarted = output<Enemy[]>();
+}
+```
+
+---
+
+## State Service Pattern (Facade + Signals)
+
+### AdminStateService
+Para módulos complejos, creamos un **State Service** que actúa como Facade:
+
+**Ubicación**: `src/app/services/admin/admin-state.service.ts`
+
+```typescript
+@Injectable({ providedIn: 'root' })
+export class AdminStateService {
+    private _supabaseService = inject(SupabaseService);
+    private _snackBar = inject(MatSnackBar);
+
+    // SIGNALS - Estado reactivo
+    public readonly enemies = signal<Enemy[]>([]);
+    public readonly enemiesLoading = signal<boolean>(false);
+    public readonly enemySearchTerm = signal<string>('');
+
+    // COMPUTED - Propiedades derivadas
+    public readonly filteredEnemies = computed(() => {
+        const term = this.enemySearchTerm().toLowerCase();
+        return this.enemies().filter(e => 
+            e.name.toLowerCase().includes(term)
+        );
+    });
+
+    // OPERATIONS - Métodos CRUD
+    public async loadEnemies(): Promise<void> {
+        this.enemiesLoading.set(true);
+        try {
+            const result = await this._supabaseService.getEnemies();
+            this.enemies.set(result.data || []);
+        } finally {
+            this.enemiesLoading.set(false);
+        }
+    }
+
+    public async deleteEnemy(enemy: Enemy): Promise<boolean> {
+        try {
+            await this._supabaseService.deleteEnemy(enemy.id);
+            this.enemies.update(list => list.filter(e => e.id !== enemy.id));
+            this.showSnackbar(`${enemy.name} eliminado.`);
+            return true;
+        } catch (error) {
+            this.showSnackbar('Error al eliminar.');
+            return false;
+        }
+    }
+
+    // UTILITIES
+    public showSnackbar(message: string): void {
+        this._snackBar.open(message, 'Cerrar', { duration: 4000 });
+    }
+}
+```
+
+**Beneficios**:
+- ✅ Estado centralizado para el módulo
+- ✅ Reutilizable entre componentes
+- ✅ Testable (inyectable)
+- ✅ Signals para reactividad nativa
+- ✅ Computed properties para filtros
+
+---
+
+## Service Architecture Overview
+
+### Jerarquía de Servicios:
+```
+src/app/services/
+├── supabase/                    # Capa de datos (Backend)
+│   └── supabase.service.ts     # CRUD, Auth, Realtime
+├── user/                        # Auth state global
+│   └── user.service.ts
+├── profile/                     # Profile state global
+│   └── profile.service.ts
+├── loader/                      # UI state (spinners)
+│   └── loader.service.ts
+└── admin/                       # Feature state (Admin module)
+    └── admin-state.service.ts  # Signals-based state
+```
+
+### Reglas de Servicios:
+1. **SupabaseService**: ÚNICO punto de acceso a la BD
+2. **Feature State Services**: Usan SupabaseService, gestionan estado con Signals
+3. **Componentes**: Inyectan State Services, NO SupabaseService directamente
+
 ---
 
 ## Future Improvements & TODOs
 
 ### High Priority
+- [x] ~~Refactorizar AdminComponent en sub-componentes~~
+- [x] ~~Implementar AdminStateService con Signals~~
 - [ ] Implementar Route Guards para `/admin`
 - [ ] Lazy loading de componentes grandes
 - [ ] Progressive Web App (PWA) support
 - [ ] Unit tests para servicios críticos
-- [ ] Error boundary component para manejo global de errores
 
 ### Medium Priority
-- [ ] State management (NgRx / Akita)
+- [ ] Migrar otros componentes grandes al patrón Signal
 - [ ] WebSocket para batallas en tiempo real
-- [ ] Caché estratégico de datos
+- [ ] Caché estratégico de datos con Signals
 - [ ] Service Worker para offline mode
 - [ ] Notificaciones push
 
@@ -1056,7 +1368,8 @@ chore: tareas de mantenimiento
 
 ## Helpful Resources
 
-- [Angular Documentation](https://angular.io/docs)
+- [Angular Documentation](https://angular.dev/docs)
+- [Angular Signals Guide](https://angular.dev/guide/signals)
 - [Angular Material Components](https://material.angular.io/)
 - [Supabase Documentation](https://supabase.com/docs)
 - [Transloco Docs](https://jsverse.github.io/transloco/)
@@ -1064,7 +1377,7 @@ chore: tareas de mantenimiento
 
 ---
 
-**Last Updated**: January 3, 2026
+**Last Updated**: January 5, 2026
 **Maintainer**: Biele
-**Version**: Angular 17, Supabase v2
+**Version**: Angular 21, Supabase v2
 
