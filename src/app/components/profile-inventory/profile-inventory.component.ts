@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { MaterialModule } from '../../modules/material.module';
 import { Item, Profile, SupabaseService } from '../../services/supabase/supabase.service';
 import { UserService } from '../../services/user/user.service';
@@ -28,6 +28,7 @@ export class ProfileInventoryComponent implements OnInit {
     private _loaderService: LoaderService = inject(LoaderService);
     private _supabaseService: SupabaseService = inject(SupabaseService);
     private _router = inject(Router);
+    private _cdr = inject(ChangeDetectorRef);
     private _user: User | null = null;
 
     @Input() profile: Profile | null = null;
@@ -53,7 +54,8 @@ export class ProfileInventoryComponent implements OnInit {
     }
 
     async ngOnInit(): Promise<void> {
-        this._loaderService.setLoading(true);
+        // Defer loading state to avoid ExpressionChangedAfterItHasBeenCheckedError
+        setTimeout(() => this._loaderService.setLoading(true));
         
         if (!this._user) {
             alert('Credenciales inválidas. Por favor, inicie sesión nuevamente.');
@@ -64,15 +66,16 @@ export class ProfileInventoryComponent implements OnInit {
     }
 
     private async _loadData(): Promise<void> {
-        this._loaderService.setLoading(true);
+        setTimeout(() => this._loaderService.setLoading(true));
 
         if (this._user) {
             let response = await this._supabaseService.getItems(this._user.id);
 
             this.items = response.data;
+            this._cdr.detectChanges();
         }
 
-        this._loaderService.setLoading(false);
+        setTimeout(() => this._loaderService.setLoading(false));
     }
 
     ngOnChanges() : void {

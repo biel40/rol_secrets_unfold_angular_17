@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { MaterialModule } from '../../modules/material.module';
 import { Profile, SupabaseService } from '../../services/supabase/supabase.service';
 import { UserService } from '../../services/user/user.service';
@@ -7,7 +7,7 @@ import { User } from '@supabase/supabase-js';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslocoModule } from '@jsverse/transloco';
-import { NgTiltModule } from '@geometricpanda/angular-tilt';
+import { VanillaTiltDirective } from '../../directives/vanilla-tilt.directive';
 
 @Component({
     selector: 'app-profile-info',
@@ -17,7 +17,7 @@ import { NgTiltModule } from '@geometricpanda/angular-tilt';
     imports: [
         MaterialModule,
         TranslocoModule,
-        NgTiltModule
+        VanillaTiltDirective
     ]
 })
 export class ProfileInfoComponent implements OnInit {
@@ -26,6 +26,7 @@ export class ProfileInfoComponent implements OnInit {
     private _loaderService: LoaderService = inject(LoaderService);
     private _supabaseService: SupabaseService = inject(SupabaseService);
     private _router = inject(Router);
+    private _cdr = inject(ChangeDetectorRef);
 
     private _user: User | null = null;
 
@@ -47,12 +48,15 @@ export class ProfileInfoComponent implements OnInit {
             alert('Credenciales inválidas. Por favor, inicie sesión nuevamente.');
             this._router.navigate(['']);
         } else if (!this.profile) {
-            this.profile = (await this._supabaseService.getProfileInfo(this._user.id)).data;
-
+            const profileData = (await this._supabaseService.getProfileInfo(this._user.id)).data;
+            
+            this.profile = profileData;
             // Default profile image
-            if (this.profile && this.profile.image_url == '' || this.profile && this.profile.image_url == null) {
+            if (this.profile && (this.profile.image_url == '' || this.profile.image_url == null)) {
                 this.profile.image_url = 'https://iili.io/Ji7Prrl.jpg';
             }
+            this.setElementEmojis();
+            this._cdr.detectChanges();
         }
         this.setElementEmojis();
     }

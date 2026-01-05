@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Profile, SupabaseService } from '../../services/supabase/supabase.service';
 import { User } from '@supabase/supabase-js';
 import { UserService } from '../../services/user/user.service';
@@ -49,6 +49,7 @@ export class ProfileComponent implements OnInit {
     private _supabaseService: SupabaseService = inject(SupabaseService);
     private _loaderService: LoaderService = inject(LoaderService);
     private _router = inject(Router);
+    private _cdr = inject(ChangeDetectorRef);
 
     public profile: Profile | null = null;
     private _user: User | null = null;
@@ -75,7 +76,8 @@ export class ProfileComponent implements OnInit {
     }
 
     async ngOnInit(): Promise<void> {
-        this._loaderService.setLoading(true);
+        // Defer loading state to avoid ExpressionChangedAfterItHasBeenCheckedError
+        setTimeout(() => this._loaderService.setLoading(true));
 
         try {
             if (this._user) {
@@ -84,6 +86,7 @@ export class ProfileComponent implements OnInit {
 
                 if (profile) {
                     this.profile = profile;
+                    this._cdr.detectChanges();
                 } else {
                     this._displaySnackbar('No se ha podido cargar el perfil. Por favor, vuelve a iniciar sesión.');
                     this._router.navigate(['']);
@@ -102,7 +105,7 @@ export class ProfileComponent implements OnInit {
             this._displaySnackbar('Error al cargar el perfil. Por favor, vuelve a iniciar sesión.');
             this._router.navigate(['']);
         } finally {
-            this._loaderService.setLoading(false);
+            setTimeout(() => this._loaderService.setLoading(false));
         }
     }
 
