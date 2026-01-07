@@ -1,324 +1,744 @@
-/* Inventory Container */
+// ============================================
+// PROFILE INVENTORY - Modern RPG Card Style
+// ============================================
+
+$primary-color: #1e40af;
+$primary-light: #3b82f6;
+$accent-color: #8b5cf6;
+$gold-color: #fbbf24;
+$gold-dark: #d97706;
+$bg-darkest: #0f172a;
+$bg-dark: #1e293b;
+$glass-bg: rgba(17, 24, 39, 0.7);
+$glass-border: rgba(255, 255, 255, 0.08);
+$text-primary: #f1f5f9;
+$text-secondary: rgba(255, 255, 255, 0.6);
+$danger-color: #ef4444;
+$success-color: #22c55e;
+
+// ============================================
+// CONTAINER
+// ============================================
 .inventory-container {
     display: flex;
     justify-content: center;
-    align-items: center;
-    padding: 20px;
-    font-family: 'Segoe UI', 'Roboto', sans-serif;
+    width: 100%;
+    padding: 1rem;
 }
 
-/* Inventory Card */
 .inventory-card {
-    background: linear-gradient(to bottom, #2a2a2a, #1a1a1a);
-    border-radius: 15px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid $glass-border;
     width: 100%;
-    max-width: 900px;
-    padding: 20px;
-    color: #fff;
+    max-width: 1250px;
+    padding: 1.5rem;
+    box-shadow: 
+        0 20px 50px rgba(0, 0, 0, 0.4),
+        0 0 40px rgba($primary-color, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
     position: relative;
     overflow: hidden;
-    border: 2px solid #444;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba($gold-color, 0.5), transparent);
+    }
 }
 
-/* Card Header */
+// ============================================
+// CARD HEADER
+// ============================================
 .card-header {
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid $glass-border;
+    flex-wrap: wrap;
+}
+
+.header-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.title-section {
+    display: flex;
     align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    gap: 0.75rem;
+}
+
+.title-icon {
+    font-size: 1.75rem;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 .inventory-title {
-    font-size: 1.8rem;
+    font-size: 1.75rem;
+    font-weight: 700;
     margin: 0;
-    color: #ffcb05; /* Pokemon yellow */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    letter-spacing: 1px;
+    background: linear-gradient(135deg, $gold-color 0%, #fff 50%, $gold-color 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer-text 3s linear infinite;
+}
+
+.stats-badges {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.stat-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background: $glass-bg;
+    border: 1px solid $glass-border;
+    border-radius: 12px;
+    min-width: 70px;
+
+    &.gold {
+        border-color: rgba($gold-color, 0.3);
+        background: rgba($gold-color, 0.1);
+    }
+}
+
+.badge-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: $text-primary;
+}
+
+.badge-label {
+    font-size: 0.7rem;
+    color: $text-secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .add-button {
-    background: #3d7dca; /* Pokemon blue */
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-weight: bold;
-    cursor: pointer;
     display: flex;
     align-items: center;
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: linear-gradient(135deg, $primary-color 0%, $primary-light 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba($primary-color, 0.3);
+
+    mat-icon {
+        font-size: 1.25rem;
+        width: 20px;
+        height: 20px;
+    }
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba($primary-color, 0.4);
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
 }
 
-.add-button:hover {
-    background: #5090e0;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
-}
-
-.add-icon {
-    margin-right: 8px;
-}
-
-/* New Item Form */
+// ============================================
+// NEW ITEM FORM
+// ============================================
 .new-item-form {
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 20px;
-    border: 1px solid rgba(61, 125, 202, 0.5); /* Pokemon blue border */
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba($primary-color, 0.3);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    animation: slideDown 0.3s ease-out;
+}
+
+.form-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+}
+
+.form-icon {
+    font-size: 1.5rem;
 }
 
 .form-title {
-    color: #ffcb05; /* Pokemon yellow */
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 1.4rem;
-    text-align: center;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: $gold-color;
+    margin: 0;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
 }
 
 .form-group {
-    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    &.full-width {
+        grid-column: 1 / -1;
+    }
 }
 
-.new-item-form input,
-.new-item-form textarea {
+.form-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: $text-secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-input,
+.form-textarea {
     width: 100%;
+    padding: 0.875rem 1rem;
     background: rgba(0, 0, 0, 0.3);
-    border: 1px solid #444;
-    border-radius: 8px;
-    padding: 10px 15px;
-    color: #fff;
-    font-size: 1rem;
-    transition: border-color 0.3s ease;
+    border: 1px solid $glass-border;
+    border-radius: 10px;
+    color: $text-primary;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+
+    &::placeholder {
+        color: rgba(255, 255, 255, 0.3);
+    }
+
+    &:focus {
+        outline: none;
+        border-color: $primary-light;
+        box-shadow: 0 0 0 3px rgba($primary-color, 0.2);
+    }
 }
 
-.new-item-form input:focus,
-.new-item-form textarea:focus {
-    border-color: #3d7dca; /* Pokemon blue */
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(61, 125, 202, 0.3);
+.form-textarea {
+    resize: vertical;
+    min-height: 80px;
 }
 
 .form-actions {
     display: flex;
     justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid $glass-border;
+}
+
+.cancel-button,
+.save-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    mat-icon {
+        font-size: 1.125rem;
+        width: 18px;
+        height: 18px;
+    }
 }
 
 .cancel-button {
-    background: #666;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
+    background: rgba(255, 255, 255, 0.1);
+    color: $text-secondary;
 
-.cancel-button:hover {
-    background: #888;
+    &:hover {
+        background: rgba(255, 255, 255, 0.15);
+        color: $text-primary;
+    }
 }
 
 .save-button {
-    background: #3d7dca; /* Pokemon blue */
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    background: linear-gradient(135deg, $gold-dark 0%, $gold-color 100%);
+    color: #1f2937;
+
+    &:hover:not(:disabled) {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 15px rgba($gold-color, 0.3);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
 }
 
-.save-button:hover {
-    background: #5090e0;
+// ============================================
+// LOADING STATE
+// ============================================
+.loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 3rem;
+    color: $text-secondary;
 }
 
-/* Inventory Grid */
+// ============================================
+// INVENTORY GRID
+// ============================================
 .inventory-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
 }
 
-/* Item Card */
+// ============================================
+// ITEM CARD
+// ============================================
 .item-card {
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-    padding: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:hover {
+        transform: translateY(-4px);
+
+        .item-glow {
+            opacity: 1;
+        }
+
+        .item-image {
+            transform: scale(1.05);
+        }
+
+        .item-content {
+            border-color: rgba($primary-color, 0.4);
+        }
+    }
+}
+
+.item-glow {
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(135deg, rgba($primary-color, 0.4), rgba($accent-color, 0.4));
+    border-radius: 18px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 0;
+}
+
+.item-content {
+    position: relative;
+    z-index: 1;
+    background: $glass-bg;
+    border: 1px solid $glass-border;
+    border-radius: 16px;
+    overflow: hidden;
     height: 100%;
     display: flex;
     flex-direction: column;
 }
 
-.item-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
-    border-color: rgba(61, 125, 202, 0.5); /* Pokemon blue border */
-}
-
-.item-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding-bottom: 10px;
-}
-
-.item-name {
-    margin: 0;
-    font-size: 1.2rem;
-    color: #ffcb05; /* Pokemon yellow */
-    font-weight: bold;
-}
-
-.item-value {
-    background: #cc0000; /* Pokemon red */
-    color: white;
-    padding: 3px 8px;
-    border-radius: 12px;
-    font-size: 0.9rem;
-    font-weight: bold;
-}
-
 .item-image-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 120px;
-    margin: 10px 0;
+    position: relative;
+    width: 100%;
+    height: 140px;
     overflow: hidden;
-    border-radius: 8px;
-    background: rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.2) 100%);
 }
 
 .item-image {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    transition: transform 0.3s ease;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.item-image:hover {
-    transform: scale(1.1);
+.image-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(15, 23, 42, 0.8) 0%, transparent 50%);
+    pointer-events: none;
 }
 
 .item-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba($bg-dark, 0.8) 0%, rgba($bg-darkest, 0.9) 100%);
+}
+
+.placeholder-icon {
     font-size: 3rem;
-    color: rgba(255, 255, 255, 0.3);
+    opacity: 0.4;
+    filter: grayscale(0.5);
+}
+
+.item-details {
+    padding: 1rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+}
+
+.item-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: $text-primary;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.item-value-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    background: rgba($gold-color, 0.15);
+    border: 1px solid rgba($gold-color, 0.3);
+    border-radius: 20px;
+    width: fit-content;
+}
+
+.coin-icon {
+    font-size: 0.9rem;
+}
+
+.value-text {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: $gold-color;
 }
 
 .item-description {
-    flex-grow: 1;
-    margin: 10px 0;
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.8);
-    line-height: 1.4;
+    font-size: 0.85rem;
+    color: $text-secondary;
+    line-height: 1.5;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .item-actions {
+    padding: 0.875rem 1rem;
+    border-top: 1px solid $glass-border;
+}
+
+.action-button {
     display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.use-button {
-    background: #3d7dca; /* Pokemon blue */
-    color: white;
-    border: none;
-    padding: 8px 0;
-    border-radius: 5px;
-    font-weight: bold;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.625rem;
+    background: transparent;
+    border: 1px solid $glass-border;
+    border-radius: 8px;
+    color: $text-secondary;
+    font-size: 0.85rem;
+    font-weight: 500;
     cursor: pointer;
-    flex: 1;
     transition: all 0.2s ease;
+
+    mat-icon {
+        font-size: 1.125rem;
+        width: 18px;
+        height: 18px;
+    }
+
+    &.delete:hover {
+        background: rgba($danger-color, 0.15);
+        border-color: rgba($danger-color, 0.4);
+        color: $danger-color;
+    }
 }
 
-.use-button:hover {
-    background: #5090e0;
-}
-
-.delete-button {
-    background: #cc0000; /* Pokemon red */
-    color: white;
-    border: none;
-    padding: 8px 0;
-    border-radius: 5px;
-    font-weight: bold;
-    cursor: pointer;
-    flex: 1;
-    transition: all 0.2s ease;
-}
-
-.delete-button:hover {
-    background: #ff0000;
-}
-
-/* Empty Inventory */
+// ============================================
+// EMPTY STATE
+// ============================================
 .empty-inventory {
+    grid-column: 1 / -1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    grid-column: 1 / -1;
-    padding: 40px 0;
-    color: rgba(255, 255, 255, 0.6);
+    padding: 3rem 1.5rem;
+    text-align: center;
+}
+
+.empty-icon-container {
+    position: relative;
+    margin-bottom: 1.5rem;
 }
 
 .empty-icon {
     font-size: 4rem;
-    margin-bottom: 15px;
-    color: rgba(255, 255, 255, 0.3);
+    opacity: 0.6;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    animation: float 3s ease-in-out infinite;
 }
 
-/* Snackbar Styles */
-.snack-bar-success {
-    background-color: #4caf50;
-    color: #fff;
+.empty-glow {
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 20px;
+    background: radial-gradient(ellipse, rgba($primary-color, 0.3) 0%, transparent 70%);
+    filter: blur(8px);
 }
 
-.snack-bar-danger {
-    background-color: #cc0000; /* Pokemon red */
-    color: #fff;
+.empty-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: $text-primary;
+    margin: 0 0 0.5rem 0;
 }
 
-/* Responsive Styles */
-@media (max-width: 768px) {
-    .inventory-grid {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+.empty-subtitle {
+    font-size: 0.95rem;
+    color: $text-secondary;
+    margin: 0 0 1.5rem 0;
+}
+
+.empty-action {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.5rem;
+    background: linear-gradient(135deg, $primary-color 0%, $primary-light 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    mat-icon {
+        font-size: 1.25rem;
     }
-    
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba($primary-color, 0.4);
+    }
+}
+
+// ============================================
+// SNACKBAR STYLES
+// ============================================
+:host ::ng-deep {
+    .snack-bar-success {
+        --mdc-snackbar-container-color: #{$success-color};
+        --mdc-snackbar-supporting-text-color: white;
+    }
+
+    .snack-bar-danger {
+        --mdc-snackbar-container-color: #{$danger-color};
+        --mdc-snackbar-supporting-text-color: white;
+    }
+
+    .snack-bar-warning {
+        --mdc-snackbar-container-color: #{$gold-dark};
+        --mdc-snackbar-supporting-text-color: white;
+    }
+}
+
+// ============================================
+// ANIMATIONS
+// ============================================
+@keyframes shimmer-text {
+    to {
+        background-position: 200% center;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+// ============================================
+// RESPONSIVE
+// ============================================
+
+@media (max-width: 639px) {
+    .inventory-container {
+        padding: 0.75rem;
+    }
+
+    .inventory-card {
+        padding: 1rem;
+        border-radius: 16px;
+    }
+
     .card-header {
         flex-direction: column;
-        gap: 10px;
-        align-items: flex-start;
+        align-items: stretch;
+        gap: 1rem;
     }
-    
+
+    .header-content {
+        align-items: center;
+        text-align: center;
+    }
+
+    .inventory-title {
+        font-size: 1.5rem;
+    }
+
+    .stats-badges {
+        justify-content: center;
+    }
+
+    .add-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .inventory-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
     .form-actions {
         flex-direction: column;
-    }
-    
-    .form-actions button {
-        width: 100%;
+
+        button {
+            width: 100%;
+            justify-content: center;
+        }
     }
 }
 
-@media (max-width: 480px) {
-    .inventory-grid {
-        grid-template-columns: 1fr;
+@media (max-width: 374px) {
+    .inventory-card {
+        padding: 0.875rem;
     }
-    
-    .item-actions {
-        flex-direction: column;
+
+    .inventory-title {
+        font-size: 1.35rem;
+    }
+
+    .title-icon {
+        font-size: 1.5rem;
+    }
+
+    .stat-badge {
+        padding: 0.375rem 0.75rem;
+        min-width: 60px;
+    }
+
+    .badge-value {
+        font-size: 1.1rem;
+    }
+
+    .item-details {
+        padding: 0.875rem;
+    }
+
+    .item-name {
+        font-size: 1rem;
+    }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+    .inventory-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .inventory-card {
+        padding: 2rem;
+    }
+
+    .inventory-title {
+        font-size: 2rem;
+    }
+
+    .inventory-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+    .inventory-container {
+        padding: 0.5rem;
+    }
+
+    .inventory-card {
+        padding: 1rem;
+    }
+
+    .card-header {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .inventory-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 0.875rem;
+    }
+
+    .item-image-container {
+        height: 100px;
+    }
+
+    .empty-inventory {
+        padding: 2rem 1rem;
     }
 }

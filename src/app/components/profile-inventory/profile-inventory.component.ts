@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, Input, OnInit, signal, computed } from '@angular/core';
 import { MaterialModule } from '../../modules/material.module';
 import { Item, Profile, SupabaseService } from '../../services/supabase/supabase.service';
 import { UserService } from '../../services/user/user.service';
@@ -24,114 +24,159 @@ import { CommonModule } from '@angular/common';
 })
 export class ProfileInventoryComponent implements OnInit {
 
-    private _userService: UserService = inject(UserService);
-    private _loaderService: LoaderService = inject(LoaderService);
-    private _supabaseService: SupabaseService = inject(SupabaseService);
+    private _userService = inject(UserService);
+    private _loaderService = inject(LoaderService);
+    private _supabaseService = inject(SupabaseService);
     private _router = inject(Router);
-    private _cdr = inject(ChangeDetectorRef);
+    private _snackBar = inject(MatSnackBar);
+
     private _user: User | null = null;
 
     @Input() profile: Profile | null = null;
 
+    public readonly items = signal<Item[]>([]);
+    public readonly isLoading = signal<boolean>(false);
+    public readonly showForm = signal<boolean>(false);
+    public readonly searchTerm = signal<string>('');
 
-    public items: any[] | null = null;
-    public createNewItem: boolean = false;
+    public readonly filteredItems = computed(() => {
+        const term = this.searchTerm().toLowerCase();
+        if (!term) return this.items();
+        return this.items().filter(item => 
+            item.name.toLowerCase().includes(term) ||
+            item.description?.toLowerCase().includes(term)
+        );
+    });
 
-    public newItem: Item = {
-        id: 0,
-        name: '',
-        description: '',
-        quantity: 0,
-        profile_id: '',
-        value: 0,
-        img_src: '',
-    };
-        
-    constructor(
-        private _snackBar: MatSnackBar
-    ) {
-        this._user = this._userService.getUser();
-    }
+    public readonly totalValue = computed(() => 
+        this.items().reduce((sum, item) => sum + (item.value || 0), 0)
+    );
+
+    public readonly itemCount = computed(() => this.items().length);
+
+    public newItem: Item = this._getEmptyItem();
 
     async ngOnInit(): Promise<void> {
-        // Defer loading state to avoid ExpressionChangedAfterItHasBeenCheckedError
-        setTimeout(() => this._loaderService.setLoading(true));
+        this._user = this._userService.getUser();
         
         if (!this._user) {
-            alert('Credenciales inválidas. Por favor, inicie sesión nuevamente.');
+            this._showSnackbar('Credenciales inválidas. Por favor, inicie sesión nuevamente.', 'error');
             this._router.navigate(['']);
-        } 
+            return;
+        }
 
-        this._loadData();
+        await this._loadData();
     }
 
     private async _loadData(): Promise<void> {
-        setTimeout(() => this._loaderService.setLoading(true));
+        this.isLoading.set(true);
+        
+        try {
+            if (this._user) {
+                const response = await this._supabaseService.getItems(this._user.id);
+                this.items.set(response.data || []);
+            }
+        } catch (error) {
+            console.error('Error loading inventory:', error);
+            this._showSnackbar('Error al cargar el inventario', 'error');
+        } finally {
+            this.isLoading.set(false);
+        }
+    }
 
-        if (this._user) {
-            let response = await this._supabaseService.getItems(this._user.id);
+    public openForm(): void {
+        this.newItem = this._getEmptyItem();
+        this.showForm.set(true);
+    }
 
-            this.items = response.data;
-            this._cdr.detectChanges();
+    public closeForm(): void {
+        this.showForm.set(false);
+        this.newItem = this._getEmptyItem();
+    }
+
+    public async saveItem(): Promise<void> {
+        if (!this._user) {
+            this._showSnackbar('Usuario no autenticado', 'error');
+            return;
         }
 
-        setTimeout(() => this._loaderService.setLoading(false));
-    }
+        if (!this.newItem.name?.trim()) {
+            this._showSnackbar('El nombre del objeto es requerido', 'error');
+            return;
+        }
 
-    ngOnChanges() : void {
+        this.isLoading.set(true);
 
-    }
-
-    public goToEditStats(): void {
-        this._router.navigate(['profile-stats-edit']);
-    }
-
-    public async saveItemToProfile(): Promise<void> {
-
-        if (!this._user) {
-            console.error('User is null!');
-        } else {
+        try {
             this.newItem.profile_id = this._user.id;
-            this.newItem.quantity += 1;
+            this.newItem.quantity = 1;
 
             await this._supabaseService.saveItemToProfile(this.newItem);
+            
+            this._showSnackbar('¡Objeto añadido al inventario!', 'success');
+            this.closeForm();
+            await this._loadData();
+        } catch (error) {
+            console.error('Error saving item:', error);
+            this._showSnackbar('Error al guardar el objeto', 'error');
+        } finally {
+            this.isLoading.set(false);
         }
-
-        this.createNewItem = false;
-        
-        this._snackBar.open('Objeto guardado con exito!', 'Cerrar', {
-            duration: 3000,
-            verticalPosition: 'bottom',
-            panelClass: ['snack-bar-success']
-        });
-        
-        this._loadData();
     }
 
     public async deleteItem(item: Item): Promise<void> {
-        // We open a dialog to confirm the deletion of the item
-        const dialogRef = this._snackBar.open('¿Estas seguro de eliminar este objeto?', 'Si', {
-            duration: 10000,
-            verticalPosition: 'bottom',
-            panelClass: ['snack-bar-danger']
-        });
-
-        dialogRef.afterDismissed().subscribe(result => {
-            if (result) {
-                this.confirmDeleteItem(item);
+        const snackBarRef = this._snackBar.open(
+            `¿Eliminar "${item.name}" del inventario?`,
+            'Eliminar',
+            {
+                duration: 5000,
+                verticalPosition: 'bottom',
+                panelClass: ['snack-bar-warning']
             }
+        );
+
+        snackBarRef.onAction().subscribe(async () => {
+            await this._confirmDelete(item);
         });
     }
 
-    public async confirmDeleteItem(item: Item): Promise<void> {
+    private async _confirmDelete(item: Item): Promise<void> {
+        if (!this._user) return;
 
-        if (!this._user) {
-            console.error('User is null!');
-        } else {
+        this.isLoading.set(true);
+
+        try {
             await this._supabaseService.deleteItemFromProfile(item);
+            this.items.update(list => list.filter(i => i.id !== item.id));
+            this._showSnackbar(`"${item.name}" eliminado`, 'success');
+        } catch (error) {
+            console.error('Error deleting item:', error);
+            this._showSnackbar('Error al eliminar el objeto', 'error');
+        } finally {
+            this.isLoading.set(false);
         }
-
-        this._loadData();
     }
 
+    private _getEmptyItem(): Item {
+        return {
+            id: 0,
+            name: '',
+            description: '',
+            quantity: 1,
+            profile_id: '',
+            value: 0,
+            img_src: ''
+        };
+    }
+
+    private _showSnackbar(message: string, type: 'success' | 'error' | 'warning' = 'success'): void {
+        const panelClass = type === 'success' ? 'snack-bar-success' : 
+                          type === 'error' ? 'snack-bar-danger' : 'snack-bar-warning';
+        
+        this._snackBar.open(message, 'Cerrar', {
+            duration: 3000,
+            verticalPosition: 'bottom',
+            panelClass: [panelClass]
+        });
+    }
 }

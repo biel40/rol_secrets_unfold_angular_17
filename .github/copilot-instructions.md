@@ -7,7 +7,6 @@
 - ⚔️ Sistema de combate en tiempo real
 - 👥 Panel del Dungeon Master (DM) para administración
 - 📱 Aplicación multiplataforma
-- 🌐 Internacionalización (ES/EN)
 
 ## Architecture Overview
 
@@ -548,13 +547,6 @@ export const routes: Routes = [
 
 ### Route Guards
 **IMPORTANTE**: El acceso a `/admin` debe estar **protegido** por email:
-
-```typescript
-// TODO: Implementar guard
-if (this.user?.email !== 'dmthesecretsunfold@gmail.com') {
-    this._router.navigate(['']);
-    return;
-}
 ```
 
 **Estructura de componentes por ruta**:
@@ -1097,8 +1089,6 @@ El código debe ser **autoexplicativo**. Usa comentarios solo cuando aporten val
 ```typescript
 // Retrasamos 100ms porque el modal necesita tiempo para inicializar el DOM
 setTimeout(() => this.inputRef.nativeElement.focus(), 100);
-
-// TODO: Migrar a RxJS cuando se implemente el sistema de cache
 ```
 
 ### ❌ Cuándo NO comentar:
@@ -1146,8 +1136,8 @@ public readonly filteredEnemies = computed(() => {
 });
 
 // ✅ Actualizar signal
-this.enemies.set(newEnemies);           // Reemplazar valor
-this.enemies.update(list => [...list, newEnemy]); // Actualizar basado en valor actual
+this.enemies.set(newEnemies);         
+this.enemies.update(list => [...list, newEnemy]); // Actualizar
 
 // ✅ Leer signal en template
 {{ enemies().length }}
@@ -1306,14 +1296,6 @@ export class AdminStateService {
     }
 }
 ```
-
-**Beneficios**:
-- ✅ Estado centralizado para el módulo
-- ✅ Reutilizable entre componentes
-- ✅ Testable (inyectable)
-- ✅ Signals para reactividad nativa
-- ✅ Computed properties para filtros
-
 ---
 
 ## Service Architecture Overview
@@ -1374,10 +1356,3 @@ src/app/services/
 - [Supabase Documentation](https://supabase.com/docs)
 - [Transloco Docs](https://jsverse.github.io/transloco/)
 - [TypeScript Best Practices](https://www.typescriptlang.org/docs/)
-
----
-
-**Last Updated**: January 5, 2026
-**Maintainer**: Biele
-**Version**: Angular 21, Supabase v2
-
