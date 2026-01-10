@@ -259,5 +259,10 @@
     "profiles-selected": "perfiles seleccionados",
     "unsaved-changes": "Cambios sin guardar",
     "no-profiles-found": "No se encontraron perfiles",
-    "saving": "Guardando..."
+    "saving": "Guardando...",
+    "all": "Todos",
+    "normal": "Normal",
+    "bosses": "Jefes",
+    "enemy-type": "Tipo",
+    "showing": "Mostrando"
 }

@@ -29,10 +29,9 @@ export class EnemiesTabComponent implements OnInit, OnDestroy {
     public openCreateEnemyDialog(): void {
         const dialogRef = this._dialog.open(EnemyDialogComponent, {
             data: {},
-            width: 'min(90vw, 900px)',
-            minWidth: '320px',
-            maxWidth: '900px',
-            maxHeight: '95vh',
+            width: 'auto',
+            maxWidth: '95vw',
+            maxHeight: '90vh',
             disableClose: false,
             autoFocus: false,
             panelClass: 'enemy-dialog-panel'
@@ -48,10 +47,9 @@ export class EnemiesTabComponent implements OnInit, OnDestroy {
     public editEnemy(enemy: Enemy): void {
         const dialogRef = this._dialog.open(EnemyDialogComponent, {
             data: { enemy },
-            width: 'min(90vw, 900px)',
-            minWidth: '320px',
-            maxWidth: '900px',
-            maxHeight: '95vh',
+            width: 'auto',
+            maxWidth: '95vw',
+            maxHeight: '90vh',
             disableClose: false,
             autoFocus: false,
             panelClass: 'enemy-dialog-panel'

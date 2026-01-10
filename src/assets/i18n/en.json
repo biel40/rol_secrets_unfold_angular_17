@@ -256,5 +256,10 @@
     "profiles-selected": "profiles selected",
     "unsaved-changes": "Unsaved changes",
     "no-profiles-found": "No profiles found",
-    "saving": "Saving..."
+    "saving": "Saving...",
+    "all": "All",
+    "normal": "Normal",
+    "bosses": "Bosses",
+    "enemy-type": "Type",
+    "showing": "Showing"
 }

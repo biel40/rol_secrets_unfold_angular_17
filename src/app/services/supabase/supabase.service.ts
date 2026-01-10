@@ -58,8 +58,7 @@ export interface Enemy {
   current_hp: number,
   total_hp: number,
   is_boss: boolean,
-  image_url: string,
-  defense?: number
+  image_url: string
 }
 
 export interface NPC {

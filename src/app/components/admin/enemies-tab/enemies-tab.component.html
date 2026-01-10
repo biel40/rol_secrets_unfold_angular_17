@@ -47,67 +47,108 @@
 
 <!-- Enemy Library Section -->
 <div class="enemies-library">
+    <!-- Header con búsqueda -->
     <div class="library-header">
         <h2 class="library-title">{{ 'enemy-library' | transloco }}</h2>
-        <div class="library-actions">
-            <button class="library-button" (click)="openCreateEnemyDialog()">
-                <span class="add-icon">+</span>
-                {{ 'create-enemy' | transloco }}
-            </button>
+        <button class="library-button" (click)="openCreateEnemyDialog()">
+            <span class="add-icon">+</span>
+            {{ 'create-enemy' | transloco }}
+        </button>
+    </div>
 
-            <!-- Level Filter -->
-            <div class="filter-container">
-                <select class="level-filter" [ngModel]="state.enemyLevelFilter()" 
-                        (ngModelChange)="state.enemyLevelFilter.set($event)">
-                    <option value="">{{ 'all-levels' | transloco }}</option>
-                    @for (levelRange of state.levelRanges; track levelRange.value) {
-                        <option [value]="levelRange.value">{{ levelRange.label }}</option>
-                    }
-                </select>
-            </div>
-
-            <!-- Boss Filter -->
-            <div class="filter-container">
-                <select class="boss-filter" [ngModel]="state.enemyBossFilter()" 
-                        (ngModelChange)="state.enemyBossFilter.set($event)">
-                    <option value="">{{ 'all-enemy-types' | transloco }}</option>
-                    @for (option of state.bossFilterOptions; track option.value) {
-                        <option [value]="option.value">{{ option.label }}</option>
-                    }
-                </select>
-            </div>
-
-            <!-- Search -->
-            <div class="search-container">
-                <input type="text" 
-                       class="search-input" 
-                       [placeholder]="'search-enemies' | transloco"
-                       [ngModel]="state.enemySearchTerm()"
-                       (ngModelChange)="state.enemySearchTerm.set($event)">
-            </div>
-
-            <!-- Clear Filters -->
-            <button class="clear-filters-button" 
-                    (click)="clearFilters()"
-                    [disabled]="state.activeEnemyFiltersCount() === 0">
-                🗑️ {{ 'clear-filters' | transloco }}
-                @if (state.activeEnemyFiltersCount() > 0) {
-                    <span class="filter-count">{{ state.activeEnemyFiltersCount() }}</span>
-                }
-            </button>
+    <!-- Barra de búsqueda prominente -->
+    <div class="search-bar">
+        <div class="search-wrapper">
+            <span class="search-icon">🔍</span>
+            <input type="text" 
+                   class="search-input" 
+                   [placeholder]="'search-enemies' | transloco"
+                   [ngModel]="state.enemySearchTerm()"
+                   (ngModelChange)="state.enemySearchTerm.set($event)">
+            @if (state.enemySearchTerm()) {
+                <button class="clear-search" (click)="state.enemySearchTerm.set('')">✕</button>
+            }
         </div>
     </div>
 
-    <!-- Filter Status -->
+    <!-- Filtros visuales con chips -->
+    <div class="filters-section">
+        <!-- Filtro por tipo (Boss/Normal) -->
+        <div class="filter-group">
+            <span class="filter-label">{{ 'enemy-type' | transloco }}</span>
+            <div class="filter-chips">
+                <button class="filter-chip" 
+                        [class.active]="state.enemyBossFilter() === ''"
+                        (click)="state.enemyBossFilter.set('')">
+                    <span class="chip-text">{{ 'all' | transloco }}</span>
+                </button>
+                <button class="filter-chip" 
+                        [class.active]="state.enemyBossFilter() === 'normal'"
+                        (click)="state.enemyBossFilter.set('normal')">
+                    <span class="chip-text">{{ 'normal' | transloco }}</span>
+                </button>
+                <button class="filter-chip boss" 
+                        [class.active]="state.enemyBossFilter() === 'boss'"
+                        (click)="state.enemyBossFilter.set('boss')">
+                    <span class="chip-text">{{ 'bosses' | transloco }}</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Filtro por nivel con chips visuales -->
+        <div class="filter-group">
+            <span class="filter-label">{{ 'level' | transloco }}</span>
+            <div class="filter-chips level-chips">
+                <button class="filter-chip level" 
+                        [class.active]="state.enemyLevelFilter() === ''"
+                        (click)="state.enemyLevelFilter.set('')">
+                    <span class="chip-text">{{ 'all' | transloco }}</span>
+                </button>
+                <button class="filter-chip level" 
+                        [class.active]="state.enemyLevelFilter() === '1-5'"
+                        (click)="state.enemyLevelFilter.set('1-5')">
+                    <span class="level-badge">1-5</span>
+                </button>
+                <button class="filter-chip level" 
+                        [class.active]="state.enemyLevelFilter() === '6-10'"
+                        (click)="state.enemyLevelFilter.set('6-10')">
+                    <span class="level-badge">6-10</span>
+                </button>
+                <button class="filter-chip level" 
+                        [class.active]="state.enemyLevelFilter() === '11-20'"
+                        (click)="state.enemyLevelFilter.set('11-20')">
+                    <span class="level-badge">11-20</span>
+                </button>
+                <button class="filter-chip level" 
+                        [class.active]="state.enemyLevelFilter() === '21-50'"
+                        (click)="state.enemyLevelFilter.set('21-50')">
+                    <span class="level-badge">21-50</span>
+                </button>
+                <button class="filter-chip level" 
+                        [class.active]="state.enemyLevelFilter() === '51'"
+                        (click)="state.enemyLevelFilter.set('51')">
+                    <span class="level-badge">51+</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barra de estado de filtros -->
     @if (state.activeEnemyFiltersCount() > 0) {
-        <div class="filter-status">
-            <p>
-                {{ 'showing-filtered-results' | transloco }}
-                <strong>{{ state.filteredEnemies().length }}</strong>
-                {{ 'of' | transloco }}
-                <strong>{{ state.enemies().length }}</strong>
-                {{ 'enemies' | transloco }}
-            </p>
+        <div class="filter-status-bar">
+            <div class="status-info">
+                <span class="status-icon">📋</span>
+                <span>
+                    {{ 'showing' | transloco }} 
+                    <strong>{{ state.filteredEnemies().length }}</strong> 
+                    {{ 'of' | transloco }} 
+                    <strong>{{ state.enemies().length }}</strong>
+                </span>
+            </div>
+            <button class="clear-all-filters" (click)="clearFilters()">
+                <span>🗑️</span>
+                {{ 'clear-filters' | transloco }}
+            </button>
         </div>
     }
 
@@ -141,10 +182,6 @@
                             <div class="stat-item">
                                 <span class="stat-icon">⚔️</span>
                                 <span class="stat-value">10</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-icon">🛡️</span>
-                                <span class="stat-value">{{ enemy.defense || 5 }}</span>
                             </div>
                         </div>
                     </div>

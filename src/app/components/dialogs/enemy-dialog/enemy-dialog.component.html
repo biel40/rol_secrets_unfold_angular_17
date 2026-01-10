@@ -1,139 +1,129 @@
 <div class="enemy-dialog-container">
-  <!-- Header con título y botón de cerrar -->
-  <div class="dialog-header">
-    <div class="header-content">
-      <mat-icon class="header-icon">{{ isEditing ? 'edit' : 'person_add_alt' }}</mat-icon>
-      <h2>{{ isEditing ? ('edit-enemy' | transloco) : ('create-enemy' | transloco) }}</h2>
+  <form [formGroup]="enemyForm" (ngSubmit)="onSave()">
+    <!-- Header compacto -->
+    <div class="dialog-header">
+      <div class="header-title">
+        <mat-icon>{{ isEditing ? 'edit' : 'add_circle' }}</mat-icon>
+        <span>{{ isEditing ? ('edit-enemy' | transloco) : ('create-enemy' | transloco) }}</span>
+      </div>
+      <button type="button" class="close-btn" (click)="onCancel()">
+        <mat-icon>close</mat-icon>
+      </button>
     </div>
-  </div>
 
-  <!-- Contenido principal con scroll -->
-  <mat-dialog-content>
-    <form [formGroup]="enemyForm" (ngSubmit)="onSave()" class="enemy-form">
-      <div class="form-layout">
-        <!-- Sección de información básica -->
-        <div class="form-section">
-          <h3 class="section-title">
-            <mat-icon>info</mat-icon>
-            {{ 'basic-information' | transloco }}
-          </h3>
-
-          <div class="form-content">
-            <!-- Campo de nombre -->
-            <mat-form-field class="full-width">
-              <mat-label>{{ 'enemy-name' | transloco }}</mat-label>
-              <input matInput formControlName="name" placeholder="{{ 'enemy-name' | transloco }}">
-              <mat-error *ngIf="enemyForm.get('name')?.invalid && enemyForm.get('name')?.touched">
-                {{ getErrorMessage('name') }}
-              </mat-error>
-            </mat-form-field>
-
-            <!-- Campo de descripción -->
-            <mat-form-field class="full-width">
-              <mat-label>{{ 'enemy-description' | transloco }}</mat-label>
-              <textarea matInput formControlName="description" placeholder="{{ 'enemy-description' | transloco }}"
-                rows="3"></textarea>
-              <mat-error *ngIf="enemyForm.get('description')?.invalid && enemyForm.get('description')?.touched">
-                {{ getErrorMessage('description') }}
-              </mat-error>
-            </mat-form-field>
-          </div>
-        </div>
-
-        <!-- Sección de estadísticas -->
-        <div class="form-section">
-          <h3 class="section-title">
-            <mat-icon>bar_chart</mat-icon>
-            {{ 'statistics' | transloco }}
-          </h3>
-
-          <div class="form-content">
-            <div class="form-row">
-              <!-- Campo de nivel -->
-              <mat-form-field class="half-width">
-                <mat-label>{{ 'level' | transloco }}</mat-label>
-                <input matInput type="number" formControlName="level" min="1" max="100">
-                <mat-error *ngIf="enemyForm.get('level')?.invalid && enemyForm.get('level')?.touched">
-                  {{ getErrorMessage('level') }}
-                </mat-error>
-              </mat-form-field>
-            </div>
-
-            <div class="form-row">
-              <!-- Campo de HP total -->
-              <mat-form-field class="half-width">
-                <mat-label>{{ 'total-hp' | transloco }}</mat-label>
-                <input matInput type="number" formControlName="total_hp" min="1">
-                <mat-error *ngIf="enemyForm.get('total_hp')?.invalid && enemyForm.get('total_hp')?.touched">
-                  {{ getErrorMessage('total_hp') }}
-                </mat-error>
-              </mat-form-field>
-
-              <!-- Campo de HP actual -->
-              <mat-form-field class="half-width">
-                <mat-label>{{ 'current-hp' | transloco }}</mat-label>
-                <input matInput type="number" formControlName="current_hp" min="0">
-                <mat-error *ngIf="enemyForm.get('current_hp')?.invalid && enemyForm.get('current_hp')?.touched">
-                  {{ getErrorMessage('current_hp') }}
-                </mat-error>
-              </mat-form-field>
-            </div>
-
-            
-            <div class="checkbox-container">
-              <mat-checkbox formControlName="is_boss" class="boss-checkbox">
-                {{ 'is-boss-enemy' | transloco }}
-              </mat-checkbox>
-              <mat-icon class="boss-icon">star</mat-icon>
-            </div>
-          </div>
-        </div>
-
-        <!-- Sección de imagen -->
-        <div class="form-section">
-          <h3 class="section-title">
-            <mat-icon>image</mat-icon>
-            {{ 'appearance' | transloco }}
-          </h3>
-
-          <div class="form-content">
-            <!-- Campo de URL de imagen -->
-            <mat-form-field class="full-width">
-              <mat-label>{{ 'image-url' | transloco }}</mat-label>
-              <input matInput formControlName="image_url" placeholder="{{ 'image-url-placeholder' | transloco }}">
-              <mat-error *ngIf="enemyForm.get('image_url')?.invalid && enemyForm.get('image_url')?.touched">
-                {{ getErrorMessage('image_url') }}
-              </mat-error>
-            </mat-form-field>
-
-            <!-- Vista previa de imagen -->
-            <div class="image-preview" *ngIf="enemyForm.get('image_url')?.value">
-              <div class="preview-container">
-                <img [src]="enemyForm.get('image_url')?.value" [alt]="enemyForm.get('name')?.value || 'Enemy preview'"
-                  (error)="onImageError($event)" (load)="onImageLoad($event)">
-                <div class="preview-overlay">
-                  <mat-icon>preview</mat-icon>
-                </div>
+    <!-- Layout de dos columnas -->
+    <div class="dialog-body">
+      <!-- Columna izquierda: Preview del enemigo -->
+      <div class="preview-column">
+        <div class="enemy-preview-card" [class.is-boss]="enemyForm.get('is_boss')?.value">
+          <!-- Imagen preview -->
+          <div class="preview-image">
+            @if (enemyForm.get('image_url')?.value) {
+              <img [src]="enemyForm.get('image_url')?.value" 
+                   [alt]="enemyForm.get('name')?.value || 'Preview'"
+                   (error)="onImageError($event)" 
+                   (load)="onImageLoad($event)">
+            } @else {
+              <div class="image-placeholder">
+                <mat-icon>image</mat-icon>
+                <span>{{ 'add-image' | transloco }}</span>
               </div>
+            }
+            @if (enemyForm.get('is_boss')?.value) {
+              <div class="boss-crown">👑</div>
+            }
+          </div>
+
+          <!-- Info preview -->
+          <div class="preview-info">
+            <h3 class="preview-name">{{ enemyForm.get('name')?.value || ('enemy-name' | transloco) }}</h3>
+            <div class="preview-level">{{ 'level' | transloco }} {{ enemyForm.get('level')?.value || 1 }}</div>
+          </div>
+
+          <!-- Stats preview -->
+          <div class="preview-stats">
+            <div class="stat">
+              <span class="stat-icon">❤️</span>
+              <span class="stat-value">{{ enemyForm.get('total_hp')?.value || 100 }}</span>
             </div>
           </div>
+        </div>
+
+        <!-- URL de imagen -->
+        <mat-form-field class="image-url-field">
+          <mat-label>{{ 'image-url' | transloco }}</mat-label>
+          <input matInput formControlName="image_url" placeholder="https://...">
+          <mat-icon matPrefix>link</mat-icon>
+          @if (enemyForm.get('image_url')?.invalid && enemyForm.get('image_url')?.touched) {
+            <mat-error>{{ getErrorMessage('image_url') }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <!-- Columna derecha: Formulario -->
+      <div class="form-column">
+        <!-- Nombre -->
+        <mat-form-field>
+          <mat-label>{{ 'enemy-name' | transloco }}</mat-label>
+          <input matInput formControlName="name">
+          <mat-icon matPrefix>badge</mat-icon>
+          @if (enemyForm.get('name')?.invalid && enemyForm.get('name')?.touched) {
+            <mat-error>{{ getErrorMessage('name') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Descripción -->
+        <mat-form-field>
+          <mat-label>{{ 'enemy-description' | transloco }}</mat-label>
+          <textarea matInput formControlName="description" rows="5"></textarea>
+          <mat-icon matPrefix>description</mat-icon>
+          @if (enemyForm.get('description')?.invalid && enemyForm.get('description')?.touched) {
+            <mat-error>{{ getErrorMessage('description') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Stats en grid compacto -->
+        <div class="stats-grid">
+          <mat-form-field class="stat-field">
+            <mat-label>{{ 'level' | transloco }}</mat-label>
+            <input matInput type="number" formControlName="level" min="1" max="100">
+            <mat-icon matPrefix>trending_up</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field class="stat-field">
+            <mat-label>{{ 'total-hp' | transloco }}</mat-label>
+            <input matInput type="number" formControlName="total_hp" min="1">
+            <mat-icon matPrefix>favorite</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field class="stat-field">
+            <mat-label>{{ 'current-hp' | transloco }}</mat-label>
+            <input matInput type="number" formControlName="current_hp" min="0">
+            <mat-icon matPrefix>favorite_border</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <!-- Boss toggle -->
+        <div class="boss-toggle" [class.active]="enemyForm.get('is_boss')?.value">
+          <mat-checkbox formControlName="is_boss">
+            <div class="boss-label">
+              <span>👑</span>
+              <span>{{ 'is-boss-enemy' | transloco }}</span>
+            </div>
+          </mat-checkbox>
         </div>
       </div>
-    </form>
-  </mat-dialog-content>
+    </div>
 
-  <!-- Acciones del diálogo -->
-  <mat-dialog-actions>
-    <div class="dialog-actions">
-      <button type="button" mat-button (click)="onCancel()" class="cancel-button">
-        <mat-icon>close</mat-icon>
+    <!-- Footer con acciones -->
+    <div class="dialog-footer">
+      <button type="button" class="btn-cancel" (click)="onCancel()">
         {{ 'cancel' | transloco }}
       </button>
-      <button type="submit" mat-raised-button color="primary" [disabled]="!enemyForm.valid" (click)="onSave()"
-        class="save-button">
-        <mat-icon>{{ isEditing ? 'update' : 'add' }}</mat-icon>
+      <button type="submit" class="btn-save" [disabled]="!enemyForm.valid" (click)="onSave()">
+        <mat-icon>{{ isEditing ? 'save' : 'add' }}</mat-icon>
         {{ isEditing ? ('update-enemy' | transloco) : ('create-enemy' | transloco) }}
       </button>
     </div>
-  </mat-dialog-actions>
+  </form>
 </div>
