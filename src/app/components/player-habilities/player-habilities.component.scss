@@ -417,8 +417,8 @@ $natura-color: #27ae60;
 
 .btn-damage {
     flex: 0 1 auto;
-    background: linear-gradient(135deg, $gold-color, color.adjust($gold-color, $lightness: -12%));
-    color: $bg-dark;
+    background: linear-gradient(135deg, #d4af37, #b8973b) !important;
+    color: $bg-dark !important;
     box-shadow: 0 4px 15px rgba($gold-color, 0.3);
     min-width: 90px;
     
@@ -427,15 +427,16 @@ $natura-color: #27ae60;
     }
     
     &:hover:not(:disabled) {
-        background: linear-gradient(135deg, $gold-light, $gold-color);
+        background: linear-gradient(135deg, $gold-light, $gold-color) !important;
         box-shadow: 0 6px 20px rgba($gold-color, 0.4);
         transform: translateY(-2px);
     }
     
     &:disabled {
-        background: linear-gradient(135deg, #555, #444);
-        color: #888;
+        background: linear-gradient(135deg, #555, #444) !important;
+        color: #888 !important;
         box-shadow: none;
+        opacity: 0.5;
     }
 }
 

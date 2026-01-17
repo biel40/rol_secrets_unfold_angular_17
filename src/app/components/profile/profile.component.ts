@@ -133,15 +133,15 @@ export class ProfileComponent implements OnInit {
     }
 
 
-    public async signOut() {
+    public async signOut(): Promise<void> {
         this._loaderService.setLoading(true);
-        this._userService.clearUser();
-        this._supabaseService.signOut();
-
-        setTimeout(() => {
-            this._loaderService.setLoading(false);
+        
+        try {
+            await this._userService.signOut();
             this._router.navigate(['']);
-        }, 500);
+        } finally {
+            this._loaderService.setLoading(false);
+        }
     }
 
     private _displaySnackbar(message: string): void {
@@ -154,8 +154,8 @@ export class ProfileComponent implements OnInit {
         this._loaderService.setLoading(false);
     }
 
-    public goBack(): void {
-        this._supabaseService.signOut();
+    public async goBack(): Promise<void> {
+        await this._userService.signOut();
         this._router.navigate(['']);
     }
 

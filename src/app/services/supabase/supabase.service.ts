@@ -370,8 +370,8 @@ export class SupabaseService {
     });
   }
 
-  public signOut(): any {
-    return this._supabaseClient.auth.signOut()
+  public async signOut(): Promise<void> {
+    await this._supabaseClient.auth.signOut({ scope: 'local' });
   }
 
   // Had to fix this manually to work

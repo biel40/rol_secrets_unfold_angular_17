@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { SupabaseService } from '../../services/supabase/supabase.service';
+import { UserService } from '../../services/user/user.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 })
 export class NewProfileComponent implements OnInit {
 
-    private _supabaseService: SupabaseService = inject(SupabaseService);
+    private _userService = inject(UserService);
     private _router = inject(Router);
 
     constructor() { }
@@ -22,8 +22,8 @@ export class NewProfileComponent implements OnInit {
 
     }
 
-    public async signOut() {
-        await this._supabaseService.signOut();
+    public async signOut(): Promise<void> {
+        await this._userService.signOut();
         this._router.navigate(['']);
     }
 }

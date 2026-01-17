@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { User } from '@supabase/supabase-js';
 import { SupabaseService } from '../supabase/supabase.service';
+import { ProfileService } from '../profile/profile.service';
 
 @Injectable({
     providedIn: 'root'
@@ -9,6 +10,7 @@ export class UserService {
 
     protected user: User | null = null;
     private _supabaseService = inject(SupabaseService);
+    private _profileService = inject(ProfileService);
     private _authSubscription: { unsubscribe: () => void } | null = null;
 
     constructor() {
@@ -65,5 +67,12 @@ export class UserService {
     public destroyAuthSync(): void {
         this._authSubscription?.unsubscribe();
         this._authSubscription = null;
+    }
+
+    public async signOut(): Promise<void> {
+        this.destroyAuthSync();
+        this.clearUser();
+        this._profileService.clearProfile();
+        await this._supabaseService.signOut();
     }
 }

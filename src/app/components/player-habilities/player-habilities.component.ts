@@ -117,10 +117,13 @@ export class PlayerHabilitiesComponent implements OnInit, OnChanges {
     public openDialog(hability: Hability): void {
         // Clone the hability to avoid modifying the parent view state during the dialog's lifecycle (NG0100 fix)
         const habilityClone = { ...hability };
+        // Clone the profile to pass to the dialog and avoid async loading
+        const profileClone = this.profile ? { ...this.profile } : null;
 
         const dialogRef = this.dialog.open(DiceMatDialogComponent, {
             data: { 
-                hability: habilityClone
+                hability: habilityClone,
+                profile: profileClone
             },
             width: '500px',
             maxHeight: '90vh',

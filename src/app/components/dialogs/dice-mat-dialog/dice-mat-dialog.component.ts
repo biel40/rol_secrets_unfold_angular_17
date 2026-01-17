@@ -1,11 +1,9 @@
-import { Component, inject, Inject, OnInit } from '@angular/core';
+import { afterNextRender, Component, inject, Inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialogClose, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { TranslocoModule } from '@jsverse/transloco';
-import { User } from '@supabase/supabase-js';
 import { MaterialModule } from '../../../modules/material.module';
 import { Hability, Profile, SupabaseService } from '../../../services/supabase/supabase.service';
-import { UserService } from '../../../services/user/user.service';
 
 @Component({
     selector: 'app-dice-mat-dialog',
@@ -20,73 +18,54 @@ import { UserService } from '../../../services/user/user.service';
         MatDialogTitle
     ]
 })
-export class DiceMatDialogComponent implements OnInit {
+export class DiceMatDialogComponent {
 
     private _supabaseService: SupabaseService = inject(SupabaseService);
-    private _userService: UserService = inject(UserService);
 
-    public profile: Profile | null = null;
-    private _user: User | null = null;
-    public diceNumber: number = 0;
-    public damage: number = 0;
-    public hability: Hability | null = null;
-    public isRolling: boolean = false;
+    // Use signals for reactive state
+    public readonly profile = signal<Profile | null>(null);
+    public readonly diceNumber = signal<number>(1);
+    public readonly damage = signal<number>(0);
+    public readonly hability = signal<Hability | null>(null);
+    public readonly isRolling = signal<boolean>(false);
+    public readonly isReady = signal<boolean>(false);
 
     constructor(
         public dialogRef: MatDialogRef<DiceMatDialogComponent>,
         @Inject(MAT_DIALOG_DATA)
-        public data: any,
+        public data: { hability: Hability; profile: Profile | null },
     ) {
+        // Initialize from dialog data synchronously
+        this.hability.set(this.data?.hability ?? null);
+        this.profile.set(this.data?.profile ?? null);
 
-    }
-
-    public async ngOnInit(): Promise<void> {
-
-        this.hability = this.data?.hability;
-
-        this._user = this._userService.getUser();
-
-        if (this._user) {
-            let profile = (await this._supabaseService.getProfileInfo(this._user.id)).data;
-
-            if (profile) {
-                this.profile = profile;
-            }
-        }
-
-        // Small delay to ensure component is fully rendered
-        setTimeout(() => {
+        // Use afterNextRender to roll dice after the view is fully rendered
+        // This avoids NG0100 errors by running outside change detection
+        afterNextRender(() => {
+            this.isReady.set(true);
             this.rollDice();
-        }, 300);
+        });
     }
 
-    /**
-     * Roll the dice with simple animation and visual feedback
-     */
     public rollDice() {
-        // Don't allow rolling while already rolling
-        if (this.isRolling) return;
+        if (this.isRolling()) return;
         
-        // Set rolling state
-        this.isRolling = true;
+        this.isRolling.set(true);
+        this.damage.set(0);
         
-        // Reset damage display
-        this.damage = 0;
         const damageDisplay = document.querySelector('.damage-display');
         if (damageDisplay) {
             damageDisplay.classList.remove('damage-calculated');
         }
         
-        // Generate random number for the dice (1-6)
         const rolledNumber = this.getRandomNumber(1, 6);
         console.log('Generated random number:', rolledNumber);
         
-        // Get dice element
         const simpleDice = document.querySelector('.simple-dice');
         
         if (!simpleDice) {
             console.error('Dice element not found');
-            this.isRolling = false;
+            this.isRolling.set(false);
             return;
         }
         
@@ -97,11 +76,11 @@ export class DiceMatDialogComponent implements OnInit {
         setTimeout(() => {
             simpleDice.classList.remove('rolling');
             
-            this.diceNumber = rolledNumber;
+            this.diceNumber.set(rolledNumber);
             
             this._calculateDamage();
             
-            this.isRolling = false;
+            this.isRolling.set(false);
         }, animationDuration);
     }
     
@@ -109,43 +88,44 @@ export class DiceMatDialogComponent implements OnInit {
      * Calculate damage based on dice roll and character stats
      */
     private async _calculateDamage() {
-        console.log('Calculating damage for dice number:', this.diceNumber);
+        const currentHability = this.hability();
+        const currentProfile = this.profile();
+        const currentDiceNumber = this.diceNumber();
+        
+        console.log('Calculating damage for dice number:', currentDiceNumber);
 
-        if (this.hability) {
+        if (currentHability) {
             // Decrement ability uses
-            this.hability.current_uses--;
+            currentHability.current_uses--;
 
             // Update ability in database
-            await this._supabaseService.updateHability(this.hability);
+            await this._supabaseService.updateHability(currentHability);
 
-            let damage: number = 0;
+            let calculatedDamage: number = 0;
 
-            if (
-                this.profile && 
-                this.profile.attack != undefined
-            ) {
+            if (currentProfile && currentProfile.attack != undefined) {
                 // Base damage is dice roll + attack stat
-                damage = (this.diceNumber) + (this.profile.attack);
+                calculatedDamage = currentDiceNumber + currentProfile.attack;
 
                 // Add weapon bonus
                 if (
-                    this.profile.weapon === 'Espada' ||
-                    this.profile.weapon === 'Dagas'
+                    currentProfile.weapon === 'Espada' ||
+                    currentProfile.weapon === 'Dagas'
                 ) {
-                    damage += 2;
+                    calculatedDamage += 2;
                 }
 
                 // Add class bonus
-                if (this.profile.clase === 'Guerrero') {
-                    damage += 2;
-                } else if (this.profile.clase === 'Pícaro') {
-                    damage += 1;
+                if (currentProfile.clase === 'Guerrero') {
+                    calculatedDamage += 2;
+                } else if (currentProfile.clase === 'Pícaro') {
+                    calculatedDamage += 1;
                 }
 
-                console.log('Final calculated damage:', damage);
+                console.log('Final calculated damage:', calculatedDamage);
                 
                 // Set the damage value
-                this.damage = damage;
+                this.damage.set(calculatedDamage);
                 
                 // Show the damage display with animation
                 setTimeout(() => {

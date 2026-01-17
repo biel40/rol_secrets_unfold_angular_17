@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { TranslocoModule } from '@jsverse/transloco';
@@ -12,6 +12,7 @@ import { HabilitiesTabComponent } from '../habilities-tab/habilities-tab.compone
 import { AdminStateService } from '../../../services/admin/admin-state.service';
 import { SupabaseService, Profile, Enemy } from '../../../services/supabase/supabase.service';
 import { UserService } from '../../../services/user/user.service';
+import { LoaderService } from '../../../services/loader/loader.service';
 
 @Component({
     selector: 'app-admin',
@@ -28,9 +29,10 @@ import { UserService } from '../../../services/user/user.service';
         HabilitiesTabComponent
     ]
 })
-export class AdminComponent implements OnInit {
+export class AdminComponent implements OnInit, OnDestroy {
     private readonly _supabaseService = inject(SupabaseService);
     private readonly _userService = inject(UserService);
+    private readonly _loaderService = inject(LoaderService);
     private readonly _router = inject(Router);
     public readonly state = inject(AdminStateService);
 
@@ -39,6 +41,8 @@ export class AdminComponent implements OnInit {
     public readonly currentTab = signal<'enemies' | 'npcs' | 'quests' | 'users' | 'habilities'>('enemies');
 
     public async ngOnInit(): Promise<void> {
+        this._loaderService.setLoading(false);
+        
         const currentUser = this._userService.getUser();
         this.user.set(currentUser);
 
@@ -52,13 +56,16 @@ export class AdminComponent implements OnInit {
         await this.state.loadAllData();
     }
 
+    public ngOnDestroy(): void {
+        this._loaderService.setLoading(false);
+    }
+
     public switchTab(tabName: 'enemies' | 'npcs' | 'quests' | 'users' | 'habilities'): void {
         this.currentTab.set(tabName);
     }
 
-    public signOut(): void {
-        this._userService.clearUser();
-        this._supabaseService.signOut();
+    public async signOut(): Promise<void> {
+        await this._userService.signOut();
         this.state.showSnackbar('Sesión cerrada correctamente.');
         this._router.navigate(['']);
     }

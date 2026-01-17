@@ -64,6 +64,11 @@ export class AuthComponent implements OnInit, OnDestroy {
 
   private async _checkUserSession() {
     try {
+      const localUser = this._userService.getUser();
+      if (!localUser) {
+        return;
+      }
+
       const session = await this._supabaseService.getSession();
       const isSessionValid = !!session?.user && !!session?.expires_at && session.expires_at > Math.floor(Date.now() / 1000);
 
