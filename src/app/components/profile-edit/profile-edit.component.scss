@@ -375,9 +375,18 @@
 .submit-container {
     width: 100%;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     margin-top: 1.5rem;
+    gap: 0.65rem;
+}
+
+.shortcut-hint {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+    letter-spacing: 0.02em;
 }
 
 // Animación de pulso para elementos enfocados

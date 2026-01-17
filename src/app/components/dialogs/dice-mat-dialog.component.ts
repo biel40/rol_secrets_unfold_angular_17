@@ -67,39 +67,20 @@ export class DiceMatDialogComponent implements OnInit {
         
         // Set rolling state
         this.isRolling = true;
-        
-        // Reset damage display
         this.damage = 0;
-        const damageDisplay = document.querySelector('.damage-display');
-        if (damageDisplay) {
-            damageDisplay.classList.remove('damage-calculated');
-        }
+        this.diceNumber = 0; // Reset to 0 to remove specific face class during roll
         
         // Generate random number for the dice (1-6)
         const rolledNumber = this.getRandomNumber(1, 6);
         console.log('Generated random number:', rolledNumber);
         
-        // Get dice element
-        const simpleDice = document.querySelector('.simple-dice');
-        
-        if (!simpleDice) {
-            console.error('Dice element not found');
-            this.isRolling = false;
-            return;
-        }
-        
-        simpleDice.classList.add('rolling');
-        
         const animationDuration = 1000;
         
         setTimeout(() => {
-            simpleDice.classList.remove('rolling');
-            
             this.diceNumber = rolledNumber;
+            this.isRolling = false;
             
             this._calculateDamage();
-            
-            this.isRolling = false;
         }, animationDuration);
     }
     
@@ -109,21 +90,18 @@ export class DiceMatDialogComponent implements OnInit {
     private async _calculateDamage() {
         console.log('Calculating damage for dice number:', this.diceNumber);
 
-        if (this.hability) {
+        if (this.hability && this.profile) {
             // Decrement ability uses
             this.hability.current_uses--;
 
-            // Update ability in database
-            await this._supabaseService.updateHability(this.hability);
+            // Update ability uses in profile_habilities junction table
+            await this._supabaseService.updateHabilityUses(this.hability, this.profile);
 
             let damage: number = 0;
 
-            if (
-                this.profile && 
-                this.profile.attack != undefined
-            ) {
+            if (this.profile.attack != undefined) {
                 // Base damage is dice roll + attack stat
-                damage = (this.diceNumber) + (this.profile.attack);
+                damage = this.diceNumber + this.profile.attack;
 
                 // Add weapon bonus
                 if (

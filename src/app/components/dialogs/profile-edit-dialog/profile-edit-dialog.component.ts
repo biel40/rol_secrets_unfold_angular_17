@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, HostListener } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -95,6 +95,20 @@ export class ProfileEditDialogComponent implements OnInit {
         this.imageLoading = false;
       }
     });
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  public handleShortcut(event: KeyboardEvent): void {
+    if (!(event.metaKey || event.ctrlKey)) {
+      return;
+    }
+
+    if (event.key.toLowerCase() !== 's') {
+      return;
+    }
+
+    event.preventDefault();
+    this.onSubmit();
   }
 
   async onSubmit(): Promise<void> {

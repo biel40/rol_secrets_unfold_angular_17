@@ -1,4 +1,4 @@
-import { Component, Inject, inject, OnInit } from '@angular/core';
+import { Component, Inject, inject, OnInit, HostListener } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MaterialModule } from '../../../modules/material.module';
@@ -65,6 +65,20 @@ export class HabilityDialogComponent implements OnInit {
     } finally {
       this.isLoadingProfiles = false;
     }
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  public handleShortcut(event: KeyboardEvent): void {
+    if (!(event.metaKey || event.ctrlKey)) {
+      return;
+    }
+
+    if (event.key.toLowerCase() !== 's') {
+      return;
+    }
+
+    event.preventDefault();
+    this.onSave();
   }
 
   public onCancel(): void {

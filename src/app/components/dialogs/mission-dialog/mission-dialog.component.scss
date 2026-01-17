@@ -338,6 +338,13 @@ mat-dialog-actions {
       height: 1.1rem;
     }
   }
+
+  .shortcut-hint {
+    margin-left: auto;
+    font-size: 0.85rem;
+    color: rgba($text-color, 0.6);
+    letter-spacing: 0.04em;
+  }
 }
 
 // Loading spinner

@@ -510,6 +510,14 @@ $success-color: #2ecc71;
     border-top: 1px solid rgba($gold-color, 0.2);
 }
 
+.shortcut-hint {
+    margin-top: 12px;
+    font-size: 0.85rem;
+    color: rgba($gold-light, 0.8);
+    text-align: right;
+    letter-spacing: 0.04em;
+}
+
 .form-button {
     padding: 12px 24px;
     border: none;

@@ -113,7 +113,7 @@
                             <h4>{{ selectedUser.email }}</h4>
                         </div>
 
-                        <form #profileForm="ngForm" (ngSubmit)="createProfile(profileForm.value)">
+                        <form #profileForm="ngForm" id="profileForm" (ngSubmit)="createProfile(profileForm.value)">
                             <div class="form-group">
                                 <label for="username">{{ 'username' | transloco }}</label>
                                 <input type="text" id="username" name="username" 
@@ -167,6 +167,7 @@
                                     {{ 'create-profile' | transloco }}
                                 </button>
                             </div>
+                            <p class="shortcut-hint">Cmd/Ctrl+S para guardar</p>
                         </form>
                     }
                 </div>

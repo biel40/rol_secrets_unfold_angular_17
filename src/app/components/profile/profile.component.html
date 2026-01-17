@@ -29,7 +29,7 @@
     </nav>
 
     <!-- Contenido dinámico con animaciones -->
-    <main class="tab-content" [@tabAnimation]="activeTab">
+    <main class="tab-content" [class.wide-content]="activeTab === 'habilities'" [@tabAnimation]="activeTab">
         @switch (activeTab) {
             @case ('profile') {
                 <div class="content-panel fade-in">

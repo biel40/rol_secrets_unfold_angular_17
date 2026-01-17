@@ -1,4 +1,4 @@
-import { Component, inject, Inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, Inject, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MaterialModule } from '../../../modules/material.module';
@@ -113,6 +113,20 @@ export class NPCDialogComponent implements OnInit, OnDestroy {
     public onImageError(): void {
         this.imageLoading = false;
         this.imageError = true;
+    }
+
+    @HostListener('window:keydown', ['$event'])
+    public handleShortcut(event: KeyboardEvent): void {
+        if (!(event.metaKey || event.ctrlKey)) {
+            return;
+        }
+
+        if (event.key.toLowerCase() !== 's') {
+            return;
+        }
+
+        event.preventDefault();
+        this.saveNPC();
     }
 
     public async saveNPC(): Promise<void> {

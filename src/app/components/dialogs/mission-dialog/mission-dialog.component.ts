@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, HostListener } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -67,6 +67,20 @@ export class MissionDialogComponent implements OnInit {
 
   public ngOnInit(): void {
     // Component initialization if needed
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  public handleShortcut(event: KeyboardEvent): void {
+    if (!(event.metaKey || event.ctrlKey)) {
+      return;
+    }
+
+    if (event.key.toLowerCase() !== 's') {
+      return;
+    }
+
+    event.preventDefault();
+    this.saveMission();
   }
 
   public async saveMission(): Promise<void> {

@@ -157,6 +157,14 @@
   }
 }
 
+.shortcut-hint {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.65);
+  letter-spacing: 0.03em;
+}
+
 // Responsive design
 @media (max-width: 768px) {
   .hability-dialog {

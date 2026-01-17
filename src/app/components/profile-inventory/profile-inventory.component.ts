@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit, signal, computed } from '@angular/core';
+import { Component, inject, Input, OnInit, signal, computed, HostListener } from '@angular/core';
 import { MaterialModule } from '../../modules/material.module';
 import { Item, Profile, SupabaseService } from '../../services/supabase/supabase.service';
 import { UserService } from '../../services/user/user.service';
@@ -97,6 +97,24 @@ export class ProfileInventoryComponent implements OnInit {
     public closeForm(): void {
         this.showForm.set(false);
         this.newItem = this._getEmptyItem();
+    }
+
+    @HostListener('window:keydown', ['$event'])
+    public handleShortcut(event: KeyboardEvent): void {
+        if (!(event.metaKey || event.ctrlKey)) {
+            return;
+        }
+
+        if (event.key.toLowerCase() !== 's') {
+            return;
+        }
+
+        if (!this.showForm()) {
+            return;
+        }
+
+        event.preventDefault();
+        this.saveItem();
     }
 
     public async saveItem(): Promise<void> {

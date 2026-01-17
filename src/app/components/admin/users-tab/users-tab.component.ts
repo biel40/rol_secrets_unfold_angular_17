@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -39,6 +39,25 @@ export class UsersTabComponent {
     public closeProfileModal(): void {
         this.showProfileModal = false;
         this.selectedUser = null;
+    }
+
+    @HostListener('window:keydown', ['$event'])
+    public handleShortcut(event: KeyboardEvent): void {
+        if (!(event.metaKey || event.ctrlKey)) {
+            return;
+        }
+
+        if (event.key.toLowerCase() !== 's') {
+            return;
+        }
+
+        if (!this.showProfileModal) {
+            return;
+        }
+
+        event.preventDefault();
+        const form = document.querySelector<HTMLFormElement>('form#profileForm');
+        form?.requestSubmit();
     }
 
     public async createProfile(profileData: Partial<Profile>): Promise<void> {

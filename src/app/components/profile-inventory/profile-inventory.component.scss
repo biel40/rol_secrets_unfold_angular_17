@@ -258,6 +258,14 @@ $success-color: #22c55e;
     border-top: 1px solid $glass-border;
 }
 
+.shortcut-hint {
+    margin-top: 0.75rem;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-align: right;
+    letter-spacing: 0.03em;
+}
+
 .cancel-button,
 .save-button {
     display: flex;

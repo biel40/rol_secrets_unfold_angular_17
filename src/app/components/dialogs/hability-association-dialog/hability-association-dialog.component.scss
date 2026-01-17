@@ -426,6 +426,13 @@ $border-active: rgba(212, 175, 55, 0.5);
     padding: 20px 24px;
     border-top: 1px solid $border-subtle;
     background: $bg-darker;
+
+    .shortcut-hint {
+        margin-left: auto;
+        font-size: 0.85rem;
+        color: $text-secondary;
+        letter-spacing: 0.04em;
+    }
 }
 
 .cancel-btn {

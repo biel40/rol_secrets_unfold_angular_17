@@ -39,8 +39,8 @@ export class PlayerHabilitiesComponent implements OnInit, OnChanges {
 
     constructor(public dialog: MatDialog) { }
 
-    async ngOnInit(): Promise<void> {
-        this.user = await this._userService.getUser();
+    ngOnInit(): void {
+        this.user = this._userService.getUser();
 
         if (!this.user) {
             this._displaySnackbar('Credenciales inválidas. Por favor, inicie sesión nuevamente.', 'error');
@@ -99,6 +99,11 @@ export class PlayerHabilitiesComponent implements OnInit, OnChanges {
 
     public calculateDamage(hability: Hability): any {
         if (hability) {
+            
+            // Prevent opening multiple dialogs if one is already open
+            if (this.dialog.openDialogs.length > 0) {
+                return;
+            }
 
             if (hability.current_uses <= 0) {
                 this._displaySnackbar('No tienes más usos disponibles para esta habilidad.', 'error');
@@ -110,9 +115,12 @@ export class PlayerHabilitiesComponent implements OnInit, OnChanges {
     }
 
     public openDialog(hability: Hability): void {
+        // Clone the hability to avoid modifying the parent view state during the dialog's lifecycle (NG0100 fix)
+        const habilityClone = { ...hability };
+
         const dialogRef = this.dialog.open(DiceMatDialogComponent, {
             data: { 
-                hability: hability
+                hability: habilityClone
             },
             width: '500px',
             maxHeight: '90vh',
@@ -120,6 +128,15 @@ export class PlayerHabilitiesComponent implements OnInit, OnChanges {
             autoFocus: false,
             disableClose: false,
             scrollStrategy: this._overlay.scrollStrategies.noop()
+        });
+        
+        // Update local state when dialog closes (and changes were made)
+        dialogRef.afterClosed().subscribe(() => {
+            // Check if uses changed in the clone
+            if (habilityClone.current_uses !== hability.current_uses) {
+                hability.current_uses = habilityClone.current_uses;
+                this._cdr.detectChanges();
+            }
         });
     }
 

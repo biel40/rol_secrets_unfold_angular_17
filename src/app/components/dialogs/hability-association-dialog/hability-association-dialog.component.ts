@@ -1,4 +1,4 @@
-import { Component, Inject, inject, OnInit } from '@angular/core';
+import { Component, Inject, inject, OnInit, HostListener } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MaterialModule } from '../../../modules/material.module';
 import { TranslocoModule } from '@jsverse/transloco';
@@ -119,6 +119,20 @@ export class HabilityAssociationDialogComponent implements OnInit {
 
     public deselectAll(): void {
         this.visibleProfiles.forEach(p => p.selected = false);
+    }
+
+    @HostListener('window:keydown', ['$event'])
+    public handleShortcut(event: KeyboardEvent): void {
+        if (!(event.metaKey || event.ctrlKey)) {
+            return;
+        }
+
+        if (event.key.toLowerCase() !== 's') {
+            return;
+        }
+
+        event.preventDefault();
+        this.onSave();
     }
 
     public onCancel(): void {

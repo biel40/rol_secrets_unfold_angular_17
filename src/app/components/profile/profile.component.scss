@@ -221,6 +221,11 @@ $glass-border: rgba(255, 255, 255, 0.06);
     max-width: 800px;
     margin: 0 auto;
     padding: 1rem;
+
+    &.wide-content {
+        max-width: 100%;
+        padding: 0;
+    }
 }
 
 .content-panel {
