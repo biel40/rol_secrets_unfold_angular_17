@@ -26,20 +26,32 @@ export class UserService {
             return;
         }
 
-        const session = await this._supabaseService.getSession();
+        const session = await this._supabaseService.getSession(true);
         const isSessionValid = !!session?.user && !!session?.expires_at && session.expires_at > Math.floor(Date.now() / 1000);
 
         if (isSessionValid) {
+            // Verificar que el usuario local coincide con la sesión
+            const localUser = this.getUser();
+            if (localUser && localUser.id !== session!.user.id) {
+                this.clearUser();
+                this._profileService.clearProfile();
+            }
             this.setUser(session!.user);
         } else {
             this.clearUser();
+            this._profileService.clearProfile();
+            this._supabaseService.clearSessionCache();
         }
 
-        const { data } = this._supabaseService.authChanges((_, updatedSession) => {
-            if (updatedSession?.user) {
+        const { data } = this._supabaseService.authChanges((event, updatedSession) => {
+            if (event === 'SIGNED_OUT') {
+                this.clearUser();
+                this._profileService.clearProfile();
+            } else if (updatedSession?.user) {
                 this.setUser(updatedSession.user);
             } else {
                 this.clearUser();
+                this._profileService.clearProfile();
             }
         });
 
@@ -73,6 +85,7 @@ export class UserService {
         this.destroyAuthSync();
         this.clearUser();
         this._profileService.clearProfile();
+        this._supabaseService.clearSessionCache();
         await this._supabaseService.signOut();
     }
 }

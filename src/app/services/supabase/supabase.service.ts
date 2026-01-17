@@ -164,8 +164,8 @@ export class SupabaseService {
     return message.includes('network') || message.includes('fetch') || message.includes('timeout');
   }
 
-  public async getSession() {
-    if (!this._session) {
+  public async getSession(forceRefresh: boolean = false) {
+    if (!this._session || forceRefresh) {
       const { data } = await this._supabaseClient.auth.getSession();
       this._session = data.session;
     }
@@ -371,7 +371,12 @@ export class SupabaseService {
   }
 
   public async signOut(): Promise<void> {
+    this._session = null;
     await this._supabaseClient.auth.signOut({ scope: 'local' });
+  }
+
+  public clearSessionCache(): void {
+    this._session = null;
   }
 
   // Had to fix this manually to work

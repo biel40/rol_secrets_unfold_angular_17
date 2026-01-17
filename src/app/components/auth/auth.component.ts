@@ -66,14 +66,25 @@ export class AuthComponent implements OnInit, OnDestroy {
     try {
       const localUser = this._userService.getUser();
       if (!localUser) {
+        // Limpiar cualquier caché de sesión si no hay usuario local
+        this._supabaseService.clearSessionCache();
         return;
       }
 
-      const session = await this._supabaseService.getSession();
+      // Forzar refresh para obtener la sesión actual de Supabase
+      const session = await this._supabaseService.getSession(true);
       const isSessionValid = !!session?.user && !!session?.expires_at && session.expires_at > Math.floor(Date.now() / 1000);
 
       if (!isSessionValid) {
         this._userService.clearUser();
+        this._supabaseService.clearSessionCache();
+        return;
+      }
+
+      // Verificar que el usuario local coincide con la sesión de Supabase
+      if (localUser.id !== session!.user.id) {
+        this._userService.clearUser();
+        this._supabaseService.clearSessionCache();
         return;
       }
 
@@ -112,6 +123,10 @@ export class AuthComponent implements OnInit, OnDestroy {
       const password = this.signInForm.value.password as string;
 
       if (email != "" && password != "") {
+        // Limpiar cualquier sesión anterior antes de iniciar sesión
+        this._userService.clearUser();
+        this._supabaseService.clearSessionCache();
+
         const user = await this._supabaseService.signIn(email, password);
 
         if (user.error && user.error.message == "Invalid login credentials") {
