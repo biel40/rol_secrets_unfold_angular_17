@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
 import { Profile, SupabaseService } from '../../services/supabase/supabase.service';
 import { User } from '@supabase/supabase-js';
 import { UserService } from '../../services/user/user.service';
@@ -7,12 +7,13 @@ import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MaterialModule } from '../../modules/material.module';
 import { ProfileStatsComponent } from '../profile-stats/profile-stats.component';
-import { HabilitiesComponent } from '../habilities/habilities.component';
+import { PlayerHabilitiesComponent } from '../player-habilities/player-habilities.component';
 import { TranslocoModule } from '@jsverse/transloco';
 import { CardComponent } from '../card/card.component';
 import { ProfileInventoryComponent } from '../profile-inventory/profile-inventory.component';
 import { trigger, transition, style, animate, query, group } from '@angular/animations';
 import { CommonModule } from '@angular/common';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 interface Tab {
     id: string;
@@ -30,9 +31,10 @@ interface Tab {
         MaterialModule,
         ProfileStatsComponent,
         ProfileInventoryComponent,
-        HabilitiesComponent,
+        PlayerHabilitiesComponent,
         TranslocoModule,
-        CardComponent
+        CardComponent,
+        MatProgressSpinnerModule
     ],
     animations: [
         trigger('tabAnimation', [
@@ -73,6 +75,27 @@ export class ProfileComponent implements OnInit {
 
     public setActiveTab(tabId: string): void {
         this.activeTab = tabId;
+    }
+
+    @HostListener('window:keydown', ['$event'])
+    public handleShortcut(event: KeyboardEvent): void {
+        if (!(event.metaKey || event.ctrlKey)) {
+            return;
+        }
+
+        if (!['1', '2', '3', '4'].includes(event.key)) {
+            return;
+        }
+
+        const tabIndex = Number(event.key) - 1;
+        const tab = this.tabs[tabIndex];
+
+        if (!tab) {
+            return;
+        }
+
+        event.preventDefault();
+        this.setActiveTab(tab.id);
     }
 
     async ngOnInit(): Promise<void> {

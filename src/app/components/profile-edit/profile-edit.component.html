@@ -22,6 +22,30 @@
             <form id="edit-form" [formGroup]="updateProfileForm" (ngSubmit)="updateProfile()"
                 class="form-widget w-full gap-6 flex flex-col justify-center items-center">
 
+                <div class="avatar-section">
+                    <div class="avatar-frame">
+                        @if (avatarPreview) {
+                            <img [src]="avatarPreview" alt="Avatar" class="avatar-image">
+                        } @else {
+                            <div class="avatar-placeholder">
+                                <mat-icon>image</mat-icon>
+                                <span>Sin avatar</span>
+                            </div>
+                        }
+                    </div>
+                    <div class="avatar-actions">
+                        <label class="avatar-upload">
+                            <input type="file" accept="image/*" (change)="handleAvatarUpload($event)">
+                            <mat-icon>upload</mat-icon>
+                            Subir
+                        </label>
+                        <button type="button" class="avatar-clear" (click)="removeAvatar()" [disabled]="!avatarPreview">
+                            <mat-icon>close</mat-icon>
+                            Quitar
+                        </button>
+                    </div>
+                </div>
+
                 <div class="form-field-container w-full">
                     <mat-form-field class="w-full custom-field">
                         <mat-label for="username">{{ 'name' | transloco }}</mat-label>
@@ -29,7 +53,7 @@
                         <mat-icon matPrefix class="field-icon">person</mat-icon>
                     </mat-form-field>
                 </div>
-    
+
                 <div class="form-field-container w-full">
                     <mat-form-field class="w-full custom-field">
                         <mat-label>Clase</mat-label>
@@ -86,6 +110,7 @@
                     </mat-form-field>
                 </div>
             </form>
+
 
             <!-- Botón de actualizar mejorado -->
             <div class="submit-container | w-full mt-6">

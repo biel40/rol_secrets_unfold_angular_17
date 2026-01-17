@@ -26,7 +26,8 @@ export interface Profile {
   special_defense?: number,
   speed?: number,
   current_experience?: number,
-  image_url?: string
+  image_url?: string,
+  updated_at?: string
 }
 
 export interface ProfileSummary {
@@ -146,6 +147,23 @@ export class SupabaseService {
     })
   }
 
+  private async _executeWithRetry<T>(operation: () => Promise<T>, retries = 2, delayMs = 400): Promise<T> {
+    try {
+      return await operation();
+    } catch (error) {
+      if (retries > 0 && this._isTransientError(error)) {
+        await new Promise(resolve => setTimeout(resolve, delayMs));
+        return this._executeWithRetry(operation, retries - 1, delayMs * 2);
+      }
+      throw error;
+    }
+  }
+
+  private _isTransientError(error: any): boolean {
+    const message = String(error?.message || error || '').toLowerCase();
+    return message.includes('network') || message.includes('fetch') || message.includes('timeout');
+  }
+
   public async getSession() {
     if (!this._session) {
       const { data } = await this._supabaseClient.auth.getSession();
@@ -165,13 +183,17 @@ export class SupabaseService {
 
   public async getProfileInfo(userId: string): Promise<{ data: Profile | null, error: any }> {
     try {
-      const { data, error } = await this._supabaseClient
-        .from('profiles')
-        .select(`id, username, clase, power, level, weapon, current_hp, total_hp, attack, defense, special_attack, special_defense, speed, current_experience, image_url`)
-        .eq('id', userId)
-        .maybeSingle();
+      const { data, error } = await this._executeWithRetry(async () => {
+        const result = await this._supabaseClient
+          .from('profiles')
+          .select(`id, username, clase, power, level, weapon, current_hp, total_hp, attack, defense, special_attack, special_defense, speed, current_experience, image_url, updated_at`)
+          .eq('id', userId)
+          .maybeSingle();
 
-      if (error) throw error;
+        if (result.error) throw result.error;
+        return result;
+      });
+
       return { data, error: null };
     } catch (error) {
       console.error(error);
@@ -182,13 +204,17 @@ export class SupabaseService {
   // Method to get profile by user_id (not profile_id)
   public async getProfileByUserId(userId: string): Promise<{ data: Profile | null, error: any }> {
     try {
-      const { data, error } = await this._supabaseClient
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)  // Changed from 'user_id' to 'id'
-        .maybeSingle();
+      const { data, error } = await this._executeWithRetry(async () => {
+        const result = await this._supabaseClient
+          .from('profiles')
+          .select('*')
+          .eq('id', userId)  // Changed from 'user_id' to 'id'
+          .maybeSingle();
 
-      if (error) throw error;
+        if (result.error) throw result.error;
+        return result;
+      });
+
       return { data, error: null };
     } catch (error) {
       console.error('Error getting profile by user_id:', error);
@@ -197,9 +223,11 @@ export class SupabaseService {
   }
 
   public async getAllHabilities(): Promise<Hability[] | null> {
-    const { data: habilities, error } = await this._supabaseClient
-      .from('habilities')
-      .select('*');
+    const { data: habilities, error } = await this._executeWithRetry(async () =>
+      this._supabaseClient
+        .from('habilities')
+        .select('*')
+    );
 
     if (error) {
       console.error('Error fetching habilities:', error);
@@ -238,17 +266,7 @@ export class SupabaseService {
         .in("id", habilitiesIds)
         .order("level");
 
-      // Filter the habilities that the user has by the level of the user and the power of the user
-      // and the class of the user. Allow 'Base' class habilities for any class
-      if (userHabilities) {
-        userHabilities = userHabilities.filter(hability => {
-          const levelMatch = hability.level <= profile.level;
-          const powerMatch = hability.power === profile.power;
-          const classMatch = hability.clase === profile.clase || hability.clase === 'Base';
-
-          return levelMatch && powerMatch && classMatch;
-        });
-      }      // We will set the current uses of the hability on the fly from the intermediate table
+      // We will set the current uses of the hability on the fly from the intermediate table
       // which are the REAL current uses.
       if (userHabilities) {
         userHabilities.forEach(hability => {
@@ -407,9 +425,11 @@ export class SupabaseService {
   }
 
   public async getEnemies(): Promise<{ data: Enemy[] | null, error: any }> {
-    return await this._supabaseClient
-      .from('enemies')
-      .select('*');
+    return await this._executeWithRetry(async () =>
+      this._supabaseClient
+        .from('enemies')
+        .select('*')
+    );
   }
 
   public async getBroadcastBattleChannel(): Promise<RealtimeChannel> {
@@ -419,10 +439,12 @@ export class SupabaseService {
   }
 
   public async getItems(userId: string): Promise<{ data: Item[] | null, error: any }> {
-    return await this._supabaseClient
-      .from('items')
-      .select('*')
-      .eq('profile_id', userId);
+    return await this._executeWithRetry(async () =>
+      this._supabaseClient
+        .from('items')
+        .select('*')
+        .eq('profile_id', userId)
+    );
   }
 
   public async saveItemToProfile(item: Item): Promise<{ data: Item[] | null, error: any }> {

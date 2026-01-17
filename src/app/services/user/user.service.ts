@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { User } from '@supabase/supabase-js';
+import { SupabaseService } from '../supabase/supabase.service';
 
 @Injectable({
     providedIn: 'root'
@@ -7,6 +8,8 @@ import { User } from '@supabase/supabase-js';
 export class UserService {
 
     protected user: User | null = null;
+    private _supabaseService = inject(SupabaseService);
+    private _authSubscription: { unsubscribe: () => void } | null = null;
 
     constructor() {
         const storedUser = localStorage.getItem('user');
@@ -14,6 +17,31 @@ export class UserService {
         if (storedUser) {
             this.user = JSON.parse(storedUser);
         }
+    }
+
+    public async initializeAuthSync(): Promise<void> {
+        if (this._authSubscription) {
+            return;
+        }
+
+        const session = await this._supabaseService.getSession();
+        const isSessionValid = !!session?.user && !!session?.expires_at && session.expires_at > Math.floor(Date.now() / 1000);
+
+        if (isSessionValid) {
+            this.setUser(session!.user);
+        } else {
+            this.clearUser();
+        }
+
+        const { data } = this._supabaseService.authChanges((_, updatedSession) => {
+            if (updatedSession?.user) {
+                this.setUser(updatedSession.user);
+            } else {
+                this.clearUser();
+            }
+        });
+
+        this._authSubscription = data?.subscription ?? null;
     }
 
     public setUser(user: User | null) : void  {
@@ -32,5 +60,10 @@ export class UserService {
 
     public isLoggedIn(): boolean {
         return !!this.user;
+    }
+
+    public destroyAuthSync(): void {
+        this._authSubscription?.unsubscribe();
+        this._authSubscription = null;
     }
 }

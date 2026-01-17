@@ -1,8 +1,10 @@
+@if (profile) {
 <div class="pokemon-stats-container">
     <div class="pokemon-card">
         <div class="card-header">
-            <h1 class="character-name">{{ profile?.username || 'Character' }}</h1>
-            <div class="character-class">{{ profile?.clase || 'Unknown Class' }}</div>
+            <h1 class="character-name">{{ profile.username || 'Character' }}</h1>
+            <div class="character-class">{{ profile.clase || 'Unknown Class' }}</div>
+            <div class="stats-updated">Actualizado: {{ lastUpdatedLabel }}</div>
         </div>
         
         <div class="character-info">
@@ -14,7 +16,7 @@
                         <div class="avatar-icon">👤</div>
                     }
                 </div>
-                <div class="character-level">LVL {{ profile?.level || '1' }}</div>
+                <div class="character-level">LVL {{ profile.level || '1' }}</div>
             </div>
             
             <div class="character-vitals">
@@ -23,9 +25,9 @@
                         <span>❤️</span>
                         <span>Puntos de Vida</span>
                     </div>
-                    <div class="stat-value">{{ profile?.current_hp || 0 }} / {{ profile?.total_hp || 0 }}</div>
+                    <div class="stat-value">{{ profile.current_hp || 0 }} / {{ profile.total_hp || 0 }}</div>
                     <div class="progress-bar-container">
-                        <div class="progress-bar hp" [style.width.%]="profile && profile.current_hp && profile.total_hp ? (profile.current_hp / profile.total_hp) * 100 : 0"></div>
+                        <div class="progress-bar hp" [style.width.%]="profile.current_hp && profile.total_hp ? (profile.current_hp / profile.total_hp) * 100 : 0"></div>
                     </div>
                 </div>
                 
@@ -34,23 +36,36 @@
                         <span>⚔️</span>
                         <span>Arma Equipada</span>
                     </div>
-                    <div class="weapon-value">{{ profile?.weapon || 'Ninguna' }}</div>
+                    <div class="weapon-value">{{ profile.weapon || 'Ninguna' }}</div>
                 </div>
             </div>
         </div>
         
         <div class="stats-container">
-            @for (key of keys; track $index) {
-                @if (key !== '❤️ Vida') {
-                    <div class="stat-row">
-                        <div class="stat-name">{{ key }}</div>
-                        <div class="stat-value">{{ dataSource[0][key] }}</div>
-                        <div class="stat-bar-container">
-                            <div class="stat-bar" [style.width.%]="getStatPercentage(dataSource[0][key])"></div>
+            @if (keys.length > 0) {
+                @for (key of keys; track $index) {
+                    @if (key !== '❤️ Vida') {
+                        <div class="stat-row">
+                            <div class="stat-name">{{ key }}</div>
+                            <div class="stat-value">{{ dataSource[0][key] }}</div>
+                            <div class="stat-bar-container">
+                                <div class="stat-bar" [style.width.%]="getStatPercentage(dataSource[0][key])"></div>
+                            </div>
                         </div>
-                    </div>
+                    }
                 }
+            } @else {
+                <div class="stats-empty-inline">Sin datos disponibles</div>
             }
         </div>
     </div>
 </div>
+} @else {
+<div class="stats-empty">
+    <div class="stats-empty-card">
+        <span class="stats-empty-icon">📊</span>
+        <h3>Sin estadisticas</h3>
+        <p>Vuelve a iniciar sesion para cargar tus datos.</p>
+    </div>
+</div>
+}

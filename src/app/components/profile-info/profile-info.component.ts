@@ -2,7 +2,6 @@ import { Component, inject, Input, OnInit, ChangeDetectorRef } from '@angular/co
 import { MaterialModule } from '../../modules/material.module';
 import { Profile, SupabaseService } from '../../services/supabase/supabase.service';
 import { UserService } from '../../services/user/user.service';
-import { LoaderService } from '../../services/loader/loader.service';
 import { User } from '@supabase/supabase-js';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -23,7 +22,6 @@ import { VanillaTiltDirective } from '../../directives/vanilla-tilt.directive';
 export class ProfileInfoComponent implements OnInit {
 
     private _userService: UserService = inject(UserService);
-    private _loaderService: LoaderService = inject(LoaderService);
     private _supabaseService: SupabaseService = inject(SupabaseService);
     private _router = inject(Router);
     private _cdr = inject(ChangeDetectorRef);
@@ -45,7 +43,7 @@ export class ProfileInfoComponent implements OnInit {
 
     async ngOnInit(): Promise<void> {
         if (!this._user) {
-            alert('Credenciales inválidas. Por favor, inicie sesión nuevamente.');
+            this._displaySnackbar('Credenciales inválidas. Por favor, inicie sesión nuevamente.', true);
             this._router.navigate(['']);
         } else if (!this.profile) {
             const profileData = (await this._supabaseService.getProfileInfo(this._user.id)).data;
@@ -63,6 +61,15 @@ export class ProfileInfoComponent implements OnInit {
 
     public ngOnChanges() : void {
         this.setElementEmojis();
+    }
+
+    private _displaySnackbar(message: string, isError: boolean = false): void {
+        this._snackBar.open(message, 'Cerrar', {
+            duration: 4000,
+            panelClass: isError ? ['custom-snackbar', 'error-snackbar'] : ['custom-snackbar'],
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom'
+        });
     }
 
     public setElementEmojis() : void {

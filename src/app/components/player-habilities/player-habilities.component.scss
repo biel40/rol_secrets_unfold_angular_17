@@ -1,0 +1,525 @@
+@use 'sass:color';
+
+// Variables de tema - Consistentes con el resto de la app
+$gold-color: #d4af37;
+$gold-light: #ffeba7;
+$bg-darkest: #0f172a;
+$bg-dark: #1a2530;
+$bg-card: #2c3e50;
+$text-primary: #e0e0e0;
+$text-secondary: rgba(224, 224, 224, 0.7);
+$danger-color: #e74c3c;
+$success-color: #2ecc71;
+
+// Power colors
+$pyro-color: #e74c3c;
+$hydro-color: #3498db;
+$electro-color: #9b59b6;
+$geo-color: #8b4513;
+$cryo-color: #74b9ff;
+$natura-color: #27ae60;
+
+:host {
+    display: block;
+    width: 100%;
+}
+
+// Container principal
+.player-habilities-container {
+    width: 100%;
+    padding: 1rem;
+    max-width: 1800px;
+    margin: 0 auto;
+    
+    @media (min-width: 768px) {
+        padding: 1.5rem 2rem;
+    }
+    
+    @media (min-width: 1200px) {
+        padding: 2rem 3rem;
+    }
+}
+
+// Grid de habilidades
+.habilities-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    
+    // Solo 2 columnas a partir de tablets grandes
+    @media (min-width: 768px) {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+    
+    @media (min-width: 1200px) {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.75rem;
+    }
+    
+    @media (min-width: 1600px) {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2rem;
+    }
+}
+
+// Carta de habilidad
+.hability-card {
+    background: linear-gradient(145deg, rgba($bg-card, 0.95), rgba($bg-dark, 0.98));
+    border-radius: 16px;
+    border: 1px solid rgba($gold-color, 0.25);
+    overflow: visible;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, var(--power-color, $gold-color), transparent);
+    }
+    
+    &:hover {
+        transform: translateY(-4px);
+        border-color: rgba($gold-color, 0.5);
+        box-shadow: 
+            0 12px 30px rgba(0, 0, 0, 0.4),
+            0 0 20px rgba(var(--power-rgb, 212, 175, 55), 0.15);
+    }
+    
+    // Power-based themes
+    &.power-pyro {
+        --power-color: #{$pyro-color};
+        --power-rgb: 231, 76, 60;
+    }
+    &.power-hydro {
+        --power-color: #{$hydro-color};
+        --power-rgb: 52, 152, 219;
+    }
+    &.power-electro {
+        --power-color: #{$electro-color};
+        --power-rgb: 155, 89, 182;
+    }
+    &.power-geo {
+        --power-color: #{$geo-color};
+        --power-rgb: 139, 69, 19;
+    }
+    &.power-cryo {
+        --power-color: #{$cryo-color};
+        --power-rgb: 116, 185, 255;
+    }
+    &.power-natura {
+        --power-color: #{$natura-color};
+        --power-rgb: 39, 174, 96;
+    }
+}
+
+// Header de la carta
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 1.25rem 1.25rem 1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid rgba($gold-color, 0.15);
+    
+    @media (min-width: 1200px) {
+        padding: 1.5rem 1.5rem 1.25rem;
+        gap: 1rem;
+    }
+}
+
+.power-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    background: linear-gradient(135deg, rgba(var(--power-rgb, 212, 175, 55), 0.3), rgba(var(--power-rgb, 212, 175, 55), 0.1));
+    border: 1px solid rgba(var(--power-rgb, 212, 175, 55), 0.4);
+    flex-shrink: 0;
+    
+    @media (min-width: 1200px) {
+        width: 58px;
+        height: 58px;
+        font-size: 1.85rem;
+        border-radius: 14px;
+    }
+}
+
+.card-title-section {
+    flex: 1;
+    min-width: 0;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: $gold-light;
+    margin: 0;
+    line-height: 1.3;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    
+    @media (min-width: 768px) {
+        font-size: 1.35rem;
+    }
+    
+    @media (min-width: 1200px) {
+        font-size: 1.5rem;
+    }
+}
+
+.card-power {
+    font-size: 0.85rem;
+    color: var(--power-color, $gold-color);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 3px;
+    
+    @media (min-width: 1200px) {
+        font-size: 0.95rem;
+    }
+}
+
+// Descripción
+.card-description {
+    padding: 1rem 1.25rem;
+    color: $text-secondary;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    flex: 1;
+    min-height: 70px;
+    max-height: 110px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    
+    @media (min-width: 768px) {
+        font-size: 1rem;
+        min-height: 80px;
+    }
+    
+    @media (min-width: 1200px) {
+        font-size: 1.05rem;
+        padding: 1.25rem 1.5rem;
+        min-height: 90px;
+        max-height: 130px;
+        -webkit-line-clamp: 4;
+    }
+}
+
+// Uses section
+.uses-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 1.25rem;
+    gap: 1rem;
+    background: rgba(0, 0, 0, 0.15);
+    
+    @media (min-width: 1200px) {
+        padding: 1.25rem 1.5rem;
+    }
+}
+
+.uses-display {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    
+    @media (min-width: 1200px) {
+        gap: 0.75rem;
+    }
+}
+
+.uses-current {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff;
+    background: linear-gradient(135deg, $pyro-color, color.adjust($pyro-color, $lightness: -15%));
+    box-shadow: 
+        0 4px 12px rgba($pyro-color, 0.4),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.2),
+        inset 0 2px 4px rgba(255, 255, 255, 0.2);
+    position: relative;
+    
+    &::after {
+        content: '';
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
+    }
+    
+    &.depleted {
+        background: linear-gradient(135deg, #555, #333);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+    
+    @media (min-width: 1200px) {
+        width: 64px;
+        height: 64px;
+        font-size: 1.6rem;
+    }
+}
+
+.uses-separator {
+    font-size: 1.75rem;
+    font-weight: 300;
+    color: rgba($gold-color, 0.6);
+    
+    @media (min-width: 1200px) {
+        font-size: 2rem;
+    }
+}
+
+.uses-total {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: $text-primary;
+    background: linear-gradient(135deg, rgba($bg-dark, 0.9), rgba(0, 0, 0, 0.5));
+    border: 2px solid rgba($gold-color, 0.4);
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4);
+    
+    @media (min-width: 1200px) {
+        width: 64px;
+        height: 64px;
+        font-size: 1.6rem;
+        border-width: 3px;
+    }
+}
+
+// Actions
+.card-actions {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem 1rem;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    
+    @media (min-width: 768px) {
+        gap: 0.75rem;
+        padding: 1rem 1.25rem 1.25rem;
+    }
+    
+    @media (min-width: 1200px) {
+        gap: 1rem;
+        padding: 1.25rem 1.5rem 1.5rem;
+    }
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    padding: 0.6rem 0.5rem;
+    border-radius: 8px;
+    border: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+    min-height: 40px;
+    
+    mat-icon {
+        font-size: 1.2rem;
+        width: 20px;
+        height: 20px;
+    }
+    
+    @media (min-width: 768px) {
+        padding: 0.75rem 0.65rem;
+        font-size: 0.95rem;
+        border-radius: 10px;
+        min-height: 44px;
+        gap: 0.4rem;
+        
+        mat-icon {
+            font-size: 1.25rem;
+            width: 22px;
+            height: 22px;
+        }
+    }
+    
+    @media (min-width: 1200px) {
+        padding: 0.85rem 0.85rem;
+        font-size: 1rem;
+        border-radius: 12px;
+        gap: 0.5rem;
+        min-height: 48px;
+        
+        mat-icon {
+            font-size: 1.3rem;
+            width: 24px;
+            height: 24px;
+        }
+    }
+    
+    &:active {
+        transform: scale(0.96);
+    }
+    
+    &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        transform: none;
+    }
+}
+
+.btn-minus {
+    background: linear-gradient(135deg, rgba(100, 100, 100, 0.4), rgba(60, 60, 60, 0.6));
+    color: $text-primary;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    flex: 0 0 auto;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    
+    @media (min-width: 768px) {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    &:hover:not(:disabled) {
+        background: linear-gradient(135deg, rgba(120, 120, 120, 0.5), rgba(80, 80, 80, 0.7));
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+}
+
+.btn-damage {
+    flex: 1 1 auto;
+    background: linear-gradient(135deg, $gold-color, color.adjust($gold-color, $lightness: -12%));
+    color: $bg-dark;
+    box-shadow: 0 4px 15px rgba($gold-color, 0.3);
+    max-width: 140px;
+    
+    @media (min-width: 768px) {
+        max-width: 160px;
+    }
+    
+    &:hover:not(:disabled) {
+        background: linear-gradient(135deg, $gold-light, $gold-color);
+        box-shadow: 0 6px 20px rgba($gold-color, 0.4);
+        transform: translateY(-2px);
+    }
+    
+    &:disabled {
+        background: linear-gradient(135deg, #555, #444);
+        color: #888;
+        box-shadow: none;
+    }
+}
+
+.btn-plus {
+    background: linear-gradient(135deg, rgba($success-color, 0.3), rgba($success-color, 0.5));
+    color: #fff;
+    border: 1px solid rgba($success-color, 0.4);
+    flex: 0 0 auto;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    
+    @media (min-width: 768px) {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    &:hover:not(:disabled) {
+        background: linear-gradient(135deg, rgba($success-color, 0.5), rgba($success-color, 0.7));
+        border-color: $success-color;
+    }
+}
+
+// Empty state
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    text-align: center;
+    background: linear-gradient(145deg, rgba($bg-card, 0.5), rgba($bg-dark, 0.7));
+    border-radius: 20px;
+    border: 1px dashed rgba($gold-color, 0.3);
+    margin: 2rem auto;
+    max-width: 400px;
+}
+
+.empty-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+.empty-state h3 {
+    color: $gold-light;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+}
+
+.empty-state p {
+    color: $text-secondary;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+// Dice info badge
+.dice-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    color: $text-secondary;
+    padding: 0.35rem 0.75rem;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    border: 1px solid rgba($gold-color, 0.2);
+    
+    .dice-icon {
+        font-size: 1rem;
+    }
+    
+    @media (min-width: 1200px) {
+        font-size: 0.95rem;
+        padding: 0.45rem 0.9rem;
+        
+        .dice-icon {
+            font-size: 1.1rem;
+        }
+    }
+}

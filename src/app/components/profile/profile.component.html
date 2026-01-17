@@ -48,11 +48,24 @@
             }
             @case ('habilities') {
                 <div class="content-panel fade-in">
-                    <app-habilities [profile]="profile"></app-habilities>
+                    <app-player-habilities [profile]="profile"></app-player-habilities>
                 </div>
             }
         }
     </main>
+
+    <nav class="mobile-tab-bar" aria-label="Mobile profile tabs">
+        @for (tab of tabs; track tab.id) {
+            <button
+                class="mobile-tab"
+                [class.active]="activeTab === tab.id"
+                (click)="setActiveTab(tab.id)"
+                type="button">
+                <span class="mobile-tab-icon">{{ tab.icon }}</span>
+                <span class="mobile-tab-label">{{ tab.label | transloco }}</span>
+            </button>
+        }
+    </nav>
 
     <!-- Botón de cerrar sesión flotante -->
     <div class="floating-actions">
@@ -64,6 +77,14 @@
             </svg>
             <span>{{ 'signOut' | transloco }}</span>
         </button>
+    </div>
+</div>
+} @else {
+<div class="profile-loading">
+    <div class="loading-glow"></div>
+    <div class="loading-card">
+        <mat-spinner diameter="44"></mat-spinner>
+        <p>Cargando perfil...</p>
     </div>
 </div>
 }

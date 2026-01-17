@@ -174,6 +174,10 @@ El proyecto utiliza archivos de entorno para configuraciones:
 4. Push a la rama (`git push origin feature/AmazingFeature`)
 5. Abre un Pull Request
 
+### Calidad
+
+- No se permiten warnings ni errores al aplicar cambios. Verifica con `npm start` o `ng build` antes de compartir tu trabajo.
+
 ## 📄 Licencia
 
 Este proyecto está licenciado bajo la Licencia MIT - ver el archivo LICENSE para más detalles.

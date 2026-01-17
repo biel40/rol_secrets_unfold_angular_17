@@ -64,11 +64,20 @@ export class AuthComponent implements OnInit, OnDestroy {
 
   private async _checkUserSession() {
     try {
-      this.user = this._userService.getUser();
+      const session = await this._supabaseService.getSession();
+      const isSessionValid = !!session?.user && !!session?.expires_at && session.expires_at > Math.floor(Date.now() / 1000);
+
+      if (!isSessionValid) {
+        this._userService.clearUser();
+        return;
+      }
+
+      this.user = session!.user;
+      this._userService.setUser(this.user);
 
       if (this.user && this.user.email_confirmed_at) {
-        let userIsInDb = await this._supabaseService.profile(this.user).then((response: any) => {
-            return !response.error;
+        const userIsInDb = await this._supabaseService.profile(this.user).then((response: any) => {
+          return !response.error;
         });
 
         if (!userIsInDb) {
@@ -84,7 +93,7 @@ export class AuthComponent implements OnInit, OnDestroy {
           ? 'Ya hay sesión iniciada. Redirigiendo al panel de administrador.'
           : 'Ya hay sesión iniciada. Redirigiendo a la página de perfil.';
 
-        alert(message);
+        this._displaySnackbar(message);
         this._router.navigate([redirectPath]);
       }
     } catch (error) {

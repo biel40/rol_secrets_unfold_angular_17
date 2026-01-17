@@ -1,13 +1,12 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { MaterialModule } from '../../modules/material.module';
-import { Profile, SupabaseService } from '../../services/supabase/supabase.service';
+import { Profile } from '../../services/supabase/supabase.service';
 import { UserService } from '../../services/user/user.service';
-import { LoaderService } from '../../services/loader/loader.service';
 import { User } from '@supabase/supabase-js';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslocoModule } from '@jsverse/transloco';
-import { NgIf, NgFor, CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-profile-stats',
@@ -23,7 +22,6 @@ import { NgIf, NgFor, CommonModule } from '@angular/common';
 export class ProfileStatsComponent implements OnInit {
 
     private _userService: UserService = inject(UserService);
-    private _loaderService: LoaderService = inject(LoaderService);
     private _router = inject(Router);
 
     public keys: string[] = [];
@@ -32,6 +30,7 @@ export class ProfileStatsComponent implements OnInit {
 
     public isMobile: boolean = false;
     private _user: User | null = null;
+    public lastUpdatedLabel: string = '---';
 
     @Input() profile: Profile | null = null;
 
@@ -44,9 +43,9 @@ export class ProfileStatsComponent implements OnInit {
 
     async ngOnInit(): Promise<void> {
         if (!this._user) {
-            alert('Credenciales inválidas. Por favor, inicie sesión nuevamente.');
+            this._displaySnackbar('Credenciales inválidas. Por favor, inicie sesión nuevamente.');
             this._router.navigate(['']);
-        } 
+        }
     }
 
     ngOnChanges() : void {
@@ -62,6 +61,20 @@ export class ProfileStatsComponent implements OnInit {
         ];
 
         this.keys = Object.keys(this.dataSource[0]);
+        this.lastUpdatedLabel = this.profile ? this._formatUpdatedAt() : '---';
+    }
+
+    private _formatUpdatedAt(): string {
+        if (!this.profile?.updated_at) return '---';
+        const date = new Date(this.profile.updated_at);
+        if (Number.isNaN(date.getTime())) return '---';
+        return date.toLocaleString('es-ES', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
     }
 
     public goToEditStats(): void {

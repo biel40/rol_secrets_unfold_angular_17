@@ -38,6 +38,7 @@ export class ProfileInventoryComponent implements OnInit {
     public readonly isLoading = signal<boolean>(false);
     public readonly showForm = signal<boolean>(false);
     public readonly searchTerm = signal<string>('');
+    public readonly lastUpdatedLabel = signal<string>('---');
 
     public readonly filteredItems = computed(() => {
         const term = this.searchTerm().toLowerCase();
@@ -74,7 +75,11 @@ export class ProfileInventoryComponent implements OnInit {
         try {
             if (this._user) {
                 const response = await this._supabaseService.getItems(this._user.id);
+                if (response.error) {
+                    throw response.error;
+                }
                 this.items.set(response.data || []);
+                this.lastUpdatedLabel.set(this._formatUpdatedAt());
             }
         } catch (error) {
             console.error('Error loading inventory:', error);
@@ -177,6 +182,19 @@ export class ProfileInventoryComponent implements OnInit {
             duration: 3000,
             verticalPosition: 'bottom',
             panelClass: [panelClass]
+        });
+    }
+
+    private _formatUpdatedAt(): string {
+        if (!this.profile?.updated_at) return '---';
+        const date = new Date(this.profile.updated_at);
+        if (Number.isNaN(date.getTime())) return '---';
+        return date.toLocaleString('es-ES', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
         });
     }
 }

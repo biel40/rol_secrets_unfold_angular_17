@@ -7,6 +7,7 @@ import { RealtimeChannel } from '@supabase/supabase-js';
 import { MatDialog } from '@angular/material/dialog';
 import { BattleNotificationDialogComponent } from './components/dialogs/battle-notification-dialog/battle-notification-dialog.component';
 import { MaterialModule } from './modules/material.module';
+import { UserService } from './services/user/user.service';
 
 @Component({
   selector: 'app-root',
@@ -23,8 +24,8 @@ export class AppComponent implements OnInit {
 
   private _translocoService: TranslocoService = inject(TranslocoService);
   private _dialog = inject(MatDialog);
+  private _userService = inject(UserService);
 
-  public session: any;
   private _supabaseService = inject(SupabaseService);
   
   public battleStarted: boolean = false;
@@ -44,15 +45,7 @@ export class AppComponent implements OnInit {
   }
 
   public async ngOnInit() {
-    try {
-      const session = await this._supabaseService.getSession();
-      this.session = session;
-    } catch (error) {
-      console.error('Error getting session:', error);
-      this.session = null;
-    }
-    
-    this._supabaseService.authChanges((_, session) => (this.session = session));
+    await this._userService.initializeAuthSync();
     this._loadData();
   }
 

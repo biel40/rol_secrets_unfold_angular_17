@@ -1,0 +1,64 @@
+<div class="player-habilities-container">
+    @if (userHabilities.length > 0) {
+        <div class="habilities-grid">
+            @for (hability of userHabilities; track hability.id) {
+                <div class="hability-card" [ngClass]="'power-' + (hability.power || 'default').toLowerCase()">
+                    <!-- Header -->
+                    <div class="card-header">
+                        <div class="power-icon">{{ getPowerIcon(hability.power) }}</div>
+                        <div class="card-title-section">
+                            <h3 class="card-title">{{ hability.name }}</h3>
+                            <span class="card-power">{{ hability.power || 'Neutral' }}</span>
+                        </div>
+                        @if (hability.dice) {
+                            <div class="dice-badge">
+                                <span class="dice-icon">🎲</span>
+                                <span>{{ hability.dice }}</span>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Description -->
+                    <p class="card-description">{{ hability.description }}</p>
+
+                    <!-- Uses -->
+                    <div class="uses-section">
+                        <div class="uses-display">
+                            <span class="uses-current" [class.depleted]="hability.current_uses === 0">
+                                {{ hability.current_uses }}
+                            </span>
+                            <span class="uses-separator">/</span>
+                            <span class="uses-total">{{ hability.total_uses }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="card-actions">
+                        <button class="action-btn btn-minus" 
+                                (click)="removeUses(hability)"
+                                [disabled]="hability.current_uses === 0">
+                            <mat-icon>remove</mat-icon>
+                        </button>
+                        <button class="action-btn btn-damage" 
+                                (click)="calculateDamage(hability)"
+                                [disabled]="hability.current_uses <= 0">
+                            <mat-icon>bolt</mat-icon>
+                            DMG
+                        </button>
+                        <button class="action-btn btn-plus" 
+                                (click)="addUses(hability)"
+                                [disabled]="hability.current_uses >= hability.total_uses">
+                            <mat-icon>add</mat-icon>
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    } @else {
+        <div class="empty-state">
+            <div class="empty-icon">✨</div>
+            <h3>No tienes habilidades</h3>
+            <p>Tu personaje aún no tiene habilidades asignadas.</p>
+        </div>
+    }
+</div>

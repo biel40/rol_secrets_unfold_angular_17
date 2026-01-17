@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit, HostListener } from '@angular/core';
 import { MaterialModule } from '../../modules/material.module';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -7,6 +7,7 @@ import { User } from '@supabase/supabase-js';
 import { LoaderService } from '../../services/loader/loader.service';
 import { UserService } from '../../services/user/user.service';
 import { TranslocoModule } from '@jsverse/transloco';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-profile-edit',
@@ -40,12 +41,17 @@ export class ProfileEditComponent implements OnInit {
         clase: '',
         power: '',
         level: 0,
-        weapon: ''
+        weapon: '',
+        image_url: ''
     });
 
     public profile: Profile | null = null;
+    public avatarPreview: string = '';
+    private readonly _maxAvatarSize = 2 * 1024 * 1024;
 
-    constructor() { }
+    constructor(
+        private _snackBar: MatSnackBar
+    ) { }
 
     async ngOnInit(): Promise<void> {
 
@@ -54,25 +60,42 @@ export class ProfileEditComponent implements OnInit {
         this.user = this._userService.getUser();
 
         if (!this.user) {
-            alert('Credenciales inválidas. Por favor, inicie sesión nuevamente.');
+            this._displaySnackbar('Credenciales inválidas. Por favor, inicie sesión nuevamente.', true);
             this._router.navigate(['']);
+            return;
         } else {
             this.profile = (await this._supabaseService.getProfileInfo(this.user.id)).data;
 
             if (this.profile) {
-                const { username, clase, power, level, weapon } = this.profile;
+                const { username, clase, power, level, weapon, image_url } = this.profile;
 
                 this.updateProfileForm.patchValue({
                     username,
                     clase,
                     power,
                     level,
-                    weapon
+                    weapon,
+                    image_url
                 });
+                this.avatarPreview = image_url || '';
             }
         }
 
         this._loaderService.setLoading(false);
+    }
+
+    @HostListener('window:keydown', ['$event'])
+    public handleShortcut(event: KeyboardEvent): void {
+        if (!(event.metaKey || event.ctrlKey)) {
+            return;
+        }
+
+        if (event.key.toLowerCase() !== 's') {
+            return;
+        }
+
+        event.preventDefault();
+        this.updateProfile();
     }
 
     public async updateProfile(): Promise<void> {
@@ -83,6 +106,7 @@ export class ProfileEditComponent implements OnInit {
         const power = this.updateProfileForm.value.power as string;
         const level = this.updateProfileForm.value.level as number;
         const weapon = this.updateProfileForm.value.weapon as string;
+        const image_url = this.updateProfileForm.value.image_url as string;
 
         if (this.user) {
             await this._supabaseService.updateProfile({
@@ -91,7 +115,8 @@ export class ProfileEditComponent implements OnInit {
                 clase,
                 power,
                 level,
-                weapon
+                weapon,
+                image_url
             });
 
 
@@ -101,21 +126,69 @@ export class ProfileEditComponent implements OnInit {
         }
     }
 
+    public handleAvatarUpload(event: Event): void {
+        const input = event.target as HTMLInputElement;
+        const file = input.files?.[0];
+
+        if (!file) {
+            return;
+        }
+
+        if (!file.type.startsWith('image/')) {
+            this._displaySnackbar('Selecciona una imagen valida.', true);
+            input.value = '';
+            return;
+        }
+
+        if (file.size > this._maxAvatarSize) {
+            this._displaySnackbar('La imagen supera el limite de 2MB.', true);
+            input.value = '';
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            const result = reader.result as string;
+            this.avatarPreview = result;
+            this.updateProfileForm.patchValue({ image_url: result });
+        };
+        reader.onerror = () => {
+            this._displaySnackbar('No se pudo cargar la imagen.', true);
+        };
+        reader.readAsDataURL(file);
+    }
+
+    public removeAvatar(): void {
+        this.avatarPreview = '';
+        this.updateProfileForm.patchValue({ image_url: '' });
+    }
+
+    private _displaySnackbar(message: string, isError: boolean = false): void {
+        this._snackBar.open(message, 'Cerrar', {
+            duration: 4000,
+            panelClass: isError ? ['custom-snackbar', 'error-snackbar'] : ['custom-snackbar'],
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom'
+        });
+    }
+
     public goBack(): void {
         this._router.navigate(['profile']);
     }
 
     ngOnChanges(): void {
         if (this.profile) {
-            const { username, clase, power, level, weapon } = this.profile;
+            const { username, clase, power, level, weapon, image_url } = this.profile;
 
             this.updateProfileForm.patchValue({
                 username,
                 clase,
                 power,
                 level,
-                weapon
+                weapon,
+                image_url
             });
+            this.avatarPreview = image_url || '';
         }
 
         this._loaderService.setLoading(false);

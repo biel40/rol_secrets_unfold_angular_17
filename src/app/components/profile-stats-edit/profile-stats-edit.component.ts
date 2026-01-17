@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, HostListener } from '@angular/core';
 import { Profile, SupabaseService } from '../../services/supabase/supabase.service';
 import { User } from '@supabase/supabase-js';
 import { MaterialModule } from '../../modules/material.module';
@@ -6,6 +6,7 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user/user.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-profile-stats-edit',
@@ -38,20 +39,21 @@ export class ProfileStatsEditComponent implements OnInit {
         speed: 0
     });
 
-    constructor() {
+    constructor(
+        private _snackBar: MatSnackBar
+    ) {
         this.user = this._userService.getUser();
     }
 
     public async ngOnInit(): Promise<void> {
 
         if (!this.user) {
-            alert('Credenciales inválidas. Por favor, inicie sesión nuevamente.');
+            this._displaySnackbar('Credenciales inválidas. Por favor, inicie sesión nuevamente.', true);
             this._router.navigate(['']);
+            return;
         }
 
-        if (this.user) {
-            this.profile = (await this._supabaseService.getProfileInfo(this.user.id)).data;
-        }
+        this.profile = (await this._supabaseService.getProfileInfo(this.user.id)).data;
 
         if (this.profile) {
             const { current_hp, total_hp, attack, special_attack, defense, special_defense, speed } = this.profile;
@@ -68,10 +70,24 @@ export class ProfileStatsEditComponent implements OnInit {
         }
     }
 
+    @HostListener('window:keydown', ['$event'])
+    public handleShortcut(event: KeyboardEvent): void {
+        if (!(event.metaKey || event.ctrlKey)) {
+            return;
+        }
+
+        if (event.key.toLowerCase() !== 's') {
+            return;
+        }
+
+        event.preventDefault();
+        this.updateProfileStats();
+    }
+
     public async updateProfileStats(): Promise<void> {
         try {
             if (!this.user) {
-                alert('Credenciales inválidas. Por favor, inicie sesión nuevamente.');
+                this._displaySnackbar('Credenciales inválidas. Por favor, inicie sesión nuevamente.', true);
                 this._router.navigate(['']);
             }
 
@@ -99,13 +115,22 @@ export class ProfileStatsEditComponent implements OnInit {
 
                 await this._supabaseService.updateProfileStats(profile);
                 
-                alert('Estadísticas del perfil actualizadas correctamente!');
+                this._displaySnackbar('Estadísticas del perfil actualizadas correctamente!');
 
                 this._router.navigate(['profile']);
             }
         } catch (error) {
             console.error('Error updating profile stats:', error);
         }
+    }
+
+    private _displaySnackbar(message: string, isError: boolean = false): void {
+        this._snackBar.open(message, 'Cerrar', {
+            duration: 4000,
+            panelClass: isError ? ['custom-snackbar', 'error-snackbar'] : ['custom-snackbar'],
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom'
+        });
     }
 
     public goBack() : void {
