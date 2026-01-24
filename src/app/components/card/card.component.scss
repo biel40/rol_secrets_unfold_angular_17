@@ -179,3 +179,97 @@ $glass-border: rgba(255, 255, 255, 0.06);
         border-radius: 16px;
     }
 }
+
+// ============================================
+// ELEMENTAL THEMES
+// ============================================
+$pyro: #e74c3c;   // Fuego
+$hydro: #3498db;  // Agua
+$electro: #FFD700; // Electricidad (Amarillo Eléctrico)
+$geo: #8b4513;    // Tierra
+$cryo: #74b9ff;   // Hielo
+$natura: #27ae60; // Naturaleza
+$aero: #1bc3a7;   // Viento
+
+@mixin element-theme($color) {
+    background: linear-gradient(165deg, rgba($color, 0.18) 0%, rgba($bg-darkest, 0.95) 100%);
+    border: 1px solid rgba($color, 0.15);
+    
+    &::before { // Borde gradiente
+        background: linear-gradient(
+            135deg,
+            rgba($color, 0.8) 0%,
+            transparent 50%,
+            rgba($color, 0.4) 100%
+        );
+        opacity: 0.6;
+    }
+
+    .card-glow {
+        background: radial-gradient(circle at 50% 20%, rgba($color, 0.35), transparent 70%);
+        animation: element-pulse 4s ease-in-out infinite alternate;
+        opacity: 0.4;
+    }
+
+    &:hover {
+        box-shadow: 
+            0 30px 60px -15px rgba(0, 0, 0, 0.7),
+            0 0 50px rgba($color, 0.25),
+            inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            
+        &::before {
+            opacity: 0.9;
+        }
+        
+        .card-glow {
+            opacity: 0.6;
+        }
+    }
+}
+
+@keyframes element-pulse {
+    0% { transform: scale(1); opacity: 0.3; }
+    100% { transform: scale(1.1); opacity: 0.5; }
+}
+
+@keyframes electro-flow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.card {
+    &.element-pyro { @include element-theme($pyro); }
+    &.element-hydro { @include element-theme($hydro); }
+    
+    &.element-electro { 
+        @include element-theme($electro);
+        // Sobreescritura para un degradado animado especial
+        background: linear-gradient(-45deg, 
+            rgba(#1e293b, 0.98), 
+            rgba($electro, 0.15), 
+            rgba(#0f172a, 0.95), 
+            rgba($electro, 0.1)
+        );
+        background-size: 400% 400%;
+        animation: electro-flow 8s ease infinite;
+
+        .card-glow {
+            // Doble foco de luz para efecto vibrante
+            background: 
+                radial-gradient(circle at 30% 20%, rgba($electro, 0.45), transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba($electro, 0.3), transparent 50%);
+            animation: element-pulse 1.5s ease-in-out infinite alternate;
+            filter: blur(15px);
+        }
+        
+        &:hover .card-glow {
+            opacity: 0.75;
+        }
+    }
+    
+    &.element-geo { @include element-theme($geo); }
+    &.element-cryo { @include element-theme($cryo); }
+    &.element-natura { @include element-theme($natura); }
+    &.element-aero { @include element-theme($aero); }
+}

@@ -33,7 +33,7 @@
         @switch (activeTab) {
             @case ('profile') {
                 <div class="content-panel fade-in">
-                    <app-card></app-card>
+                    <app-card [profile]="profile"></app-card>
                 </div>
             }
             @case ('stats') {

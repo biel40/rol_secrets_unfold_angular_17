@@ -1,12 +1,12 @@
 <div class="card-wrapper">
-    <div class="card">
+    <div class="card" [ngClass]="elementClass">
         <div class="card-effects-container">
             <div class="card-glow"></div>
             <div class="card-shine"></div>
         </div>
         <div class="card-border"></div>
         <div class="card__content">
-            <app-profile-info></app-profile-info>
+            <app-profile-info [profile]="profile"></app-profile-info>
         </div>
     </div>
 </div>

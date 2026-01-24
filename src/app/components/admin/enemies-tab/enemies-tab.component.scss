@@ -1,4 +1,4 @@
-@use 'sass:color';
+@use "sass:color";
 
 // Variables de tema
 $gold-color: #d4af37;
@@ -422,7 +422,7 @@ $success-color: #2ecc71;
         &.active {
             background: linear-gradient(135deg, rgba($success-color, 0.3), rgba($success-color, 0.15));
             border-color: $success-color;
-            color: lighten($success-color, 20%);
+            color: color.adjust($success-color, $lightness: 20%);
             box-shadow: 0 4px 12px rgba($success-color, 0.25);
         }
 
@@ -507,7 +507,7 @@ $success-color: #2ecc71;
     border: 1px solid rgba($danger-color, 0.5);
     border-radius: 8px;
     background: rgba($danger-color, 0.15);
-    color: lighten($danger-color, 10%);
+    color: color.adjust($danger-color, $lightness: 10%);
     font-size: 0.85rem;
     font-weight: 500;
     cursor: pointer;
@@ -687,7 +687,7 @@ $success-color: #2ecc71;
     mat-spinner {
         margin-bottom: 20px;
     }
-    
+
     p {
         font-size: 1.2rem;
         font-weight: 500;
