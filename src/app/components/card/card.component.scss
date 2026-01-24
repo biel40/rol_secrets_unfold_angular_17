@@ -54,6 +54,8 @@ $glass-border: rgba(255, 255, 255, 0.06);
         );
         -webkit-mask: linear-gradient(#fff 0 0) content-box, 
                       linear-gradient(#fff 0 0);
+        mask: linear-gradient(#fff 0 0) content-box, 
+              linear-gradient(#fff 0 0);
         -webkit-mask-composite: xor;
         mask-composite: exclude;
         opacity: 0.4;
@@ -243,28 +245,45 @@ $aero: #1bc3a7;   // Viento
     &.element-hydro { @include element-theme($hydro); }
     
     &.element-electro { 
-        @include element-theme($electro);
-        // Sobreescritura para un degradado animado especial
-        background: linear-gradient(-45deg, 
-            rgba(#1e293b, 0.98), 
-            rgba($electro, 0.15), 
-            rgba(#0f172a, 0.95), 
-            rgba($electro, 0.1)
+        background: linear-gradient(135deg, 
+            rgba(#2d2408, 0.95) 0%,
+            rgba($electro, 0.35) 25%,
+            rgba(#1a1505, 0.9) 50%,
+            rgba($electro, 0.25) 75%,
+            rgba(#0f172a, 0.95) 100%
         );
-        background-size: 400% 400%;
-        animation: electro-flow 8s ease infinite;
+        background-size: 300% 300%;
+        animation: electro-flow 6s ease infinite;
+        border: 1px solid rgba($electro, 0.4);
+
+        &::before {
+            background: linear-gradient(
+                135deg,
+                rgba($electro, 0.9) 0%,
+                rgba(#FFA500, 0.5) 50%,
+                rgba($electro, 0.7) 100%
+            );
+            opacity: 0.7;
+        }
 
         .card-glow {
-            // Doble foco de luz para efecto vibrante
             background: 
-                radial-gradient(circle at 30% 20%, rgba($electro, 0.45), transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba($electro, 0.3), transparent 50%);
+                radial-gradient(circle at 30% 20%, rgba($electro, 0.6), transparent 55%),
+                radial-gradient(circle at 70% 75%, rgba(#FFA500, 0.4), transparent 50%);
             animation: element-pulse 1.5s ease-in-out infinite alternate;
-            filter: blur(15px);
+            filter: blur(12px);
+            opacity: 0.55;
         }
         
-        &:hover .card-glow {
-            opacity: 0.75;
+        &:hover {
+            box-shadow: 
+                0 30px 60px -15px rgba(0, 0, 0, 0.7),
+                0 0 60px rgba($electro, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+                
+            .card-glow {
+                opacity: 0.8;
+            }
         }
     }
     
