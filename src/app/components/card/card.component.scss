@@ -292,3 +292,52 @@ $aero: #1bc3a7;   // Viento
     &.element-natura { @include element-theme($natura); }
     &.element-aero { @include element-theme($aero); }
 }
+
+// ============================================
+// DISABLE ANIMATIONS ON MOBILE & TOUCH DEVICES
+// (Al final para mayor especificidad)
+// ============================================
+@mixin disable-card-animations {
+    .card {
+        // Deshabilitar todas las transiciones y animaciones
+        transition: none !important;
+        animation: none !important;
+        transform: none !important;
+        
+        &::before {
+            transition: none !important;
+        }
+        
+        // Deshabilitar todos los estados interactivos
+        &:hover,
+        &:active,
+        &:focus,
+        &:focus-within {
+            transform: none !important;
+            animation: none !important;
+        }
+    }
+    
+    // Ocultar completamente los efectos visuales animados
+    .card-effects-container {
+        display: none !important;
+    }
+    
+    .card-glow {
+        display: none !important;
+    }
+    
+    .card-shine {
+        display: none !important;
+    }
+}
+
+// Aplicar en pantallas pequeñas
+@media (max-width: 1024px) {
+    @include disable-card-animations;
+}
+
+// Aplicar en dispositivos táctiles (sin hover real)
+@media (hover: none) and (pointer: coarse) {
+    @include disable-card-animations;
+}
