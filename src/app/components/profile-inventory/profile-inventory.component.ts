@@ -37,8 +37,13 @@ export class ProfileInventoryComponent implements OnInit {
     public readonly items = signal<Item[]>([]);
     public readonly isLoading = signal<boolean>(false);
     public readonly showForm = signal<boolean>(false);
+    public readonly editingItem = signal<Item | null>(null);
     public readonly searchTerm = signal<string>('');
     public readonly lastUpdatedLabel = signal<string>('---');
+
+    public get isEditing(): boolean {
+        return this.editingItem() !== null;
+    }
 
     public readonly filteredItems = computed(() => {
         const term = this.searchTerm().toLowerCase();
@@ -91,11 +96,19 @@ export class ProfileInventoryComponent implements OnInit {
 
     public openForm(): void {
         this.newItem = this._getEmptyItem();
+        this.editingItem.set(null);
+        this.showForm.set(true);
+    }
+
+    public openEditForm(item: Item): void {
+        this.newItem = { ...item };
+        this.editingItem.set(item);
         this.showForm.set(true);
     }
 
     public closeForm(): void {
         this.showForm.set(false);
+        this.editingItem.set(null);
         this.newItem = this._getEmptyItem();
     }
 
@@ -131,12 +144,16 @@ export class ProfileInventoryComponent implements OnInit {
         this.isLoading.set(true);
 
         try {
-            this.newItem.profile_id = this._user.id;
-            this.newItem.quantity = 1;
-
-            await this._supabaseService.saveItemToProfile(this.newItem);
+            if (this.isEditing) {
+                await this._supabaseService.updateItem(this.newItem);
+                this._showSnackbar('¡Objeto actualizado!', 'success');
+            } else {
+                this.newItem.profile_id = this._user.id;
+                this.newItem.quantity = 1;
+                await this._supabaseService.saveItemToProfile(this.newItem);
+                this._showSnackbar('¡Objeto añadido al inventario!', 'success');
+            }
             
-            this._showSnackbar('¡Objeto añadido al inventario!', 'success');
             this.closeForm();
             await this._loadData();
         } catch (error) {

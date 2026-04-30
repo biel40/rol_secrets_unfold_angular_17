@@ -468,6 +468,9 @@ $success-color: #22c55e;
 .item-actions {
     padding: 0.875rem 1rem;
     border-top: 1px solid $glass-border;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 .action-button {
@@ -492,10 +495,26 @@ $success-color: #22c55e;
         height: 18px;
     }
 
-    &.delete:hover {
-        background: rgba($danger-color, 0.15);
-        border-color: rgba($danger-color, 0.4);
+    &.edit {
+        color: $primary-light;
+        border-color: rgba($primary-light, 0.3);
+
+        &:hover {
+            background: rgba($primary-light, 0.15);
+            border-color: rgba($primary-light, 0.8);
+            color: #fff;
+        }
+    }
+
+    &.delete {
         color: $danger-color;
+        border-color: rgba($danger-color, 0.3);
+
+        &:hover {
+            background: rgba($danger-color, 0.15);
+            border-color: rgba($danger-color, 0.8);
+            color: #fff;
+        }
     }
 }
 

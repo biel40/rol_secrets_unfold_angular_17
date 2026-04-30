@@ -11,10 +11,6 @@
                         <span class="badge-value">{{ itemCount() }}</span>
                         <span class="badge-label">Objetos</span>
                     </div>
-                    <div class="stat-badge gold">
-                        <span class="badge-value">{{ lastUpdatedLabel() }}</span>
-                        <span class="badge-label">Actualizado</span>
-                    </div>
                 </div>
             </div>
             <button class="add-button" (click)="openForm()">
@@ -26,8 +22,8 @@
         @if (showForm()) {
             <div class="new-item-form">
                 <div class="form-header">
-                    <span class="form-icon">✨</span>
-                    <h2 class="form-title">Nuevo objeto</h2>
+                    <span class="form-icon">{{ isEditing ? '✏️' : '✨' }}</span>
+                    <h2 class="form-title">{{ isEditing ? 'Editar objeto' : 'Nuevo objeto' }}</h2>
                 </div>
                 <form (ngSubmit)="saveItem()">
                     <div class="form-grid">
@@ -71,8 +67,8 @@
                             Cancelar
                         </button>
                         <button type="submit" class="save-button" [disabled]="!newItem.name.trim()">
-                            <mat-icon>save</mat-icon>
-                            Guardar
+                            <mat-icon>{{ isEditing ? 'check' : 'save' }}</mat-icon>
+                            {{ isEditing ? 'Actualizar' : 'Guardar' }}
                         </button>
                     </div>
                     <p class="shortcut-hint">Cmd/Ctrl+S para guardar</p>
@@ -120,6 +116,10 @@
                                 </div>
                                 
                                 <div class="item-actions">
+                                    <button class="action-button edit" (click)="openEditForm(item)">
+                                        <mat-icon>edit</mat-icon>
+                                        <span>Editar</span>
+                                    </button>
                                     <button class="action-button delete" (click)="deleteItem(item)">
                                         <mat-icon>delete_outline</mat-icon>
                                         <span>Eliminar</span>
