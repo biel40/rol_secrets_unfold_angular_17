@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ProfileInfoComponent } from '../profile-info/profile-info.component';
 import { Profile } from '../../services/supabase/supabase.service';
+import { ProfileStateService } from '../../services/profile/profile-state.service';
 
 @Component({
     selector: 'app-card',
@@ -15,7 +16,11 @@ import { Profile } from '../../services/supabase/supabase.service';
 })
 export class CardComponent implements OnInit {
 
-    @Input() profile: Profile | null = null;
+    private _profileState = inject(ProfileStateService);
+
+    public get profile(): Profile | null {
+        return this._profileState.profile();
+    }
 
     constructor() { 
 

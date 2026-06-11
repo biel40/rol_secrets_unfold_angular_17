@@ -1,7 +1,7 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, OnInit, effect } from '@angular/core';
 import { MaterialModule } from '../../modules/material.module';
-import { Profile } from '../../services/supabase/supabase.service';
 import { UserService } from '../../services/user/user.service';
+import { ProfileStateService } from '../../services/profile/profile-state.service';
 import { User } from '@supabase/supabase-js';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -22,6 +22,7 @@ import { CommonModule } from '@angular/common';
 export class ProfileStatsComponent implements OnInit {
 
     private _userService: UserService = inject(UserService);
+    private _profileState = inject(ProfileStateService);
     private _router = inject(Router);
 
     public keys: string[] = [];
@@ -32,13 +33,26 @@ export class ProfileStatsComponent implements OnInit {
     private _user: User | null = null;
     public lastUpdatedLabel: string = '---';
 
-    @Input() profile: Profile | null = null;
-
     constructor(
         private _snackBar: MatSnackBar
     ) {
         this._user = this._userService.getUser();
         this._detectIfMobile();
+
+        // Reacts to profile signal: runs on init and whenever profile updates (e.g. after stats edit).
+        effect(() => {
+            const profile = this._profileState.profile();
+            this.dataSource = [{
+                '\u2764\ufe0f Vida': profile?.current_hp + '/' + profile?.total_hp,
+                ' Ataque': profile?.attack,
+                'Defensa': profile?.defense,
+                'Ataque especial': profile?.special_attack,
+                'Defensa especial': profile?.special_defense,
+                'Velocidad': profile?.speed
+            }];
+            this.keys = Object.keys(this.dataSource[0]);
+            this.lastUpdatedLabel = profile ? this._formatUpdatedAt() : '---';
+        });
     }
 
     async ngOnInit(): Promise<void> {
@@ -48,25 +62,10 @@ export class ProfileStatsComponent implements OnInit {
         }
     }
 
-    ngOnChanges() : void {
-        this.dataSource = [
-            {
-                '❤️ Vida': this.profile?.current_hp + '/' + this.profile?.total_hp,
-                ' Ataque': this.profile?.attack,
-                'Defensa': this.profile?.defense,
-                'Ataque especial': this.profile?.special_attack,
-                'Defensa especial': this.profile?.special_defense,
-                'Velocidad': this.profile?.speed
-            }
-        ];
-
-        this.keys = Object.keys(this.dataSource[0]);
-        this.lastUpdatedLabel = this.profile ? this._formatUpdatedAt() : '---';
-    }
-
     private _formatUpdatedAt(): string {
-        if (!this.profile?.updated_at) return '---';
-        const date = new Date(this.profile.updated_at);
+        const profile = this._profileState.profile();
+        if (!profile?.updated_at) return '---';
+        const date = new Date(profile.updated_at);
         if (Number.isNaN(date.getTime())) return '---';
         return date.toLocaleString('es-ES', {
             day: '2-digit',

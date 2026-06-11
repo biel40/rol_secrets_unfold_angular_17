@@ -1,8 +1,9 @@
-import { Component, inject, Input, OnInit, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../modules/material.module';
 import { UserService } from '../../services/user/user.service';
 import { Hability, Profile, SupabaseService } from '../../services/supabase/supabase.service';
+import { ProfileStateService } from '../../services/profile/profile-state.service';
 import { Router } from '@angular/router';
 import { User } from '@supabase/supabase-js';
 import { MatDialog } from '@angular/material/dialog';
@@ -20,24 +21,27 @@ import { Overlay } from '@angular/cdk/overlay';
         MaterialModule,
     ]
 })
-export class PlayerHabilitiesComponent implements OnInit, OnChanges {
+export class PlayerHabilitiesComponent implements OnInit {
 
     private _userService: UserService = inject(UserService);
     private _supabaseService: SupabaseService = inject(SupabaseService);
+    private _profileState = inject(ProfileStateService);
     private _router = inject(Router);
+    private _dialog = inject(MatDialog);
     private _overlay = inject(Overlay);
     private _snackBar = inject(MatSnackBar);
     private _cdr = inject(ChangeDetectorRef);
 
     public animateDice: boolean = false;
-
     public user: User | null = null;
+    
+    public get userHabilities(): Hability[] {
+        return this._profileState.userHabilities();
+    }
 
-    @Input() public profile: Profile | null = null;
-
-    public userHabilities: Hability[] = [];
-
-    constructor(public dialog: MatDialog) { }
+    private get _profile(): Profile | null {
+        return this._profileState.profile();
+    }
 
     ngOnInit(): void {
         this.user = this._userService.getUser();
@@ -48,19 +52,8 @@ export class PlayerHabilitiesComponent implements OnInit, OnChanges {
         }
     }
 
-    async ngOnChanges(changes: SimpleChanges): Promise<void> {
-        if (changes['profile'] && this.profile) {
-            this.userHabilities = await this._supabaseService.getHabilitiesFromUser(this.profile);
-            this._cdr.detectChanges();
-        } else if (!this.profile) {
-            this.userHabilities = [];
-        }
-    }
-
     public async refreshHabilities(): Promise<void> {
-        if (this.profile) {
-            this.userHabilities = await this._supabaseService.getHabilitiesFromUser(this.profile);
-        }
+        await this._profileState.refreshHabilities();
     }
 
     public addUses(hability: Hability) {
@@ -72,8 +65,8 @@ export class PlayerHabilitiesComponent implements OnInit, OnChanges {
 
             hability.current_uses++;
 
-            if (this.profile) {
-                this._supabaseService.updateHabilityUses(hability, this.profile);
+            if (this._profile) {
+                this._supabaseService.updateHabilityUses(hability, this._profile);
             } else {
                 console.error('Profile is null');
             }
@@ -89,8 +82,8 @@ export class PlayerHabilitiesComponent implements OnInit, OnChanges {
 
             hability.current_uses--;
 
-            if (this.profile) {
-                this._supabaseService.updateHabilityUses(hability, this.profile);
+            if (this._profile) {
+                this._supabaseService.updateHabilityUses(hability, this._profile);
             } else {
                 console.error('Profile is null');
             }
@@ -101,7 +94,7 @@ export class PlayerHabilitiesComponent implements OnInit, OnChanges {
         if (hability) {
             
             // Prevent opening multiple dialogs if one is already open
-            if (this.dialog.openDialogs.length > 0) {
+            if (this._dialog.openDialogs.length > 0) {
                 return;
             }
 
@@ -118,9 +111,9 @@ export class PlayerHabilitiesComponent implements OnInit, OnChanges {
         // Clone the hability to avoid modifying the parent view state during the dialog's lifecycle (NG0100 fix)
         const habilityClone = { ...hability };
         // Clone the profile to pass to the dialog and avoid async loading
-        const profileClone = this.profile ? { ...this.profile } : null;
+        const profileClone = this._profile ? { ...this._profile } : null;
 
-        const dialogRef = this.dialog.open(DiceMatDialogComponent, {
+        const dialogRef = this._dialog.open(DiceMatDialogComponent, {
             data: { 
                 hability: habilityClone,
                 profile: profileClone

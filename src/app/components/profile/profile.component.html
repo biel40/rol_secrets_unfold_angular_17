@@ -33,22 +33,22 @@
         @switch (activeTab) {
             @case ('profile') {
                 <div class="content-panel fade-in">
-                    <app-card [profile]="profile"></app-card>
+                    <app-card></app-card>
                 </div>
             }
             @case ('stats') {
                 <div class="content-panel fade-in">
-                    <app-profile-stats [profile]="profile"></app-profile-stats>
+                    <app-profile-stats></app-profile-stats>
                 </div>
             }
             @case ('inventory') {
                 <div class="content-panel fade-in">
-                    <app-profile-inventory [profile]="profile"></app-profile-inventory>
+                    <app-profile-inventory></app-profile-inventory>
                 </div>
             }
             @case ('habilities') {
                 <div class="content-panel fade-in">
-                    <app-player-habilities [profile]="profile"></app-player-habilities>
+                    <app-player-habilities></app-player-habilities>
                 </div>
             }
         }

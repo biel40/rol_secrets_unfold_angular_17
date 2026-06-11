@@ -1,8 +1,9 @@
-import { Component, inject, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
-import { Profile, SupabaseService } from '../../services/supabase/supabase.service';
+import { Component, inject, OnInit, HostListener } from '@angular/core';
+import { Profile } from '../../services/supabase/supabase.service';
 import { User } from '@supabase/supabase-js';
 import { UserService } from '../../services/user/user.service';
 import { LoaderService } from '../../services/loader/loader.service';
+import { ProfileStateService } from '../../services/profile/profile-state.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MaterialModule } from '../../modules/material.module';
@@ -48,13 +49,16 @@ interface Tab {
 export class ProfileComponent implements OnInit {
 
     private _userService: UserService = inject(UserService);
-    private _supabaseService: SupabaseService = inject(SupabaseService);
+    private _profileState = inject(ProfileStateService);
     private _loaderService: LoaderService = inject(LoaderService);
     private _router = inject(Router);
-    private _cdr = inject(ChangeDetectorRef);
 
-    public profile: Profile | null = null;
     private _user: User | null = null;
+
+    /** Backed by the service signal — no local copy, no change detection needed. */
+    public get profile(): Profile | null {
+        return this._profileState.profile();
+    }
 
     public errorConfirmEmail: boolean = false;
     
@@ -104,13 +108,9 @@ export class ProfileComponent implements OnInit {
 
         try {
             if (this._user) {
-                const response = await this._supabaseService.getProfileInfo(this._user.id);
-                const profile = response?.data;
+                const profile = await this._profileState.loadProfileWithHabilities(this._user.id);
 
-                if (profile) {
-                    this.profile = profile;
-                    this._cdr.detectChanges();
-                } else {
+                if (!profile) {
                     this._displaySnackbar('No se ha podido cargar el perfil. Por favor, vuelve a iniciar sesión.');
                     this._router.navigate(['']);
                 }
@@ -152,6 +152,7 @@ export class ProfileComponent implements OnInit {
 
     public ngOnDestroy(): void {
         this._loaderService.setLoading(false);
+        this._profileState.clear();
     }
 
     public async goBack(): Promise<void> {

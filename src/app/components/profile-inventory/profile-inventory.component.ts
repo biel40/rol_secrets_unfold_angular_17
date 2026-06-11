@@ -1,8 +1,8 @@
-import { Component, inject, Input, OnInit, signal, computed, HostListener } from '@angular/core';
+import { Component, inject, OnInit, signal, computed, HostListener } from '@angular/core';
 import { MaterialModule } from '../../modules/material.module';
-import { Item, Profile, SupabaseService } from '../../services/supabase/supabase.service';
+import { Item } from '../../services/supabase/supabase.service';
+import { ProfileStateService } from '../../services/profile/profile-state.service';
 import { UserService } from '../../services/user/user.service';
-import { LoaderService } from '../../services/loader/loader.service';
 import { User } from '@supabase/supabase-js';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -25,31 +25,40 @@ import { CommonModule } from '@angular/common';
 export class ProfileInventoryComponent implements OnInit {
 
     private _userService = inject(UserService);
-    private _loaderService = inject(LoaderService);
-    private _supabaseService = inject(SupabaseService);
+    private _profileState = inject(ProfileStateService);
     private _router = inject(Router);
     private _snackBar = inject(MatSnackBar);
 
     private _user: User | null = null;
 
-    @Input() profile: Profile | null = null;
+    /** Delegated to service signal — pre-loaded before tab activates. */
+    public get items() { return this._profileState.items; }
+    public get isLoading() { return this._profileState.itemsLoading; }
 
-    public readonly items = signal<Item[]>([]);
-    public readonly isLoading = signal<boolean>(false);
     public readonly showForm = signal<boolean>(false);
     public readonly searchTerm = signal<string>('');
-    public readonly lastUpdatedLabel = signal<string>('---');
+
+    public readonly lastUpdatedLabel = computed(() => {
+        const profile = this._profileState.profile();
+        if (!profile?.updated_at) return '---';
+        const date = new Date(profile.updated_at);
+        if (Number.isNaN(date.getTime())) return '---';
+        return date.toLocaleString('es-ES', {
+            day: '2-digit', month: '2-digit', year: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+        });
+    });
 
     public readonly filteredItems = computed(() => {
         const term = this.searchTerm().toLowerCase();
         if (!term) return this.items();
-        return this.items().filter(item => 
+        return this.items().filter(item =>
             item.name.toLowerCase().includes(term) ||
             item.description?.toLowerCase().includes(term)
         );
     });
 
-    public readonly totalValue = computed(() => 
+    public readonly totalValue = computed(() =>
         this.items().reduce((sum, item) => sum + (item.value || 0), 0)
     );
 
@@ -57,37 +66,16 @@ export class ProfileInventoryComponent implements OnInit {
 
     public newItem: Item = this._getEmptyItem();
 
-    async ngOnInit(): Promise<void> {
+    ngOnInit(): void {
         this._user = this._userService.getUser();
-        
+
         if (!this._user) {
             this._showSnackbar('Credenciales inválidas. Por favor, inicie sesión nuevamente.', 'error');
             this._router.navigate(['']);
-            return;
-        }
-
-        await this._loadData();
-    }
-
-    private async _loadData(): Promise<void> {
-        this.isLoading.set(true);
-        
-        try {
-            if (this._user) {
-                const response = await this._supabaseService.getItems(this._user.id);
-                if (response.error) {
-                    throw response.error;
-                }
-                this.items.set(response.data || []);
-                this.lastUpdatedLabel.set(this._formatUpdatedAt());
-            }
-        } catch (error) {
-            console.error('Error loading inventory:', error);
-            this._showSnackbar('Error al cargar el inventario', 'error');
-        } finally {
-            this.isLoading.set(false);
         }
     }
+
+
 
     public openForm(): void {
         this.newItem = this._getEmptyItem();
@@ -128,22 +116,14 @@ export class ProfileInventoryComponent implements OnInit {
             return;
         }
 
-        this.isLoading.set(true);
+        const ok = await this._profileState.addItem({ ...this.newItem }, this._user.id);
 
-        try {
-            this.newItem.profile_id = this._user.id;
-            this.newItem.quantity = 1;
-
-            await this._supabaseService.saveItemToProfile(this.newItem);
-            
+        if (ok) {
             this._showSnackbar('¡Objeto añadido al inventario!', 'success');
             this.closeForm();
-            await this._loadData();
-        } catch (error) {
-            console.error('Error saving item:', error);
+            this.newItem = this._getEmptyItem();
+        } else {
             this._showSnackbar('Error al guardar el objeto', 'error');
-        } finally {
-            this.isLoading.set(false);
         }
     }
 
@@ -164,19 +144,11 @@ export class ProfileInventoryComponent implements OnInit {
     }
 
     private async _confirmDelete(item: Item): Promise<void> {
-        if (!this._user) return;
-
-        this.isLoading.set(true);
-
-        try {
-            await this._supabaseService.deleteItemFromProfile(item);
-            this.items.update(list => list.filter(i => i.id !== item.id));
+        const ok = await this._profileState.removeItem(item);
+        if (ok) {
             this._showSnackbar(`"${item.name}" eliminado`, 'success');
-        } catch (error) {
-            console.error('Error deleting item:', error);
+        } else {
             this._showSnackbar('Error al eliminar el objeto', 'error');
-        } finally {
-            this.isLoading.set(false);
         }
     }
 
@@ -203,16 +175,5 @@ export class ProfileInventoryComponent implements OnInit {
         });
     }
 
-    private _formatUpdatedAt(): string {
-        if (!this.profile?.updated_at) return '---';
-        const date = new Date(this.profile.updated_at);
-        if (Number.isNaN(date.getTime())) return '---';
-        return date.toLocaleString('es-ES', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-    }
 }
+
