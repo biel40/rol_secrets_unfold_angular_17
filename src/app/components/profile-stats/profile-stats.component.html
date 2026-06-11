@@ -1,22 +1,22 @@
-@if (profile) {
+@if (profile()) {
 <div class="pokemon-stats-container">
     <div class="pokemon-card">
         <div class="card-header">
-            <h1 class="character-name">{{ profile.username || 'Character' }}</h1>
-            <div class="character-class">{{ profile.clase || 'Unknown Class' }}</div>
+            <h1 class="character-name">{{ profile()!.username || 'Character' }}</h1>
+            <div class="character-class">{{ profile()!.clase || 'Unknown Class' }}</div>
             <div class="stats-updated">Actualizado: {{ lastUpdatedLabel }}</div>
         </div>
         
         <div class="character-info">
             <div class="character-avatar">
                 <div class="avatar-placeholder">
-                    @if (profile && profile.image_url) {
-                        <img [src]="profile.image_url" alt="Character" class="character-image">
+                    @if (profile()!.image_url) {
+                        <img [src]="profile()!.image_url" alt="Character" class="character-image">
                     } @else {
                         <div class="avatar-icon">👤</div>
                     }
                 </div>
-                <div class="character-level">LVL {{ profile.level || '1' }}</div>
+                <div class="character-level">LVL {{ profile()!.level || '1' }}</div>
             </div>
             
             <div class="character-vitals">
@@ -25,9 +25,9 @@
                         <span>❤️</span>
                         <span>Puntos de Vida</span>
                     </div>
-                    <div class="stat-value">{{ profile.current_hp || 0 }} / {{ profile.total_hp || 0 }}</div>
+                    <div class="stat-value">{{ profile()!.current_hp || 0 }} / {{ profile()!.total_hp || 0 }}</div>
                     <div class="progress-bar-container">
-                        <div class="progress-bar hp" [style.width.%]="profile.current_hp && profile.total_hp ? (profile.current_hp / profile.total_hp) * 100 : 0"></div>
+                        <div class="progress-bar hp" [style.width.%]="profile()!.current_hp && profile()!.total_hp ? (profile()!.current_hp! / profile()!.total_hp!) * 100 : 0"></div>
                     </div>
                 </div>
                 
@@ -36,7 +36,7 @@
                         <span>⚔️</span>
                         <span>Arma Equipada</span>
                     </div>
-                    <div class="weapon-value">{{ profile.weapon || 'Ninguna' }}</div>
+                    <div class="weapon-value">{{ profile()!.weapon || 'Ninguna' }}</div>
                 </div>
             </div>
         </div>

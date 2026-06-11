@@ -7,7 +7,6 @@ import { Hability, Item, Profile, SupabaseService } from '../supabase/supabase.s
 export class ProfileStateService {
     private readonly _supabaseService = inject(SupabaseService);
 
-    // --- State signals ---
     public readonly profile = signal<Profile | null>(null);
     public readonly userHabilities = signal<Hability[]>([]);
     public readonly habilitiesLoading = signal<boolean>(false);
@@ -61,6 +60,20 @@ export class ProfileStateService {
         try {
             await this._supabaseService.deleteItemFromProfile(item);
             this.items.update(list => list.filter(i => i.id !== item.id));
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
+    /** Updates an item in DB and refreshes the signal. */
+    public async updateItem(item: Item): Promise<boolean> {
+        try {
+            const { data, error } = await this._supabaseService.updateItem(item);
+            if (error) throw error;
+            if (data) {
+                this.items.update(list => list.map(i => i.id === item.id ? { ...i, ...data[0] } : i));
+            }
             return true;
         } catch {
             return false;

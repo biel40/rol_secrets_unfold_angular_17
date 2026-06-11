@@ -38,7 +38,21 @@ export class ProfileInventoryComponent implements OnInit {
     public readonly showForm = signal<boolean>(false);
     public readonly editingItem = signal<Item | null>(null);
     public readonly searchTerm = signal<string>('');
-    public readonly lastUpdatedLabel = signal<string>('---');
+
+    public readonly lastUpdatedLabel = computed(() => {
+        const profile = this._profileState.profile();
+        if (!profile?.updated_at) return '---';
+        const date = new Date(profile.updated_at);
+        if (Number.isNaN(date.getTime())) return '---';
+        return date.toLocaleString('es-ES', {
+            day: '2-digit', month: '2-digit', year: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+        });
+    });
+
+    public get isEditing(): boolean {
+        return this.editingItem() !== null;
+    }
 
     public readonly filteredItems = computed(() => {
         const term = this.searchTerm().toLowerCase();
@@ -115,17 +129,22 @@ export class ProfileInventoryComponent implements OnInit {
             return;
         }
 
-        this.isLoading.set(true);
+        let ok: boolean;
 
-        try {
-            this.newItem.profile_id = this._user.id;
-            this.newItem.quantity = 1;
+        if (this.isEditing) {
+            ok = await this._profileState.updateItem({ ...this.newItem });
+            if (ok) {
+                this._showSnackbar('¡Objeto actualizado!', 'success');
+            }
+        } else {
+            ok = await this._profileState.addItem({ ...this.newItem }, this._user.id);
+            if (ok) {
+                this._showSnackbar('¡Objeto añadido al inventario!', 'success');
+            }
+        }
 
-            await this._supabaseService.saveItemToProfile(this.newItem);
-            
-            this._showSnackbar('¡Objeto añadido al inventario!', 'success');
+        if (ok) {
             this.closeForm();
-            this.newItem = this._getEmptyItem();
         } else {
             this._showSnackbar('Error al guardar el objeto', 'error');
         }

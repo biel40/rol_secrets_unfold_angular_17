@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, effect } from '@angular/core';
+import { Component, inject, OnInit, effect, computed } from '@angular/core';
 import { MaterialModule } from '../../modules/material.module';
 import { UserService } from '../../services/user/user.service';
 import { ProfileStateService } from '../../services/profile/profile-state.service';
@@ -24,6 +24,8 @@ export class ProfileStatsComponent implements OnInit {
     private _userService: UserService = inject(UserService);
     private _profileState = inject(ProfileStateService);
     private _router = inject(Router);
+
+    public readonly profile = computed(() => this._profileState.profile());
 
     public keys: string[] = [];
     public dataSource: any[] = [];
