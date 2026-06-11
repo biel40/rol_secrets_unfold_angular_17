@@ -472,6 +472,20 @@ export class SupabaseService {
       .eq('id', item.id);
   }
 
+  public async updateItem(item: Item): Promise<{ data: Item[] | null, error: any }> {
+    return await this._supabaseClient
+      .from('items')
+      .update({
+        name: item.name,
+        description: item.description,
+        value: item.value,
+        img_src: item.img_src,
+        quantity: item.quantity
+      })
+      .eq('id', item.id)
+      .select();
+  }
+
   public async deleteEnemy(enemyId: string): Promise<{ data: any, error: any }> {
     return await this._supabaseClient
       .from('enemies')

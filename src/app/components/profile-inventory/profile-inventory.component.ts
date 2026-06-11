@@ -36,18 +36,9 @@ export class ProfileInventoryComponent implements OnInit {
     public get isLoading() { return this._profileState.itemsLoading; }
 
     public readonly showForm = signal<boolean>(false);
+    public readonly editingItem = signal<Item | null>(null);
     public readonly searchTerm = signal<string>('');
-
-    public readonly lastUpdatedLabel = computed(() => {
-        const profile = this._profileState.profile();
-        if (!profile?.updated_at) return '---';
-        const date = new Date(profile.updated_at);
-        if (Number.isNaN(date.getTime())) return '---';
-        return date.toLocaleString('es-ES', {
-            day: '2-digit', month: '2-digit', year: 'numeric',
-            hour: '2-digit', minute: '2-digit'
-        });
-    });
+    public readonly lastUpdatedLabel = signal<string>('---');
 
     public readonly filteredItems = computed(() => {
         const term = this.searchTerm().toLowerCase();
@@ -79,11 +70,19 @@ export class ProfileInventoryComponent implements OnInit {
 
     public openForm(): void {
         this.newItem = this._getEmptyItem();
+        this.editingItem.set(null);
+        this.showForm.set(true);
+    }
+
+    public openEditForm(item: Item): void {
+        this.newItem = { ...item };
+        this.editingItem.set(item);
         this.showForm.set(true);
     }
 
     public closeForm(): void {
         this.showForm.set(false);
+        this.editingItem.set(null);
         this.newItem = this._getEmptyItem();
     }
 
@@ -116,9 +115,14 @@ export class ProfileInventoryComponent implements OnInit {
             return;
         }
 
-        const ok = await this._profileState.addItem({ ...this.newItem }, this._user.id);
+        this.isLoading.set(true);
 
-        if (ok) {
+        try {
+            this.newItem.profile_id = this._user.id;
+            this.newItem.quantity = 1;
+
+            await this._supabaseService.saveItemToProfile(this.newItem);
+            
             this._showSnackbar('¡Objeto añadido al inventario!', 'success');
             this.closeForm();
             this.newItem = this._getEmptyItem();
