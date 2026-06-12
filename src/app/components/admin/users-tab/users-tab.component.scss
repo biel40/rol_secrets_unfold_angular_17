@@ -358,6 +358,37 @@ $success-color: #2ecc71;
             }
         }
     }
+
+    &.awaken {
+        background: transparent;
+        color: #a78bfa;
+        border: 1px solid #a78bfa;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+        .awaken-icon {
+            font-size: 1rem;
+        }
+
+        &:hover {
+            background: rgba(167, 139, 250, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 0 12px rgba(167, 139, 250, 0.4);
+        }
+
+        &.awaken-active {
+            background: linear-gradient(135deg, #7c3aed, #4c1d95);
+            color: #fff;
+            border-color: #7c3aed;
+            animation: awaken-button-pulse 2s ease-in-out infinite;
+
+            &:hover {
+                background: linear-gradient(135deg, #8b5cf6, #5b21b6);
+                box-shadow: 0 0 20px rgba(139, 92, 246, 0.6);
+            }
+        }
+    }
 }
 
 .empty-users-list {
@@ -604,4 +635,9 @@ $success-color: #2ecc71;
             width: 100%;
         }
     }
+}
+
+@keyframes awaken-button-pulse {
+    0%, 100% { box-shadow: 0 0 8px rgba(139, 92, 246, 0.5); }
+    50%       { box-shadow: 0 0 20px rgba(139, 92, 246, 0.9); }
 }

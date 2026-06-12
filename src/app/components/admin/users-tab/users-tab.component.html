@@ -78,6 +78,14 @@
                                     (click)="viewUserHabilities(user.id)">
                                 <span class="button-text">Ver Habilidades</span>
                             </button>
+                            <button 
+                                class="user-action-button awaken"
+                                [class.awaken-active]="user.profile.is_awakened"
+                                (click)="toggleAwaken(user)"
+                                [title]="user.profile.is_awakened ? 'Desactivar Awaken' : 'Activar Awaken'">
+                                <span class="awaken-icon">⚡</span>
+                                <span class="button-text">{{ user.profile.is_awakened ? 'Awaken ON' : 'Awaken' }}</span>
+                            </button>
                         } @else {
                             <button class="user-action-button primary" 
                                     (click)="openCreateProfileModal(user)">

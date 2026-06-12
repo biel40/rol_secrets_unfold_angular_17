@@ -92,6 +92,10 @@ export class UsersTabComponent {
         });
     }
 
+    public async toggleAwaken(user: UserReplica & { profile?: Profile }): Promise<void> {
+        await this.state.toggleAwaken(user);
+    }
+
     public async viewUserHabilities(userId: string): Promise<void> {
         try {
             const profileResult = await this._supabaseService.getProfileByUserId(userId);

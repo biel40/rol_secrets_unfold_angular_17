@@ -1054,6 +1054,26 @@ chore: tareas de mantenimiento
    ```
 
 6. **Comentarios Redundantes**
+
+7. **overflow recorta box-shadow**
+   `overflow-x: auto` (o cualquier valor distinto de `visible`) en un contenedor recorta el `box-shadow` de sus hijos, produciendo una sombra con apariencia cuadrada/cortada en los bordes.
+
+   **❌ Incorrecto:**
+   ```scss
+   .chips-container {
+       overflow-x: auto;
+       flex-wrap: nowrap; // la sombra de los chips se recortará en los bordes
+   }
+   ```
+
+   **✅ Correcto:**
+   ```scss
+   .chips-container {
+       flex-wrap: wrap; // los chips hacen wrap y box-shadow se renderiza completo
+   }
+   ```
+
+8. **Comentarios Redundantes**
    ```typescript
    // ❌ Comentarios obvios que repiten el código
    // Incrementa el contador

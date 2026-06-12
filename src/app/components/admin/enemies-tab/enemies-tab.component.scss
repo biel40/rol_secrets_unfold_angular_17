@@ -447,25 +447,8 @@ $success-color: #2ecc71;
 }
 
 .level-chips {
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    padding-bottom: 5px;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-    scrollbar-color: rgba($gold-color, 0.3) transparent;
-
-    &::-webkit-scrollbar {
-        height: 4px;
-    }
-
-    &::-webkit-scrollbar-track {
-        background: transparent;
-    }
-
-    &::-webkit-scrollbar-thumb {
-        background: rgba($gold-color, 0.3);
-        border-radius: 2px;
-    }
+    flex-wrap: wrap;
+    padding: 4px 0;
 }
 
 // FILTER STATUS BAR

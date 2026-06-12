@@ -27,7 +27,8 @@ export interface Profile {
   speed?: number,
   current_experience?: number,
   image_url?: string,
-  updated_at?: string
+  updated_at?: string,
+  is_awakened?: boolean
 }
 
 export interface ProfileSummary {
@@ -441,6 +442,28 @@ export class SupabaseService {
     const channel = this._supabaseClient.channel('battle-channel-room');
 
     return channel;
+  }
+
+  public async toggleProfileAwaken(profileId: string, isAwakened: boolean): Promise<{ error: any }> {
+    const { error } = await this._supabaseClient
+      .from('profiles')
+      .update({ is_awakened: isAwakened })
+      .eq('id', profileId);
+    return { error };
+  }
+
+  public subscribeToProfileAwakenChanges(
+    profileId: string,
+    callback: (isAwakened: boolean) => void
+  ): RealtimeChannel {
+    return this._supabaseClient
+      .channel(`profile-awaken-${profileId}`)
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'profiles', filter: `id=eq.${profileId}` },
+        (payload) => callback(!!payload.new['is_awakened'])
+      )
+      .subscribe();
   }
 
   public async getItems(userId: string): Promise<{ data: Item[] | null, error: any }> {

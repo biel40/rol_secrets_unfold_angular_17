@@ -1,6 +1,6 @@
-import { Component, inject, OnInit, HostListener } from '@angular/core';
-import { Profile } from '../../services/supabase/supabase.service';
-import { User } from '@supabase/supabase-js';
+import { Component, inject, OnInit, HostListener, OnDestroy, signal } from '@angular/core';
+import { Profile, SupabaseService } from '../../services/supabase/supabase.service';
+import { User, RealtimeChannel } from '@supabase/supabase-js';
 import { UserService } from '../../services/user/user.service';
 import { LoaderService } from '../../services/loader/loader.service';
 import { ProfileStateService } from '../../services/profile/profile-state.service';
@@ -46,20 +46,23 @@ interface Tab {
         ])
     ]
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
 
     private _userService: UserService = inject(UserService);
     private _profileState = inject(ProfileStateService);
+    private _supabaseService = inject(SupabaseService);
     private _loaderService: LoaderService = inject(LoaderService);
     private _router = inject(Router);
 
     private _user: User | null = null;
+    private _awakenChannel: RealtimeChannel | null = null;
 
     /** Backed by the service signal — no local copy, no change detection needed. */
     public get profile(): Profile | null {
         return this._profileState.profile();
     }
 
+    public readonly isAwakened = signal<boolean>(false);
     public errorConfirmEmail: boolean = false;
     
     // Sistema de tabs personalizado
@@ -113,6 +116,9 @@ export class ProfileComponent implements OnInit {
                 if (!profile) {
                     this._displaySnackbar('No se ha podido cargar el perfil. Por favor, vuelve a iniciar sesión.');
                     this._router.navigate(['']);
+                } else {
+                    this.isAwakened.set(!!profile.is_awakened);
+                    this._subscribeToAwakenChanges(this._user.id);
                 }
 
                 if (this._user.email && !this._user.email_confirmed_at) {
@@ -153,6 +159,37 @@ export class ProfileComponent implements OnInit {
     public ngOnDestroy(): void {
         this._loaderService.setLoading(false);
         this._profileState.clear();
+        if (this._awakenChannel) {
+            this._awakenChannel.unsubscribe();
+        }
+    }
+
+    public getPowerAwakenClass(): string {
+        const power = this.profile?.power?.toLowerCase() ?? '';
+        const map: Record<string, string> = {
+            pyro: 'awaken-pyro',
+            hydro: 'awaken-hydro',
+            electro: 'awaken-electro',
+            geo: 'awaken-geo',
+            aero: 'awaken-aero',
+            cryo: 'awaken-cryo',
+            natura: 'awaken-natura',
+            combat: 'awaken-combat',
+            fuego: 'awaken-pyro',
+            agua: 'awaken-hydro',
+            tierra: 'awaken-geo',
+            aire: 'awaken-aero',
+        };
+        return map[power] ?? 'awaken-default';
+    }
+
+    private _subscribeToAwakenChanges(profileId: string): void {
+        this._awakenChannel = this._supabaseService.subscribeToProfileAwakenChanges(
+            profileId,
+            (isAwakened) => {
+                this.isAwakened.set(isAwakened);
+            }
+        );
     }
 
     public async goBack(): Promise<void> {

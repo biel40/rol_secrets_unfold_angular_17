@@ -572,6 +572,35 @@ export class AdminStateService {
         return themes[normalized] || { icon: '⭐', color: '#95a5a6', bgColor: 'rgba(149, 165, 166, 0.1)' };
     }
 
+    public async toggleAwaken(user: UserReplica & { profile?: Profile }): Promise<void> {
+        if (!user.profile?.id) {
+            this.showSnackbar('Este usuario no tiene un perfil creado.');
+            return;
+        }
+
+        const newState = !user.profile.is_awakened;
+        const { error } = await this._supabaseService.toggleProfileAwaken(user.profile.id, newState);
+
+        if (error) {
+            this.showSnackbar('Error al cambiar el estado Awaken.');
+            return;
+        }
+
+        this.users.update(list =>
+            list.map(u =>
+                u.id === user.id
+                    ? { ...u, profile: { ...u.profile!, is_awakened: newState } }
+                    : u
+            )
+        );
+
+        const username = user.profile.username || user.email;
+        const msg = newState
+            ? `⚡ ${username} ha despertado su poder ULTIMATE!`
+            : `${username} ha vuelto a la normalidad.`;
+        this.showSnackbar(msg);
+    }
+
     public showSnackbar(message: string, duration = 4000): void {
         this._snackBar.open(message, 'Cerrar', { duration });
     }
