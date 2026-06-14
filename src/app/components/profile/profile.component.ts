@@ -183,6 +183,18 @@ export class ProfileComponent implements OnInit, OnDestroy {
         return map[power] ?? 'awaken-default';
     }
 
+    /** Returns the canonical element key used for conditional rendering in the template. */
+    public get elementPower(): string {
+        const power = this.profile?.power?.toLowerCase() ?? '';
+        const aliases: Record<string, string> = {
+            fuego: 'pyro',
+            agua: 'hydro',
+            tierra: 'geo',
+            aire: 'aero',
+        };
+        return aliases[power] ?? power;
+    }
+
     private _subscribeToAwakenChanges(profileId: string): void {
         this._awakenChannel = this._supabaseService.subscribeToProfileAwakenChanges(
             profileId,
@@ -196,5 +208,4 @@ export class ProfileComponent implements OnInit, OnDestroy {
         await this._userService.signOut();
         this._router.navigate(['']);
     }
-
 }

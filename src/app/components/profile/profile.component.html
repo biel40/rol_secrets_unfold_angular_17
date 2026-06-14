@@ -3,12 +3,104 @@
 
     <!-- Overlay de modo Awaken -->
     @if (isAwakened()) {
-        <div class="awaken-overlay" aria-hidden="true">
-            <div class="awaken-particles">
-                @for (i of [1,2,3,4,5,6,7,8,9,10,11,12]; track i) {
-                    <span class="particle" [attr.data-index]="i"></span>
-                }
-            </div>
+        <div class="awaken-overlay" [class]="'awaken-overlay--' + elementPower" aria-hidden="true">
+
+            <!-- Llamas - PYRO -->
+            @if (elementPower === 'pyro') {
+                <div class="flames-container">
+                    @for (i of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]; track i) {
+                        <div class="flame" [attr.data-index]="i"></div>
+                    }
+                    <div class="ember-container">
+                        @for (i of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]; track i) {
+                            <span class="ember" [attr.data-index]="i"></span>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- Ondas - HYDRO -->
+            @if (elementPower === 'hydro') {
+                <div class="hydro-container">
+                    @for (i of [1,2,3,4,5]; track i) {
+                        <div class="hydro-wave" [attr.data-index]="i"></div>
+                    }
+                    @for (i of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]; track i) {
+                        <span class="hydro-bubble" [attr.data-index]="i"></span>
+                    }
+                </div>
+            }
+
+            <!-- Rayos - ELECTRO -->
+            @if (elementPower === 'electro') {
+                <div class="electro-container">
+                    @for (i of [1,2,3,4,5,6]; track i) {
+                        <div class="lightning-bolt" [attr.data-index]="i"></div>
+                    }
+                    @for (i of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]; track i) {
+                        <span class="spark" [attr.data-index]="i"></span>
+                    }
+                </div>
+            }
+
+            <!-- Cristales de hielo - CRYO -->
+            @if (elementPower === 'cryo') {
+                <div class="cryo-container">
+                    @for (i of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]; track i) {
+                        <div class="snowflake" [attr.data-index]="i"></div>
+                    }
+                    @for (i of [1,2,3,4,5,6,7,8]; track i) {
+                        <div class="ice-shard" [attr.data-index]="i"></div>
+                    }
+                </div>
+            }
+
+            <!-- Tierra/Rocas - GEO -->
+            @if (elementPower === 'geo') {
+                <div class="geo-container">
+                    @for (i of [1,2,3,4,5,6,7,8,9,10,11,12]; track i) {
+                        <div class="geo-crystal" [attr.data-index]="i"></div>
+                    }
+                    @for (i of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]; track i) {
+                        <span class="geo-particle" [attr.data-index]="i"></span>
+                    }
+                </div>
+            }
+
+            <!-- Viento - AERO -->
+            @if (elementPower === 'aero') {
+                <div class="aero-container">
+                    @for (i of [1,2,3,4,5,6]; track i) {
+                        <div class="wind-streak" [attr.data-index]="i"></div>
+                    }
+                    @for (i of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]; track i) {
+                        <span class="wind-leaf" [attr.data-index]="i"></span>
+                    }
+                </div>
+            }
+
+            <!-- Naturaleza - NATURA -->
+            @if (elementPower === 'natura') {
+                <div class="natura-container">
+                    @for (i of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]; track i) {
+                        <span class="leaf-particle" [attr.data-index]="i"></span>
+                    }
+                    @for (i of [1,2,3,4,5,6,7,8]; track i) {
+                        <div class="vine-tendril" [attr.data-index]="i"></div>
+                    }
+                </div>
+            }
+
+            <!-- Combate - COMBAT (genérico) -->
+            @if (elementPower === 'combat') {
+                <div class="combat-container">
+                    @for (i of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]; track i) {
+                        <span class="combat-particle" [attr.data-index]="i"></span>
+                    }
+                </div>
+            }
+
+            <!-- Anillos de energía (todos los elementos) -->
             <div class="awaken-rings">
                 <div class="awaken-ring awaken-ring-1"></div>
                 <div class="awaken-ring awaken-ring-2"></div>

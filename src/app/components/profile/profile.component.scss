@@ -1,3 +1,5 @@
+@use "sass:math";
+
 // ============================================
 // PROFILE COMPONENT - Modern Mobile-First Design
 // ============================================
@@ -48,6 +50,114 @@ $glass-border: rgba(255, 255, 255, 0.06);
                 radial-gradient(ellipse 60% 40% at 50% 100%, rgba(var(--awaken-rgb), 0.12) 0%, transparent 70%);
             animation: awaken-bg-pulse 2.5s ease-in-out infinite;
         }
+    }
+
+    // Fondos de pantalla completa temáticos por elemento
+    &.awakened.awaken-pyro::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        background:
+            radial-gradient(ellipse 100% 55% at 50% 100%, rgba(231, 76, 60, 0.35) 0%, rgba(204, 60, 0, 0.2) 40%, transparent 70%),
+            radial-gradient(ellipse 70% 40% at 20% 90%, rgba(255, 100, 0, 0.25) 0%, transparent 60%),
+            radial-gradient(ellipse 70% 40% at 80% 90%, rgba(255, 100, 0, 0.25) 0%, transparent 60%),
+            linear-gradient(to top, rgba(100, 10, 0, 0.6) 0%, rgba(40, 0, 0, 0.3) 40%, transparent 70%);
+        animation: awaken-bg-pulse 3s ease-in-out infinite;
+    }
+
+    &.awakened.awaken-hydro::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        background:
+            radial-gradient(ellipse 100% 60% at 50% 0%, rgba(52, 152, 219, 0.2) 0%, transparent 70%),
+            radial-gradient(ellipse 100% 60% at 50% 100%, rgba(41, 128, 185, 0.3) 0%, transparent 70%),
+            linear-gradient(to bottom, rgba(0, 20, 60, 0.4) 0%, rgba(0, 40, 80, 0.25) 50%, transparent 100%);
+        animation: awaken-bg-pulse 4s ease-in-out infinite;
+    }
+
+    &.awakened.awaken-electro::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        background:
+            radial-gradient(ellipse 80% 80% at 50% 50%, rgba(155, 89, 182, 0.15) 0%, transparent 70%),
+            radial-gradient(ellipse 60% 40% at 30% 20%, rgba(180, 79, 255, 0.2) 0%, transparent 60%),
+            radial-gradient(ellipse 60% 40% at 70% 80%, rgba(180, 79, 255, 0.2) 0%, transparent 60%),
+            linear-gradient(135deg, rgba(20, 0, 40, 0.5) 0%, transparent 60%);
+        animation: awaken-bg-pulse 1.8s ease-in-out infinite;
+    }
+
+    &.awakened.awaken-cryo::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        background:
+            radial-gradient(ellipse 100% 50% at 50% 0%, rgba(116, 185, 255, 0.2) 0%, transparent 70%),
+            radial-gradient(ellipse 80% 60% at 50% 100%, rgba(200, 230, 255, 0.15) 0%, transparent 70%),
+            linear-gradient(to bottom, rgba(0, 30, 60, 0.35) 0%, rgba(10, 50, 80, 0.2) 100%);
+        animation: awaken-bg-pulse 5s ease-in-out infinite;
+    }
+
+    &.awakened.awaken-geo::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        background:
+            radial-gradient(ellipse 100% 50% at 50% 100%, rgba(212, 160, 23, 0.3) 0%, transparent 65%),
+            radial-gradient(ellipse 60% 40% at 30% 80%, rgba(249, 217, 35, 0.15) 0%, transparent 55%),
+            radial-gradient(ellipse 60% 40% at 70% 80%, rgba(249, 217, 35, 0.15) 0%, transparent 55%),
+            linear-gradient(to top, rgba(60, 30, 0, 0.5) 0%, rgba(30, 15, 0, 0.2) 50%, transparent 80%);
+        animation: awaken-bg-pulse 4s ease-in-out infinite;
+    }
+
+    &.awakened.awaken-aero::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        background:
+            radial-gradient(ellipse 100% 60% at 0% 50%, rgba(0, 206, 201, 0.15) 0%, transparent 70%),
+            radial-gradient(ellipse 100% 60% at 100% 50%, rgba(0, 206, 201, 0.15) 0%, transparent 70%),
+            linear-gradient(135deg, rgba(0, 50, 60, 0.3) 0%, transparent 60%);
+        animation: awaken-bg-pulse 3.5s ease-in-out infinite;
+    }
+
+    &.awakened.awaken-natura::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        background:
+            radial-gradient(ellipse 100% 55% at 50% 100%, rgba(39, 174, 96, 0.3) 0%, transparent 65%),
+            radial-gradient(ellipse 70% 50% at 50% 0%, rgba(46, 204, 113, 0.15) 0%, transparent 65%),
+            linear-gradient(to top, rgba(0, 40, 10, 0.5) 0%, rgba(0, 20, 5, 0.2) 50%, transparent 80%);
+        animation: awaken-bg-pulse 4.5s ease-in-out infinite;
+    }
+
+    &.awakened.awaken-combat::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        background:
+            radial-gradient(ellipse 80% 60% at 50% 50%, rgba(230, 126, 34, 0.2) 0%, transparent 70%),
+            radial-gradient(ellipse 60% 40% at 50% 100%, rgba(231, 76, 60, 0.25) 0%, transparent 60%),
+            linear-gradient(to top, rgba(60, 20, 0, 0.5) 0%, transparent 70%);
+        animation: awaken-bg-pulse 2s ease-in-out infinite;
     }
 
     // Variantes de color por elemento
@@ -128,30 +238,494 @@ $glass-border: rgba(255, 255, 255, 0.06);
     }
 }
 
-// Partículas flotantes
-.awaken-particles {
+// ─── PYRO — Llamas ────────────────────────────────────────────────────────────
+.flames-container {
     position: absolute;
     inset: 0;
+    overflow: hidden;
+}
 
-    .particle {
-        position: absolute;
-        width: 4px;
-        height: 4px;
-        border-radius: 50%;
-        background: var(--awaken-color);
-        box-shadow: 0 0 8px var(--awaken-color), 0 0 16px var(--awaken-color);
-        animation: particle-rise 4s ease-in infinite;
+.flame {
+    position: absolute;
+    bottom: -20px;
+    border-radius: 50% 50% 30% 30% / 60% 60% 40% 40%;
+    animation: flame-rise linear infinite;
+    transform-origin: bottom center;
+    filter: blur(1px);
 
-        @for $i from 1 through 12 {
-            &[data-index="#{$i}"] {
-                left: #{(($i - 1) * 8.5) + 2%};
-                animation-delay: #{($i - 1) * 0.35}s;
-                animation-duration: #{3 + ($i * 0.3)}s;
-                width: #{2 + ($i % 3)}px;
-                height: #{2 + ($i % 3)}px;
+    @for $i from 1 through 20 {
+        &[data-index="#{$i}"] {
+            left: #{($i - 1) * 5.2 - 1%};
+            width: #{55 + (($i * 37) % 80)}px;
+            height: #{80 + (($i * 53) % 140)}px;
+            animation-duration: #{1.8 + ($i * 0.17) % 1.6}s;
+            animation-delay: #{($i * 0.23) % 1.4}s;
+            opacity: #{0.55 + ($i % 5) * 0.09};
+            background: radial-gradient(
+                ellipse at 50% 100%,
+                #fff5e0 0%,
+                #ffdd00 10%,
+                #ff9500 30%,
+                #ff4500 55%,
+                #cc1a00 80%,
+                transparent 100%
+            );
+        }
+    }
+}
+
+@keyframes flame-rise {
+    0%   { transform: scaleX(1)   scaleY(1)    translateY(0)    rotate(0deg);   opacity: 0; }
+    5%   { opacity: 1; }
+    40%  { transform: scaleX(0.9) scaleY(1.1)  translateY(-15%) rotate(-3deg); }
+    70%  { transform: scaleX(1.1) scaleY(0.95) translateY(-40%) rotate(3deg);  opacity: 0.8; }
+    100% { transform: scaleX(0.7) scaleY(1.3)  translateY(-80%) rotate(-5deg); opacity: 0; }
+}
+
+.ember-container {
+    position: absolute;
+    inset: 0;
+}
+
+.ember {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fff 0%, #ffcc00 40%, #ff6600 100%);
+    box-shadow: 0 0 6px 2px rgba(255, 120, 0, 0.8);
+    animation: ember-float ease-in infinite;
+
+    @for $i from 1 through 25 {
+        &[data-index="#{$i}"] {
+            left: #{($i * 3.8 + 1) % 100%};
+            bottom: #{($i * 7) % 30%};
+            width: #{2 + ($i % 4)}px;
+            height: #{2 + ($i % 4)}px;
+            animation-duration: #{2.5 + ($i * 0.31) % 2.5}s;
+            animation-delay: #{($i * 0.19) % 2.2}s;
+        }
+    }
+}
+
+@keyframes ember-float {
+    0%   { transform: translate(0, 0) scale(1);         opacity: 0; }
+    10%  { opacity: 1; }
+    50%  { transform: translate(#{math.random(40) - 20}px, -50vh) scale(0.7); opacity: 0.9; }
+    100% { transform: translate(#{math.random(60) - 30}px, -95vh) scale(0.2); opacity: 0; }
+}
+
+// ─── HYDRO — Ondas y burbujas ────────────────────────────────────────────────
+.hydro-container {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+
+.hydro-wave {
+    position: absolute;
+    left: -50%;
+    width: 200%;
+    height: 180px;
+    border-radius: 45%;
+    background: rgba(52, 152, 219, 0.12);
+    animation: wave-sweep ease-in-out infinite;
+    transform-origin: center center;
+
+    @for $i from 1 through 5 {
+        &[data-index="#{$i}"] {
+            bottom: #{($i - 1) * 15 - 20}px;
+            animation-duration: #{6 + $i * 1.5}s;
+            animation-delay: #{($i - 1) * -2.5}s;
+            opacity: #{0.5 + ($i % 3) * 0.15};
+            background: rgba(52, 152, 219, 0.08 + ($i % 3) * 0.04);
+        }
+    }
+}
+
+@keyframes wave-sweep {
+    0%   { transform: rotate(0deg)   translateX(-5%);  }
+    50%  { transform: rotate(180deg) translateX(5%);   }
+    100% { transform: rotate(360deg) translateX(-5%);  }
+}
+
+.hydro-bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.7), rgba(52,152,219,0.4) 60%, transparent);
+    border: 1px solid rgba(116, 185, 255, 0.5);
+    animation: bubble-rise ease-in infinite;
+
+    @for $i from 1 through 15 {
+        &[data-index="#{$i}"] {
+            left: #{($i * 6.5) % 95%};
+            bottom: #{($i * 5) % 20%};
+            width: #{8 + ($i % 5) * 6}px;
+            height: #{8 + ($i % 5) * 6}px;
+            animation-duration: #{3 + ($i * 0.4) % 3}s;
+            animation-delay: #{($i * 0.3) % 3}s;
+        }
+    }
+}
+
+@keyframes bubble-rise {
+    0%   { transform: translateY(0) scale(1);    opacity: 0; }
+    10%  { opacity: 0.8; }
+    80%  { transform: translateY(-85vh) scale(1.3); opacity: 0.5; }
+    100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+}
+
+// ─── ELECTRO — Rayos y chispas ────────────────────────────────────────────────
+.electro-container {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+
+.lightning-bolt {
+    position: absolute;
+    top: 0;
+    width: 2px;
+    height: 100vh;
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(200, 160, 255, 0.8) 20%,
+        rgba(255, 255, 255, 1) 40%,
+        rgba(200, 160, 255, 0.8) 60%,
+        transparent 100%
+    );
+    filter: blur(1px) drop-shadow(0 0 8px #b44fff);
+    animation: lightning-flash ease-in-out infinite;
+    clip-path: polygon(
+        40% 0%, 60% 0%,
+        55% 35%, 80% 35%,
+        45% 65%, 70% 65%,
+        35% 100%, 50% 100%,
+        50% 65%, 25% 65%,
+        55% 35%, 30% 35%
+    );
+
+    @for $i from 1 through 6 {
+        &[data-index="#{$i}"] {
+            left: (($i - 1) * 18 + 3) * 1%;
+            width: #{20 + ($i % 3) * 12}px;
+            animation-duration: #{0.8 + ($i * 0.3) % 1.2}s;
+            animation-delay: #{($i * 0.45) % 2.5}s;
+            opacity: 0;
+        }
+    }
+}
+
+@keyframes lightning-flash {
+    0%, 85%, 100% { opacity: 0; }
+    86%           { opacity: 0.9; transform: scaleX(1); }
+    87%           { opacity: 0;   transform: scaleX(1.05); }
+    88%           { opacity: 0.95; }
+    89%           { opacity: 0; }
+}
+
+.spark {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fff 0%, #d8b4fe 50%, #9b59b6 100%);
+    box-shadow: 0 0 8px 3px rgba(180, 79, 255, 0.9);
+    animation: spark-zip ease-in infinite;
+
+    @for $i from 1 through 20 {
+        &[data-index="#{$i}"] {
+            left: #{($i * 5.1) % 98%};
+            top:  #{($i * 4.7) % 90%};
+            width: #{2 + ($i % 3)}px;
+            height: #{2 + ($i % 3)}px;
+            animation-duration: #{0.6 + ($i * 0.11) % 0.8}s;
+            animation-delay: #{($i * 0.22) % 2}s;
+        }
+    }
+}
+
+@keyframes spark-zip {
+    0%   { transform: translate(0, 0)       scale(1);   opacity: 0; }
+    20%  { opacity: 1; }
+    50%  { transform: translate(#{math.random(80) - 40}px, #{math.random(80) - 40}px) scale(1.5); }
+    100% { transform: translate(#{math.random(120) - 60}px, #{math.random(120) - 60}px) scale(0); opacity: 0; }
+}
+
+// ─── CRYO — Copos y cristales ─────────────────────────────────────────────────
+.cryo-container {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+
+.snowflake {
+    position: absolute;
+    top: -20px;
+    color: rgba(116, 185, 255, 0.85);
+    text-shadow: 0 0 10px rgba(116, 185, 255, 0.9), 0 0 20px rgba(200, 230, 255, 0.5);
+    animation: snow-fall linear infinite;
+    user-select: none;
+
+    @for $i from 1 through 15 {
+        &[data-index="#{$i}"] {
+            left: (($i - 1) * 7 + 1) * 1%;
+            font-size: #{10 + ($i % 5) * 8}px;
+            animation-duration: #{5 + ($i * 0.7) % 5}s;
+            animation-delay: #{($i * 0.4) % 4}s;
+            opacity: #{0.5 + ($i % 4) * 0.12};
+
+            &::before {
+                content: '❄';
             }
         }
     }
+}
+
+@keyframes snow-fall {
+    0%   { transform: translateY(-20px) rotate(0deg)   translateX(0);    opacity: 0; }
+    5%   { opacity: 0.9; }
+    90%  { opacity: 0.7; }
+    100% { transform: translateY(105vh) rotate(360deg) translateX(30px); opacity: 0; }
+}
+
+.ice-shard {
+    position: absolute;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-left: solid transparent;
+    border-right: solid transparent;
+    border-bottom: solid rgba(116, 185, 255, 0.55);
+    filter: drop-shadow(0 0 8px rgba(116, 185, 255, 0.8));
+    animation: shard-pulse ease-in-out infinite alternate;
+
+    @for $i from 1 through 8 {
+        &[data-index="#{$i}"] {
+            left: (($i - 1) * 14 + 1) * 1%;
+            border-left-width: #{8 + ($i % 3) * 5}px;
+            border-right-width: #{8 + ($i % 3) * 5}px;
+            border-bottom-width: #{40 + ($i % 4) * 25}px;
+            animation-duration: #{2 + $i * 0.4}s;
+            animation-delay: #{$i * 0.3}s;
+        }
+    }
+}
+
+@keyframes shard-pulse {
+    from { opacity: 0.3; transform: scaleY(0.9); }
+    to   { opacity: 0.7; transform: scaleY(1.05); }
+}
+
+// ─── GEO — Cristales dorados y partículas ─────────────────────────────────────
+.geo-container {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+
+.geo-crystal {
+    position: absolute;
+    bottom: 0;
+    clip-path: polygon(50% 0%, 80% 30%, 80% 70%, 50% 100%, 20% 70%, 20% 30%);
+    background: linear-gradient(135deg, #f9d923 0%, #d4a017 50%, #8b6914 100%);
+    box-shadow: 0 0 15px rgba(212, 160, 23, 0.7), inset 0 0 10px rgba(255, 255, 200, 0.4);
+    animation: crystal-emerge ease-out infinite;
+
+    @for $i from 1 through 12 {
+        &[data-index="#{$i}"] {
+            left: (($i - 1) * 9 + 1) * 1%;
+            width: #{15 + ($i % 4) * 12}px;
+            height: #{25 + ($i % 4) * 18}px;
+            animation-duration: #{3 + ($i * 0.5) % 3}s;
+            animation-delay: #{($i * 0.4) % 4}s;
+            opacity: 0;
+        }
+    }
+}
+
+@keyframes crystal-emerge {
+    0%   { transform: translateY(100%) scaleY(0); opacity: 0; }
+    20%  { opacity: 0.9; }
+    60%  { transform: translateY(0) scaleY(1); opacity: 0.8; }
+    80%  { opacity: 0.6; }
+    100% { transform: translateY(-10px) scaleY(0.8); opacity: 0; }
+}
+
+.geo-particle {
+    position: absolute;
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    background: linear-gradient(135deg, #f9d923, #d4a017);
+    animation: geo-drift ease-in-out infinite;
+
+    @for $i from 1 through 20 {
+        &[data-index="#{$i}"] {
+            left: #{($i * 4.9) % 97%};
+            top:  #{($i * 4.2) % 85%};
+            width: #{4 + ($i % 4) * 3}px;
+            height: #{4 + ($i % 4) * 3}px;
+            animation-duration: #{3 + ($i * 0.3) % 3}s;
+            animation-delay: #{($i * 0.25) % 3}s;
+        }
+    }
+}
+
+@keyframes geo-drift {
+    0%, 100% { transform: translateY(0) rotate(0deg);   opacity: 0.4; }
+    50%       { transform: translateY(-20px) rotate(45deg); opacity: 1; }
+}
+
+// ─── AERO — Viento y hojas ────────────────────────────────────────────────────
+.aero-container {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+
+.wind-streak {
+    position: absolute;
+    height: 1px;
+    border-radius: 999px;
+    background: linear-gradient(to right, transparent, rgba(0, 206, 201, 0.7), transparent);
+    animation: wind-sweep ease-in-out infinite;
+
+    @for $i from 1 through 6 {
+        &[data-index="#{$i}"] {
+            top: (($i - 1) * 18 + 5) * 1%;
+            left: -100%;
+            width: #{200 + ($i % 3) * 150}px;
+            animation-duration: #{1.5 + $i * 0.4}s;
+            animation-delay: #{($i - 1) * 0.6}s;
+            opacity: #{0.4 + ($i % 3) * 0.15};
+        }
+    }
+}
+
+@keyframes wind-sweep {
+    0%   { transform: translateX(-20%); opacity: 0; }
+    10%  { opacity: 0.8; }
+    90%  { opacity: 0.6; }
+    100% { transform: translateX(130vw); opacity: 0; }
+}
+
+.wind-leaf {
+    position: absolute;
+    width: 10px;
+    height: 7px;
+    border-radius: 50% 0 50% 0;
+    background: rgba(0, 206, 201, 0.6);
+    box-shadow: 0 0 8px rgba(0, 206, 201, 0.5);
+    animation: leaf-swirl ease-in-out infinite;
+
+    @for $i from 1 through 15 {
+        &[data-index="#{$i}"] {
+            left: #{($i * 6.5) % 97%};
+            top:  #{($i * 5.8) % 90%};
+            width: #{6 + ($i % 4) * 5}px;
+            height: #{4 + ($i % 4) * 3}px;
+            animation-duration: #{2 + ($i * 0.35) % 2.5}s;
+            animation-delay: #{($i * 0.28) % 2.5}s;
+        }
+    }
+}
+
+@keyframes leaf-swirl {
+    0%   { transform: translate(0, 0) rotate(0deg);      opacity: 0; }
+    15%  { opacity: 0.85; }
+    50%  { transform: translate(40px, -60px) rotate(180deg); opacity: 0.7; }
+    100% { transform: translate(100px, -30px) rotate(360deg); opacity: 0; }
+}
+
+// ─── NATURA — Hojas y enredaderas ─────────────────────────────────────────────
+.natura-container {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+
+.leaf-particle {
+    position: absolute;
+    width: 12px;
+    height: 8px;
+    border-radius: 50% 0 50% 0;
+    background: linear-gradient(135deg, #55efc4, #27ae60);
+    box-shadow: 0 0 6px rgba(39, 174, 96, 0.6);
+    animation: natura-leaf ease-in-out infinite;
+
+    @for $i from 1 through 20 {
+        &[data-index="#{$i}"] {
+            left: #{($i * 5) % 97%};
+            top: -20px;
+            width: #{8 + ($i % 4) * 5}px;
+            height: #{5 + ($i % 4) * 3}px;
+            animation-duration: #{4 + ($i * 0.38) % 3.5}s;
+            animation-delay: #{($i * 0.31) % 3.5}s;
+        }
+    }
+}
+
+@keyframes natura-leaf {
+    0%   { transform: translateY(-20px) rotate(0deg) translateX(0); opacity: 0; }
+    5%   { opacity: 0.9; }
+    40%  { transform: translateY(40vh) rotate(-90deg) translateX(-25px); opacity: 0.8; }
+    80%  { transform: translateY(80vh) rotate(180deg) translateX(20px); opacity: 0.5; }
+    100% { transform: translateY(110vh) rotate(270deg) translateX(-15px); opacity: 0; }
+}
+
+.vine-tendril {
+    position: absolute;
+    bottom: 0;
+    width: 3px;
+    border-radius: 2px;
+    background: linear-gradient(to top, #27ae60, #2ecc71, transparent);
+    animation: vine-grow ease-out infinite;
+    transform-origin: bottom center;
+    box-shadow: 0 0 8px rgba(39, 174, 96, 0.5);
+
+    @for $i from 1 through 8 {
+        &[data-index="#{$i}"] {
+            left: (($i - 1) * 14 + 2) * 1%;
+            height: #{80 + ($i % 4) * 60}px;
+            animation-duration: #{3 + $i * 0.5}s;
+            animation-delay: #{$i * 0.4}s;
+            width: #{2 + ($i % 3)}px;
+        }
+    }
+}
+
+@keyframes vine-grow {
+    0%   { transform: scaleY(0);   opacity: 0; }
+    30%  { opacity: 0.8; }
+    60%  { transform: scaleY(1);   opacity: 0.7; }
+    100% { transform: scaleY(1.1); opacity: 0; }
+}
+
+// ─── COMBAT — Partículas de fuerza ────────────────────────────────────────────
+.combat-container {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+
+.combat-particle {
+    position: absolute;
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    background: linear-gradient(135deg, #e67e22, #ff9f43, #f9d923);
+    animation: combat-burst ease-in-out infinite;
+
+    @for $i from 1 through 20 {
+        &[data-index="#{$i}"] {
+            left: #{($i * 5) % 97%};
+            top:  #{($i * 4.7) % 90%};
+            width: #{6 + ($i % 5) * 5}px;
+            height: #{6 + ($i % 5) * 5}px;
+            animation-duration: #{1.5 + ($i * 0.22) % 1.8}s;
+            animation-delay: #{($i * 0.21) % 2}s;
+        }
+    }
+}
+
+@keyframes combat-burst {
+    0%, 100% { transform: scale(0) rotate(0deg);   opacity: 0; }
+    30%       { transform: scale(1.4) rotate(120deg); opacity: 1; }
+    60%       { transform: scale(0.8) rotate(240deg); opacity: 0.7; }
 }
 
 // Anillos de energía
@@ -196,13 +770,6 @@ $glass-border: rgba(255, 255, 255, 0.06);
 @keyframes awaken-flash {
     from { opacity: 0.6; transform: scale(0.9); }
     to   { opacity: 1;   transform: scale(1.15); }
-}
-
-@keyframes particle-rise {
-    0%   { bottom: -10px; opacity: 0;   transform: translateX(0) scale(0.5); }
-    10%  { opacity: 1; }
-    90%  { opacity: 0.8; }
-    100% { bottom: 110vh; opacity: 0;   transform: translateX(30px) scale(1.2); }
 }
 
 @keyframes awaken-ring-expand {

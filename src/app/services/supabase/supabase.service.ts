@@ -187,7 +187,7 @@ export class SupabaseService {
       const { data, error } = await this._executeWithRetry(async () => {
         const result = await this._supabaseClient
           .from('profiles')
-          .select(`id, username, clase, power, level, weapon, current_hp, total_hp, attack, defense, special_attack, special_defense, speed, current_experience, image_url, updated_at`)
+          .select(`id, username, clase, power, level, weapon, current_hp, total_hp, attack, defense, special_attack, special_defense, speed, current_experience, image_url, is_awakened, updated_at`)
           .eq('id', userId)
           .maybeSingle();
 
